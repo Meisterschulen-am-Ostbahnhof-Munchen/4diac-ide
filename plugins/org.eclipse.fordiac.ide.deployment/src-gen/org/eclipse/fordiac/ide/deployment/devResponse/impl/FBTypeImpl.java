@@ -31,8 +31,7 @@ import org.eclipse.fordiac.ide.deployment.devResponse.FBType;
  * The following features are implemented:
  * </p>
  * <ul>
- * <li>{@link org.eclipse.fordiac.ide.deployment.devResponse.impl.FBTypeImpl#getName
- * <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.fordiac.ide.deployment.devResponse.impl.FBTypeImpl#getName <em>Name</em>}</li>
  * </ul>
  *
  * @generated
@@ -60,15 +59,14 @@ public class FBTypeImpl extends EObjectImpl implements FBType {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	protected FBTypeImpl() {
+		super();
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
@@ -78,7 +76,6 @@ public class FBTypeImpl extends EObjectImpl implements FBType {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
@@ -88,12 +85,11 @@ public class FBTypeImpl extends EObjectImpl implements FBType {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
-	public void setName(final String newName) {
-		final String oldName = name;
+	public void setName(String newName) {
+		String oldName = name;
 		name = newName;
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, DevResponsePackage.FB_TYPE__NAME, oldName, name));
@@ -102,65 +98,66 @@ public class FBTypeImpl extends EObjectImpl implements FBType {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
-	public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
-		return switch (featureID) {
-		case DevResponsePackage.FB_TYPE__NAME -> getName();
-		default -> super.eGet(featureID, resolve, coreType);
-		};
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
-	 * @generated
-	 */
-	@Override
-	public void eSet(final int featureID, final Object newValue) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DevResponsePackage.FB_TYPE__NAME:
-			setName((String) newValue);
-			return;
-		default:
-			super.eSet(featureID, newValue);
+			case DevResponsePackage.FB_TYPE__NAME:
+				return getName();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
-	public void eUnset(final int featureID) {
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DevResponsePackage.FB_TYPE__NAME:
-			setName(NAME_EDEFAULT);
-			return;
-		default:
-			super.eUnset(featureID);
+			case DevResponsePackage.FB_TYPE__NAME:
+				setName((String)newValue);
+				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(final int featureID) {
-		return switch (featureID) {
-		case DevResponsePackage.FB_TYPE__NAME -> NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		default -> super.eIsSet(featureID);
-		};
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DevResponsePackage.FB_TYPE__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			default:
+				super.eUnset(featureID);
+				return;
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DevResponsePackage.FB_TYPE__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			default:
+				return super.eIsSet(featureID);
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -169,7 +166,7 @@ public class FBTypeImpl extends EObjectImpl implements FBType {
 			return super.toString();
 		}
 
-		final StringBuilder result = new StringBuilder(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(')');

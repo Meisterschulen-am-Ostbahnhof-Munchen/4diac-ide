@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.fordiac.ide.model.libraryElement.Attribute;
 import org.eclipse.fordiac.ide.model.libraryElement.Connection;
 import org.eclipse.fordiac.ide.model.libraryElement.ErrorMarkerInterface;
 import org.eclipse.fordiac.ide.model.libraryElement.FBNetworkElement;
@@ -46,6 +47,7 @@ public final class FordiacErrorMarker {
 	public static final String VALIDATION_MARKER = "org.eclipse.fordiac.ide.model.validation"; //$NON-NLS-1$
 	public static final String INITIAL_VALUE_MARKER = "org.eclipse.fordiac.ide.model.initialValue"; //$NON-NLS-1$
 	public static final String TYPE_DECLARATION_MARKER = "org.eclipse.fordiac.ide.model.typeDeclaration"; //$NON-NLS-1$
+	public static final String CONDITION_EXPRESSION_MARKER = "org.eclipse.fordiac.ide.model.conditionExpression"; //$NON-NLS-1$
 	public static final String IMPORT_MARKER = "org.eclipse.fordiac.ide.model.import"; //$NON-NLS-1$
 	public static final String UNUSED_MARKER = "org.eclipse.fordiac.ide.model.unused"; //$NON-NLS-1$
 	public static final String TYPE_LIBRARY_MARKER = "org.eclipse.fordiac.ide.model.typeLibrary"; //$NON-NLS-1$
@@ -54,8 +56,8 @@ public final class FordiacErrorMarker {
 	public static final String TEMPORARY_MARKER = "org.eclipse.fordiac.ide.model.temporary"; //$NON-NLS-1$
 
 	private static final Set<String> MODEL_MARKER_TYPES = Set.of(IEC61499_MARKER, VALIDATION_MARKER,
-			INITIAL_VALUE_MARKER, TYPE_DECLARATION_MARKER, IMPORT_MARKER, UNUSED_MARKER, TYPE_LIBRARY_MARKER,
-			PROJECT_CONFIGURATION_MARKER, LIBRARY_MARKER, TEMPORARY_MARKER);
+			INITIAL_VALUE_MARKER, TYPE_DECLARATION_MARKER, CONDITION_EXPRESSION_MARKER, IMPORT_MARKER, UNUSED_MARKER,
+			TYPE_LIBRARY_MARKER, PROJECT_CONFIGURATION_MARKER, LIBRARY_MARKER, TEMPORARY_MARKER);
 
 	/**
 	 * The source-specific diagnostic code.
@@ -323,6 +325,16 @@ public final class FordiacErrorMarker {
 	 */
 	public static boolean markerTargetsValue(final IMarker marker) {
 		return isTargetOfType(marker, LibraryElementPackage.eINSTANCE.getValue());
+	}
+
+	/**
+	 * Test whether the marker originates from a {@link Attribute}.
+	 *
+	 * @param marker The marker
+	 * @return true if yes, false otherwise
+	 */
+	public static boolean markerTargetsAttribute(final IMarker marker) {
+		return isTargetOfType(marker, LibraryElementPackage.eINSTANCE.getAttribute());
 	}
 
 	/**

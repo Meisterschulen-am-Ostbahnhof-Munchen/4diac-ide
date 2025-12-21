@@ -195,7 +195,7 @@ public class DeploymentExecutor extends AbstractDeviceManagementInteractor {
 			sendREQ(resource.getName(), request);
 		} catch (final IOException e) {
 			throw new DeploymentException(MessageFormat.format(Messages.DeploymentExecutor_WriteFBParameterFailed,
-					resource.getName(), varDecl.getName()), e);
+					resource.getName(), fbData.getPrefix() + fbData.getFb().getName() + '.' + varDecl.getName()), e);
 		}
 
 	}

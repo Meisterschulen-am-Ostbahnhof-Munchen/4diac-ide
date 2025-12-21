@@ -13,9 +13,9 @@
 
 package org.eclipse.fordiac.ide.test.resourcedeployment;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.io.IOException;
@@ -77,13 +77,15 @@ class ResourceDeploymentTest {
 	@TestFactory
 	Stream<DynamicTest> dynamicNumberOfParametersTest() {
 		return generateDynamicTests("Test Number of Params in: ", //$NON-NLS-1$
-				(nw, dep) -> assertEquals(nw.expectedNumParameters(), dep.getParams().size()));
+				(nw, dep) -> assertEquals(nw.expectedNumParameters(), dep.getParams().size(),
+						() -> dep.getParams().toString()));
 	}
 
 	@TestFactory
 	Stream<DynamicTest> dynamicNumberOfConnectionsTest() {
 		return generateDynamicTests("Test Connection Count in: ", //$NON-NLS-1$
-				(nw, dep) -> assertEquals(nw.expectedNumConnections(), dep.getConnections().size()));
+				(nw, dep) -> assertEquals(nw.expectedNumConnections(), dep.getConnections().size(),
+						() -> dep.getConnections().toString()));
 	}
 
 	private Stream<DynamicTest> generateDynamicTests(final String testNamePrefix,

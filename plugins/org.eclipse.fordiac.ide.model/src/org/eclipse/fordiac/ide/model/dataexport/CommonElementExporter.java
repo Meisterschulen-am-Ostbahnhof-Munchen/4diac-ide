@@ -55,6 +55,7 @@ import org.eclipse.fordiac.ide.model.libraryElement.INamedElement;
 import org.eclipse.fordiac.ide.model.libraryElement.Identification;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
 import org.eclipse.fordiac.ide.model.libraryElement.PositionableElement;
+import org.eclipse.fordiac.ide.model.libraryElement.VarConfigInstance;
 import org.eclipse.fordiac.ide.model.libraryElement.VarDeclaration;
 import org.eclipse.fordiac.ide.model.libraryElement.VersionInfo;
 import org.eclipse.fordiac.ide.model.preferences.ModelPreferenceConstants;
@@ -116,7 +117,12 @@ public class CommonElementExporter {
 
 		@Override
 		public int available() throws IOException {
-			return currentDataBuffer.remaining();
+			int remaining = currentDataBuffer.remaining();
+			if ((remaining == 0) && bufferIterator.hasNext()) {
+				currentDataBuffer = bufferIterator.next();
+				remaining = currentDataBuffer.remaining();
+			}
+			return remaining;
 		}
 
 		@Override
@@ -459,7 +465,7 @@ public class CommonElementExporter {
 
 		if (hasAttributes) {
 			addStartElement(LibraryElementTags.PARAMETER_ELEMENT);
-		} else if (hasInitalValue || hasComment) {
+		} else if (hasInitalValue || hasComment || ie instanceof VarConfigInstance) {
 			addEmptyStartElement(LibraryElementTags.PARAMETER_ELEMENT);
 		} else {
 			return;
