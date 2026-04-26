@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Jose Cabral
+ * Copyright (c) 2026 Jose Cabral
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,16 +12,18 @@
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-package org.eclipse.fordiac.ide.debug.replaydebugging.simulator;
+package org.eclipse.fordiac.ide.debug.replaydebugging.ui.figure;
 
-import java.util.Map;
+/**
+ * @brief Common constants for the replay debugging UI
+ */
+public class CommonConstants {
 
-import org.eclipse.fordiac.ide.model.libraryElement.Resource;
+	private CommonConstants() {
+		// we don't want any instances of this
+	}
 
-public interface IDeviceSimulator {
-
-	Map<Resource, IResourceSimulator> start();
-
-	boolean stop();
-
+	public static final int MARKER_SIZE = 20;
+	public static final int EVENT_SPACING = 5;
+	public static final int TOTAL_MARKER_SPACE = MARKER_SIZE + EVENT_SPACING;
 }

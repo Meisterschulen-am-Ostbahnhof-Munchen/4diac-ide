@@ -11,28 +11,27 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-package org.eclipse.fordiac.ide.debug.replaydebugging.simulator.forte;
+package org.eclipse.fordiac.ide.debug.replaydebugging.replayer.forte;
 
 import java.util.Optional;
 import java.util.Set;
 
-import org.eclipse.fordiac.ide.debug.replaydebugging.core.ReplayNavigator;
-import org.eclipse.fordiac.ide.debug.replaydebugging.core.Utils;
-import org.eclipse.fordiac.ide.debug.replaydebugging.simulator.IResourceSimulator;
+import org.eclipse.fordiac.ide.debug.replaydebugging.core.DatapointsState;
+import org.eclipse.fordiac.ide.debug.replaydebugging.replayer.IResourceReplayer;
 import org.eclipse.fordiac.ide.deployment.debug.watch.DeploymentDebugWatchData;
 import org.eclipse.fordiac.ide.deployment.devResponse.Data;
 import org.eclipse.fordiac.ide.deployment.exceptions.DeploymentException;
 import org.eclipse.fordiac.ide.deployment.interactors.IDeviceManagementExecutorService;
 import org.eclipse.fordiac.ide.model.libraryElement.Resource;
 
-public class ResourceSimulator implements IResourceSimulator {
+public class ResourceReplayer implements IResourceReplayer {
 
 	private final IDeviceManagementExecutorService executorService;
 	private final Set<String> allPorts;
-	private ReplayNavigator.DatapointsState currentState;
+	private DatapointsState currentState;
 	private final Resource resource;
 
-	public ResourceSimulator(final IDeviceManagementExecutorService executorService, final Resource resource)
+	public ResourceReplayer(final IDeviceManagementExecutorService executorService, final Resource resource)
 			throws DeploymentException {
 		this.executorService = executorService;
 		this.resource = resource;
@@ -56,7 +55,7 @@ public class ResourceSimulator implements IResourceSimulator {
 	}
 
 	@Override
-	public ReplayNavigator.DatapointsState getCurrentState() {
+	public DatapointsState getCurrentState() {
 		return currentState;
 	}
 
@@ -74,7 +73,7 @@ public class ResourceSimulator implements IResourceSimulator {
 	 */
 	private void transformWatchDataIntoCurrentState(final DeploymentDebugWatchData data, final Resource resource,
 			final Set<String> portNames) {
-		currentState = new ReplayNavigator.DatapointsState();
+		currentState = new DatapointsState();
 		for (final String portName : portNames) {
 			final Data portData = data.getLastData(resource, portName);
 			if (portData == null) {
@@ -89,5 +88,23 @@ public class ResourceSimulator implements IResourceSimulator {
 	@Override
 	public void injectEvent(final String name) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void setCurrentState(final DatapointsState targetState) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void forceValue(final String name, final String value) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void clearForce(final String name) {
+		// TODO Auto-generated method stub
+
 	}
 }
