@@ -12,7 +12,6 @@
 		<EventInputs>
 			<Event Name="INIT" Type="EInit" Comment="Service Initialization">
 				<With Var="QI"/>
-				<With Var="PARAMS"/>
 			</Event>
 		</EventInputs>
 		<EventOutputs>

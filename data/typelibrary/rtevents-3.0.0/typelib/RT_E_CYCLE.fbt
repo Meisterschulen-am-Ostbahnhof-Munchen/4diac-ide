@@ -19,7 +19,6 @@
     </EventInputs>
     <EventOutputs>
       <Event Name="EO" Comment="Delayed Event">
-        <With Var="QO" />
       </Event>
     </EventOutputs>
     <InputVars>
