@@ -33,10 +33,6 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.fordiac.ide.milo"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.fordiac.ide.workbench.feature"/>
       <import feature="org.eclipse.fordiac.ide.typeeditor.feature"/>
@@ -67,23 +63,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.fordiac.ide.deployment.opcua"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.fordiac.ide.deployment.interpreter"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.fordiac.ide.deployment.opcua.milo.transport"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.fordiac.ide.deployment.opcua.milo.sdk_client"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.fordiac.ide.deployment.opcua.milo.stack_core"
          version="0.0.0"/>
 
 </feature>
