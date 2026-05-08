@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="E_PULSE" Comment="standard timer function block (pulse) - non-retriggerable">
-	<Identification Standard="61499-2" Description="Copyright (c) 2023 HR Agrartechnik GmbH  &#10; &#10;This program and the accompanying materials are made  &#10;available under the terms of the Eclipse Public License 2.0  &#10;which is available at https://www.eclipse.org/legal/epl-2.0/  &#10; &#10;SPDX-License-Identifier: EPL-2.0  &#10;   &#10;   &#10;E_TP -- Impulse forming FB  &#10;&#10;Generate a Impulse with a given Time.  &#10;This FB makes a Impulse of Duration TM on the Output QO.">
+	<Identification Standard="61499-2" Description="Copyright (c) 2023 HR Agrartechnik GmbH  &#10; &#10;This program and the accompanying materials are made  &#10;available under the terms of the Eclipse Public License 2.0  &#10;which is available at https://www.eclipse.org/legal/epl-2.0/  &#10; &#10;SPDX-License-Identifier: EPL-2.0  &#10;   &#10;   &#10;E_PULSE -- Impulse forming FB  &#10;&#10;Generate an Impulse with a given Time.  &#10;This FB makes an Impulse of Duration PT on the Output Q.">
 	</Identification>
-	<VersionInfo Version="3.1" Author="Franz Höpfinger" Date="2026-04-19" Remarks="Made non-retriggerable">
+	<VersionInfo Organization="HR Agrartechnik GmbH" Version="3.1" Author="Franz Höpfinger" Date="2026-04-19" Remarks="Made non-retriggerable">
 	</VersionInfo>
 	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
 	</VersionInfo>
@@ -37,23 +37,25 @@
 	<FBNetwork>
 		<FB Name="E_DELAY" Type="iec61499::events::E_DELAY" x="-600" y="-600">
 		</FB>
-		<FB Name="E_SR" Type="iec61499::events::E_SR" x="400" y="-1100">
+		<FB Name="E_RS" Type="iec61499::events::E_RS" x="400" y="-1100">
 		</FB>
 		<FB Name="CheckRunning" Type="iec61499::events::E_PERMIT" x="-2000" y="-800">
 		</FB>
 		<EventConnections>
-			<Connection Source="REQ" Destination="CheckRunning.EI" dx1="200"/>
+			<Connection Source="REQ" Destination="CheckRunning.EI" dx1="2493.33"/>
 			<Connection Source="CheckRunning.EO" Destination="E_DELAY.START" dx1="273.33"/>
-			<Connection Source="CheckRunning.EO" Destination="E_SR.S" dx1="1053.33"/>
-			<Connection Source="E_DELAY.EO" Destination="E_SR.R" dx1="253.33"/>
-			<Connection Source="E_SR.EO" Destination="CNF" dx1="1480"/>
+			<Connection Source="CheckRunning.EO" Destination="E_RS.S" dx1="1053.33"/>
+			<Connection Source="E_DELAY.EO" Destination="E_RS.R" dx1="253.33"/>
+			<Connection Source="E_RS.EO" Destination="CNF" dx1="1480"/>
 			<Connection Source="R" Destination="E_DELAY.STOP" dx1="366.67"/>
-			<Connection Source="R" Destination="E_SR.R" dx1="960"/>
+			<Connection Source="R" Destination="E_RS.R" dx1="4846.67"/>
 		</EventConnections>
 		<DataConnections>
 			<Connection Source="PT" Destination="E_DELAY.DT" dx1="266.67"/>
-			<Connection Source="E_SR.Q" Destination="Q" dx1="1480"/>
-			<Connection Source="E_SR.Q" Destination="CheckRunning.PERMIT" dx1="80" dx2="80" dy="780"/>
+			<Connection Source="E_RS.Q" Destination="Q" dx1="1480"/>
+			<Connection Source="E_RS.Q" Destination="CheckRunning.PERMIT" dx1="80" dx2="200" dy="780">
+				<Attribute Name="Negated" Value="true"/>
+			</Connection>
 		</DataConnections>
 	</FBNetwork>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
