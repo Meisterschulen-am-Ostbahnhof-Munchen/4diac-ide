@@ -34,7 +34,7 @@
 			<Connection Source="E_DELAY.EO" Destination="E_REND.EI2" dx1="293.33" dx2="373.33" dy="520"/>
 			<Connection Source="E_REND.EO" Destination="E_DELAY.START" dx1="353.33"/>
 			<Connection Source="INIT" Destination="INITO"/>
-			<Connection Source="INIT" Destination="E_DELAY.START" dx1="2266.67"/>
+			<Connection Source="INIT" Destination="E_REND.EI2" dx1="2940"/>
 			<Connection Source="EI" Destination="E_REND.EI1" dx1="2086.67"/>
 			<Connection Source="E_REND.EO" Destination="EO" dx1="1333.33"/>
 		</EventConnections>
