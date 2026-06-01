@@ -87,6 +87,8 @@ public final class Messages extends NLS {
 	public static String AttributeAnnotations_MissingAttributeDeclaration;
 
 	public static String ErrorMarkerInterfaceAnnotations_MissingVariableForValue;
+
+	public static String EventAnnotations_MultipleOutputConnections;
 	public static String FBNetworkAnnotations_CollisionMessage;
 	public static String FBNetworkAnnotations_InterfaceBarCollisionMessage;
 
@@ -248,6 +250,8 @@ public final class Messages extends NLS {
 	public static String AttributeTarget_ServiceSequences_tooltip;
 
 	public static String BaseFBTypeAnnotations_UnsupportedInternalFBType;
+
+	public static String BlockFBNetworkElementAnnotations_Unused;
 
 	public static String SystemImporter_Mapping_WrongString;
 	public static String SystemImporter_Mapping_MissingDevice;
