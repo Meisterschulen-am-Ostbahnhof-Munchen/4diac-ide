@@ -31,8 +31,8 @@
 			<ECState Name="SET" Comment="Initialization" x="1235" y="665">
 				<ECAction Algorithm="LATCH" Output="EO"/>
 			</ECState>
-			<ECTransition Source="SET" Destination="START" Condition="1" Comment="" x="946.67" y="1186.67"/>
-			<ECTransition Source="START" Destination="SET" Condition="CLK[NE(Q, D)]" Comment="" x="980" y="320"/>
+			<ECTransition Source="SET" Destination="SET" Condition="CLK[NE(Q, D)]" Comment="" x="1380" y="193.33"/>
+			<ECTransition Source="START" Destination="SET" Condition="CLK" Comment="" x="780" y="420"/>
 		</ECC>
 		<Algorithm Name="LATCH" Comment="new algorithm">
 			<ST><![CDATA[Q := D;]]></ST>
