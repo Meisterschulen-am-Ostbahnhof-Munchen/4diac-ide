@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="DualHysteresis" Comment="2-way conversion of Analog to Digital with Hysteresis">
-	<Identification Standard="61499-2" Description="Copyright (c) 2023 HR Agrartechnik GmbH   &#10; &#10;This program and the accompanying materials are made  &#10;available under the terms of the Eclipse Public License 2.0  &#10;which is available at https://www.eclipse.org/legal/epl-2.0/  &#10; &#10;SPDX-License-Identifier: EPL-2.0 ">
+	<Identification Standard="61499-2" Description="Copyright (c) 2023 HR Agrartechnik GmbH&#10; &#10;This program and the accompanying materials are made  &#10;available under the terms of the Eclipse Public License 2.0  &#10;which is available at https://www.eclipse.org/legal/epl-2.0/  &#10; &#10;SPDX-License-Identifier: EPL-2.0 ">
 	</Identification>
 	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
 	</VersionInfo>
@@ -31,26 +31,26 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Input event qualifier" />
-			<VarDeclaration Name="MI" Type="REAL" Comment="MID Setting can e.g. be 0.5 meaning 50%"  InitialValue="0.5"/>
-			<VarDeclaration Name="DEAD" Type="REAL" Comment="Deadband around MID can be e.g. 0.1 meaning 10%"  InitialValue="0.1"/>
-			<VarDeclaration Name="HYSTERESIS" Type="REAL" Comment="Hysteresis can be 0.1 meaning 10%"  InitialValue="0.1"/>
-			<VarDeclaration Name="INPUT" Type="REAL" Comment="Value" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Input event qualifier"/>
+			<VarDeclaration Name="MI" Type="REAL" Comment="MID Setting can e.g. be 0.5 meaning 50%" InitialValue="0.5"/>
+			<VarDeclaration Name="DEAD" Type="REAL" Comment="Deadband around MID can be e.g. 0.1 meaning 10%" InitialValue="0.1"/>
+			<VarDeclaration Name="HYSTERESIS" Type="REAL" Comment="Hysteresis can be 0.1 meaning 10%" InitialValue="0.1"/>
+			<VarDeclaration Name="INPUT" Type="REAL" Comment="Value"/>
 		</InputVars>
 		<OutputVars>
 			<VarDeclaration Name="QO" Type="BOOL"/>
-			<VarDeclaration Name="DO_UP" Type="BOOL" Comment=" UP" />
-			<VarDeclaration Name="DO_DOWN" Type="BOOL" Comment="DOWN" />
+			<VarDeclaration Name="DO_UP" Type="BOOL" Comment=" UP"/>
+			<VarDeclaration Name="DO_DOWN" Type="BOOL" Comment="DOWN"/>
 		</OutputVars>
 	</InterfaceList>
 	<BasicFB>
 		<ECC>
-			<ECState Name="START" Comment="Initial State"  x="840" y="2460">
+			<ECState Name="START" Comment="Initial State" x="840" y="2460">
 			</ECState>
-			<ECState Name="Init" Comment="Initialization"  x="1600" y="2000">
+			<ECState Name="Init" Comment="Initialization" x="1600" y="2000">
 				<ECAction Algorithm="initialize" Output="INITO"/>
 			</ECState>
-			<ECState Name="UP" Comment="Normal execution"  x="6666.67" y="1066.67">
+			<ECState Name="UP" Comment="Normal execution" x="6666.67" y="1066.67">
 				<ECAction Algorithm="alUp" Output="CNF"/>
 			</ECState>
 			<ECState Name="Neutral" x="2266.67" y="2480">

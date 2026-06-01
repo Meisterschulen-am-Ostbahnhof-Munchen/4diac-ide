@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="RampLimitFS" Comment="Setpoint Ramp: Step up and down Values with Fast and Slow mode">
-	<Identification Standard="61499-1" Description="Copyright (c) 2024 HR Agrartechnik GmbH   &#10; &#10;This program and the accompanying materials are made  &#10;available under the terms of the Eclipse Public License 2.0  &#10;which is available at https://www.eclipse.org/legal/epl-2.0/  &#10; &#10;SPDX-License-Identifier: EPL-2.0&#10;&#10;Setpoint Ramp: Step up and down Values, like well-known for the cruise control in your Car. Long press increase or decrease by 10, short press increase or decrease at 1. &#10;&#10;this FB adds Maximum and Minimum Value and also Inputs to set them. &#10;For some Applications it is neccessary to store the setpoint in Non-Volatile Storage, e.g. with a ini File, for this we have here a LOAD event input which loads value from the PV input">
+	<Identification Standard="61499-1" Description="Copyright (c) 2024 HR Agrartechnik GmbH    &#10; &#10;This program and the accompanying materials are made  &#10;available under the terms of the Eclipse Public License 2.0  &#10;which is available at https://www.eclipse.org/legal/epl-2.0/  &#10; &#10;SPDX-License-Identifier: EPL-2.0&#10;&#10;Setpoint Ramp: Step up and down Values, like well-known for the cruise control in your Car. Long press increase or decrease by 10, short press increase or decrease at 1. &#10;&#10;this FB adds Maximum and Minimum Value and also Inputs to set them. &#10;For some Applications it is neccessary to store the setpoint in Non-Volatile Storage, e.g. with a ini File, for this we have here a LOAD event input which loads value from the PV input">
 	</Identification>
 	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
 	</VersionInfo>
@@ -51,12 +51,33 @@
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="ZERO" Comment="">
+		<ECState Name="ZERO">
+			<ECAction Algorithm="ZERO" Output="CNF"/>
+		</ECState>
+		<ECState Name="UP_SLOW">
+			<ECAction Algorithm="UP_SLOW" Output="CNF"/>
+		</ECState>
+		<ECState Name="UP_FAST">
+			<ECAction Algorithm="UP_FAST" Output="CNF"/>
+		</ECState>
+		<ECState Name="DOWN_SLOW">
+			<ECAction Algorithm="DOWN_SLOW" Output="CNF"/>
+		</ECState>
+		<ECState Name="DOWN_FAST">
+			<ECAction Algorithm="DOWN_FAST" Output="CNF"/>
+		</ECState>
+		<ECState Name="FULL">
+			<ECAction Algorithm="FULL" Output="CNF"/>
+		</ECState>
+		<ECState Name="LOAD">
+			<ECAction Algorithm="LOAD" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="ZERO">
 			<ST><![CDATA[ALGORITHM ZERO
 OUT := VAL_ZERO;
 END_ALGORITHM]]></ST>
 		</Algorithm>
-		<Algorithm Name="UP_SLOW" Comment="">
+		<Algorithm Name="UP_SLOW">
 			<ST><![CDATA[
 
 ALGORITHM UP_SLOW
@@ -66,7 +87,7 @@ IF GT(OUT, VAL_FULL) THEN
 END_IF;
 END_ALGORITHM]]></ST>
 		</Algorithm>
-		<Algorithm Name="UP_FAST" Comment="">
+		<Algorithm Name="UP_FAST">
 			<ST><![CDATA[
 
 ALGORITHM UP_FAST
@@ -76,7 +97,7 @@ IF GT(OUT, VAL_FULL) THEN
 END_IF;
 END_ALGORITHM]]></ST>
 		</Algorithm>
-		<Algorithm Name="DOWN_SLOW" Comment="">
+		<Algorithm Name="DOWN_SLOW">
 			<ST><![CDATA[
 
 ALGORITHM DOWN_SLOW
@@ -86,7 +107,7 @@ IF LT(OUT, VAL_ZERO) THEN
 END_IF;
 END_ALGORITHM]]></ST>
 		</Algorithm>
-		<Algorithm Name="DOWN_FAST" Comment="">
+		<Algorithm Name="DOWN_FAST">
 			<ST><![CDATA[
 
 ALGORITHM DOWN_FAST
@@ -96,14 +117,14 @@ IF LT(OUT, VAL_ZERO) THEN
 END_IF;
 END_ALGORITHM]]></ST>
 		</Algorithm>
-		<Algorithm Name="FULL" Comment="">
+		<Algorithm Name="FULL">
 			<ST><![CDATA[
 
 ALGORITHM FULL
 OUT := VAL_FULL;
 END_ALGORITHM]]></ST>
 		</Algorithm>
-		<Algorithm Name="LOAD" Comment="">
+		<Algorithm Name="LOAD">
 			<ST><![CDATA[
 
 ALGORITHM LOAD

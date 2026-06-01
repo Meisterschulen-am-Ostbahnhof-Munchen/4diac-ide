@@ -23,7 +23,7 @@
 		</OutputVars>
 	</InterfaceList>
 	<FunctionBody>
-		<ST><![CDATA[PACKAGE utils::timing;
+		<ST><![CDATA[PACKAGE eclipse4diac::utils::timing;
 
 (* returns current local date and time *)
 FUNCTION F_NOW : DATE_AND_TIME
