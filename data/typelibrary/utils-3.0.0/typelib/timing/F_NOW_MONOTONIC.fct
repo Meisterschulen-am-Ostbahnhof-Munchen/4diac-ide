@@ -23,7 +23,7 @@
 		</OutputVars>
 	</InterfaceList>
 	<FunctionBody>
-		<ST><![CDATA[PACKAGE utils::timing;
+		<ST><![CDATA[PACKAGE eclipse4diac::utils::timing;
 
 (* returns current monotonic clock value *)
 FUNCTION F_NOW_MONOTONIC : TIME
