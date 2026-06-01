@@ -17,11 +17,11 @@
 		<VarDeclaration Name="FORWARD" Type="BYTE" Comment="Direction forward (1)" InitialValue="BYTE#16#1"/>
 		<VarDeclaration Name="ENABLED" Type="BYTE" Comment="Enabled (1)" InitialValue="BYTE#16#1"/>
 		<VarDeclaration Name="ENGAGED" Type="BYTE" Comment="Switched on (1)" InitialValue="BYTE#16#1"/>
-		<VarDeclaration Name="ERROR_INDI_2Bit" Type="BYTE" Comment="2 bit error indicator (2 / 0x2)" InitialValue="BYTE#16#2"/>
-		<VarDeclaration Name="NOT_AVAILABLE_2Bit" Type="BYTE" Comment="2 bit not available (3 / 0x3)" InitialValue="BYTE#16#3"/>
+		<VarDeclaration Name="ERROR_INDI_2bit" Type="BYTE" Comment="2 bit error indicator (2 / 0x2)" InitialValue="BYTE#16#2"/>
+		<VarDeclaration Name="NOT_AVAILABLE_2bit" Type="BYTE" Comment="2 bit not available (3 / 0x3)" InitialValue="BYTE#16#3"/>
 		<VarDeclaration Name="DONT_CARE_2bit" Type="BYTE" Comment="2 bit dont care (3 / 0x3)" InitialValue="BYTE#16#3"/>
-		<VarDeclaration Name="ERROR_INDI_3Bit" Type="BYTE" Comment="3 bit error indicator (6 / 0x6)" InitialValue="BYTE#16#6"/>
-		<VarDeclaration Name="NOT_AVAILABLE_3Bit" Type="BYTE" Comment="3 bit not available (7 / 0x7)" InitialValue="BYTE#16#7"/>
+		<VarDeclaration Name="ERROR_INDI_3bit" Type="BYTE" Comment="3 bit error indicator (6 / 0x6)" InitialValue="BYTE#16#6"/>
+		<VarDeclaration Name="NOT_AVAILABLE_3bit" Type="BYTE" Comment="3 bit not available (7 / 0x7)" InitialValue="BYTE#16#7"/>
 		<VarDeclaration Name="DONT_CARE_3bit" Type="BYTE" Comment="3 bit dont care (7 / 0x7)" InitialValue="BYTE#16#7"/>
 		<VarDeclaration Name="ERROR_INDI_4bit" Type="BYTE" Comment="4 bit error indicator (14 / 0xE)" InitialValue="BYTE#16#E"/>
 		<VarDeclaration Name="NOT_AVAILABLE_4bit" Type="BYTE" Comment="4 bit not available (15 / 0xF)" InitialValue="BYTE#16#F"/>
@@ -64,14 +64,14 @@ GLOBALCONSTANTS FIELDBUS_SIGNAL
 
 		(* 2 bit *)
 		(* |0|1|2|3| - |0=OK, 2=ERR, 3=N/A| *)
-		ERROR_INDI_2Bit : BYTE := BYTE#16#2; // 2 bit error indicator (2 / 0x2)
-		NOT_AVAILABLE_2Bit : BYTE := BYTE#16#3; // 2 bit not available (3 / 0x3)
+		ERROR_INDI_2bit : BYTE := BYTE#16#2; // 2 bit error indicator (2 / 0x2)
+		NOT_AVAILABLE_2bit : BYTE := BYTE#16#3; // 2 bit not available (3 / 0x3)
 		DONT_CARE_2bit : BYTE := BYTE#16#3; // 2 bit dont care (3 / 0x3)
 
 		(* 3 bit *)
 		(* |0..5|6|7| - |0-5=OK, 6=ERR, 7=N/A| *)
-		ERROR_INDI_3Bit : BYTE := BYTE#16#6; // 3 bit error indicator (6 / 0x6)
-		NOT_AVAILABLE_3Bit : BYTE := BYTE#16#7; // 3 bit not available (7 / 0x7)
+		ERROR_INDI_3bit : BYTE := BYTE#16#6; // 3 bit error indicator (6 / 0x6)
+		NOT_AVAILABLE_3bit : BYTE := BYTE#16#7; // 3 bit not available (7 / 0x7)
 		DONT_CARE_3bit : BYTE := BYTE#16#7; // 3 bit dont care (7 / 0x7)
 
 		(* 4 bit *)
