@@ -34,20 +34,20 @@
  *******************************************************************************/
  -->
 
-<SubAppType Name="SubApp" Comment="Subapplication Type">
+<SubAppType Name="TemplateSubApp" Comment="Subapplication Type">
   <Identification Standard="61499-2" />
   <VersionInfo Organization="4DIAC-Consortium" Version="0.0" Author="4DIAC-IDE" Date="2012-02-28" />
   <SubAppInterfaceList>
     <SubAppEventInputs>
       <SubAppEvent Name="INIT" Type="EInit" Comment="Initialization Request">
       </SubAppEvent>
-      <SubAppEvent Name="REQ" Comment="Normal Execution Request">
+      <SubAppEvent Name="REQ"  Type="Event" Comment="Normal Execution Request">
       </SubAppEvent>
     </SubAppEventInputs>
     <SubAppEventOutputs>
       <SubAppEvent Name="INITO" Type="EInit" Comment="Initialization Confirm">
       </SubAppEvent>
-      <SubAppEvent Name="CNF" Comment="Execution Confirmation">
+      <SubAppEvent Name="CNF"  Type="Event" Comment="Execution Confirmation">
       </SubAppEvent>
     </SubAppEventOutputs>
     <InputVars>
