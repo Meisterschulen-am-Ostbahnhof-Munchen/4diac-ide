@@ -43,26 +43,24 @@
 			<ECAction Algorithm="REQ" Output="CNF"/>
 		</ECState>
 		<Algorithm Name="REQ">
-			<ST><![CDATA[ALGORITHM REQ
+			<ST><![CDATA[
 IF R THEN
-  CV := 0;
+	CV := 0;
 ELSE
-  IF LD THEN
-    CV := PV;
-  ELSE
-    IF NOT(CU AND CD) THEN
-      IF CU AND CV < 18446744073709551615 THEN
-        CV := CV + 1;
-      ELSIF CD AND CV> 0 THEN
-        CV := CV - 1;
-      END_IF;
-    END_IF;
-  END_IF;
+	IF LD THEN
+		CV := PV;
+	ELSE
+		IF NOT (CU AND CD) THEN
+			IF CU AND CV < 18446744073709551615 THEN
+				CV := CV + 1;
+			ELSIF CD AND CV > 0 THEN
+				CV := CV - 1;
+			END_IF;
+		END_IF;
+	END_IF;
 END_IF;
-QU := CV>= PV;
+QU := CV >= PV;
 QD := CV <= 0;
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

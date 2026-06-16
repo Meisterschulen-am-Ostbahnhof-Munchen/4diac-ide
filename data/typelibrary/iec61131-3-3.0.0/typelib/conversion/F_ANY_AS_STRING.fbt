@@ -31,10 +31,8 @@
 			<ECAction Algorithm="REQ" Output="CNF"/>
 		</ECState>
 		<Algorithm Name="REQ">
-			<ST><![CDATA[ALGORITHM REQ
+			<ST><![CDATA[
 OUT := AS_STRING(IN);
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

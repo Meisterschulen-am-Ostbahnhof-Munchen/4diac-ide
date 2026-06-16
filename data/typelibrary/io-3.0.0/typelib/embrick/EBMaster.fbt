@@ -30,16 +30,16 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
-			<VarDeclaration Name="BusInterface" Type="UINT" Comment="ID of SPI interface"  InitialValue="1"/>
-			<VarDeclaration Name="BusSelectPin" Type="UINT" Comment="SPI slave select pin"  InitialValue="49"/>
-			<VarDeclaration Name="BusInitSpeed" Type="UDINT" Comment="SPI speed during initialization"  InitialValue="300000"/>
-			<VarDeclaration Name="BusLoopSpeed" Type="UDINT" Comment="SPI speed during runtime"  InitialValue="700000"/>
-			<VarDeclaration Name="SlaveUpdateInterval" Type="UINT" Comment="Global update interval of slave modules in Hz"  InitialValue="25"/>
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
+			<VarDeclaration Name="BusInterface" Type="UINT" Comment="ID of SPI interface" InitialValue="1"/>
+			<VarDeclaration Name="BusSelectPin" Type="UINT" Comment="SPI slave select pin" InitialValue="49"/>
+			<VarDeclaration Name="BusInitSpeed" Type="UDINT" Comment="SPI speed during initialization" InitialValue="300000"/>
+			<VarDeclaration Name="BusLoopSpeed" Type="UDINT" Comment="SPI speed during runtime" InitialValue="700000"/>
+			<VarDeclaration Name="SlaveUpdateInterval" Type="UINT" Comment="Global update interval of slave modules in Hz" InitialValue="25"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 		<Plugs>
 			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::embrick::EBBusAdapter"/>

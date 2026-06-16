@@ -46,27 +46,22 @@
 			<ECState Name="LD" x="450" y="610">
 				<ECAction Algorithm="LOAD" Output="LDO"/>
 			</ECState>
-			<ECTransition Source="START" Destination="CD" Condition="CD[(CV &gt; 0)]" Comment="" x="1035" y="460"/>
-			<ECTransition Source="CD" Destination="START" Condition="1" Comment="" x="630" y="90"/>
-			<ECTransition Source="START" Destination="LD" Condition="LD" Comment="" x="395" y="510"/>
-			<ECTransition Source="LD" Destination="START" Condition="1" Comment="" x="240" y="610"/>
+			<ECTransition Source="START" Destination="CD" Condition="CD[(CV &gt; 0)]" x="1035" y="460"/>
+			<ECTransition Source="CD" Destination="START" Condition="1" x="630" y="90"/>
+			<ECTransition Source="START" Destination="LD" Condition="LD" x="395" y="510"/>
+			<ECTransition Source="LD" Destination="START" Condition="1" x="240" y="610"/>
 		</ECC>
 		<Algorithm Name="CD">
-			<ST><![CDATA[ALGORITHM CD
+			<ST><![CDATA[
 CV := CV - 1;
 Q := (CV = 0);
 
-
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
 		<Algorithm Name="LOAD">
 			<ST><![CDATA[
-
-ALGORITHM LOAD
 CV := PV;
-Q:= (CV = 0);
-
-END_ALGORITHM
+Q := (CV = 0);
 
 ]]></ST>
 		</Algorithm>

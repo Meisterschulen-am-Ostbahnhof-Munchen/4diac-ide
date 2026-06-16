@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <FBType Name="FB_RANDOM" Comment="Generate a REAL Randomly">
 	<Identification Standard="61499-1" Classification="Mathematic" Function="RANDOM" Type="Mathematical function" Description="Copyright (c) 2012 Profactor GmbH&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0 ">
 	</Identification>
@@ -25,26 +24,26 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="SEED" Type="UINT" Comment="the seed to initialize the random, a seed of 0 (zero) uses the current systemtime as seed"  InitialValue="0"/>
+			<VarDeclaration Name="SEED" Type="UINT" Comment="the seed to initialize the random, a seed of 0 (zero) uses the current systemtime as seed" InitialValue="0"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="VAL" Type="REAL" Comment="Function output" />
+			<VarDeclaration Name="VAL" Type="REAL" Comment="Function output"/>
 		</OutputVars>
 	</InterfaceList>
 	<BasicFB>
 		<ECC>
-			<ECState Name="START" Comment="Initial State"  x="855" y="285">
+			<ECState Name="START" Comment="Initial State" x="855" y="285">
 			</ECState>
-			<ECState Name="REQ" Comment="Normal execution"  x="215" y="755">
+			<ECState Name="REQ" Comment="Normal execution" x="215" y="755">
 				<ECAction Algorithm="REQ" Output="CNF"/>
 			</ECState>
 			<ECState Name="State" x="2015" y="430">
 				<ECAction Algorithm="INIT" Output="INITO"/>
 			</ECState>
-			<ECTransition Source="START" Destination="REQ" Condition="REQ" Comment="" x="555" y="600"/>
-			<ECTransition Source="REQ" Destination="START" Condition="1" Comment="" x="215" y="425"/>
-			<ECTransition Source="START" Destination="State" Condition="INIT" Comment="" x="1705" y="320"/>
-			<ECTransition Source="State" Destination="START" Condition="1" Comment="" x="1585" y="680"/>
+			<ECTransition Source="START" Destination="REQ" Condition="REQ" x="555" y="600"/>
+			<ECTransition Source="REQ" Destination="START" Condition="1" x="215" y="425"/>
+			<ECTransition Source="START" Destination="State" Condition="INIT" x="1705" y="320"/>
+			<ECTransition Source="State" Destination="START" Condition="1" x="1585" y="680"/>
 		</ECC>
 		<Algorithm Name="INIT" Comment="ALG">
 			<Other Language="AnyText"><![CDATA[// WARNING - Don't forget to add #include <time.h>

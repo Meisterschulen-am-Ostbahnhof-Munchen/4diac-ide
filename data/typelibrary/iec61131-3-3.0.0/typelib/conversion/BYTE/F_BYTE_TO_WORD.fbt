@@ -20,18 +20,19 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="IN" Type="BYTE" Comment=""/>
+			<VarDeclaration Name="IN" Type="BYTE"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUT" Type="WORD" Comment=""/>
+			<VarDeclaration Name="OUT" Type="WORD"/>
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="REQ" Comment="">
-			<ST><![CDATA[ALGORITHM REQ
+		<ECState Name="REQ">
+			<ECAction Algorithm="REQ" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="REQ">
+			<ST><![CDATA[
 OUT := BYTE_TO_WORD(IN);
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

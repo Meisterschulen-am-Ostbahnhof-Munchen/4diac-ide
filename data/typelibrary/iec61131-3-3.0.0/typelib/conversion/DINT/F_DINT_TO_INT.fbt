@@ -20,18 +20,19 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="IN" Type="DINT" Comment=""/>
+			<VarDeclaration Name="IN" Type="DINT"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUT" Type="INT" Comment=""/>
+			<VarDeclaration Name="OUT" Type="INT"/>
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="REQ" Comment="">
-			<ST><![CDATA[ALGORITHM REQ
+		<ECState Name="REQ">
+			<ECAction Algorithm="REQ" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="REQ">
+			<ST><![CDATA[
 OUT := DINT_TO_INT(IN);
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

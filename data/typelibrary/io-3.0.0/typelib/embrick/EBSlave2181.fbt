@@ -40,7 +40,7 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
 			<VarDeclaration Name="DigitalInput_1" Type="WSTRING"/>
 			<VarDeclaration Name="DigitalInput_2" Type="WSTRING"/>
 			<VarDeclaration Name="DigitalInput_3" Type="WSTRING"/>
@@ -57,11 +57,11 @@
 			<VarDeclaration Name="DigitalOutput_6" Type="WSTRING"/>
 			<VarDeclaration Name="DigitalOutput_7" Type="WSTRING"/>
 			<VarDeclaration Name="DigitalOutput_8" Type="WSTRING"/>
-			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Update interval of slave module in Hz (inherited from Master)" />
+			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Update interval of slave module in Hz (inherited from Master)"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 		<Plugs>
 			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::embrick::EBBusAdapter"/>

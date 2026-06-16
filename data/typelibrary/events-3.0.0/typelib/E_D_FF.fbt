@@ -36,12 +36,14 @@
 			<ECState Name="RESET" x="800" y="1400">
 				<ECAction Algorithm="LATCH" Output="EO"/>
 			</ECState>
-			<ECTransition Source="START" Destination="SET" Condition="CLK[D]" Comment="" x="855" y="775"/>
-			<ECTransition Source="SET" Destination="RESET" Condition="CLK[NOT D]" Comment="" x="1510" y="1215"/>
-			<ECTransition Source="RESET" Destination="SET" Condition="CLK[D]" Comment="" x="890" y="1055"/>
+			<ECTransition Source="START" Destination="SET" Condition="CLK[D]" x="855" y="775"/>
+			<ECTransition Source="SET" Destination="RESET" Condition="CLK[NOT D]" x="1510" y="1215"/>
+			<ECTransition Source="RESET" Destination="SET" Condition="CLK[D]" x="890" y="1055"/>
 		</ECC>
 		<Algorithm Name="LATCH" Comment="new algorithm">
-			<ST><![CDATA[Q := D;]]></ST>
+			<ST><![CDATA[
+Q := D;
+]]></ST>
 		</Algorithm>
 	</BasicFB>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

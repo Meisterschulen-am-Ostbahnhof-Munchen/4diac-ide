@@ -10,22 +10,22 @@
 	</CompilerInfo>
 	<InterfaceList>
 		<InputVars>
-			<VarDeclaration Name="Pin0" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin1" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin2" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin3" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin4" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin5" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin6" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin7" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin8" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin9" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin10" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin11" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin12" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin13" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin14" Type="STRING" Comment="Name of the Pin" />
-			<VarDeclaration Name="Pin15" Type="STRING" Comment="Name of the Pin" />
+			<VarDeclaration Name="Pin0" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin1" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin2" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin3" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin4" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin5" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin6" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin7" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin8" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin9" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin10" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin11" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin12" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin13" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin14" Type="STRING" Comment="Name of the Pin"/>
+			<VarDeclaration Name="Pin15" Type="STRING" Comment="Name of the Pin"/>
 		</InputVars>
 		<Sockets>
 			<AdapterDeclaration Name="PortInAdapter" Type="eclipse4diac::io::eliteboard::PortAdapter"/>

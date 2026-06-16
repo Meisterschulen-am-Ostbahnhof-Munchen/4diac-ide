@@ -10,7 +10,7 @@
 	</CompilerInfo>
 	<InterfaceList>
 		<Sockets>
-			<AdapterDeclaration Name="TimeOutSocket" Type="iec61499::events::ATimeOut"/>
+			<AdapterDeclaration Name="TimeOutSocket" Type="iec61499::events::ATimeOut" x="0" y="0"/>
 		</Sockets>
 	</InterfaceList>
 	<FBNetwork>

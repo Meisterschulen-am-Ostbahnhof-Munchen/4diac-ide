@@ -29,11 +29,13 @@
 			<ECState Name="SET" Comment="Initialization" x="1235" y="665">
 				<ECAction Algorithm="TOGGLE" Output="EO"/>
 			</ECState>
-			<ECTransition Source="START" Destination="SET" Condition="CLK" Comment="" x="860" y="590"/>
-			<ECTransition Source="SET" Destination="START" Condition="1" Comment="" x="940" y="985"/>
+			<ECTransition Source="START" Destination="SET" Condition="CLK" x="860" y="590"/>
+			<ECTransition Source="SET" Destination="START" Condition="1" x="940" y="985"/>
 		</ECC>
 		<Algorithm Name="TOGGLE" Comment="TOGGLE algorithm">
-			<ST><![CDATA[Q := NOT Q;]]></ST>
+			<ST><![CDATA[
+Q := NOT Q;
+]]></ST>
 		</Algorithm>
 	</BasicFB>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

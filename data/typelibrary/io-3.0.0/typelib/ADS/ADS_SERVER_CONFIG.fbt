@@ -21,15 +21,15 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
-			<VarDeclaration Name="FRIENDLY_NAME" Type="WSTRING" Comment="User friendly server name to use in IO FBs" />
-			<VarDeclaration Name="SERVER_ADS_ADDRESS" Type="WSTRING" Comment="Server ADS address" />
-			<VarDeclaration Name="ADS_PORT" Type="UINT" Comment="Server ADS port" />
-			<VarDeclaration Name="SERVER_IPV4_OR_HOSTNAME" Type="WSTRING" Comment="ADS Server IPv4 address or hostame" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
+			<VarDeclaration Name="FRIENDLY_NAME" Type="WSTRING" Comment="User friendly server name to use in IO FBs"/>
+			<VarDeclaration Name="SERVER_ADS_ADDRESS" Type="WSTRING" Comment="Server ADS address"/>
+			<VarDeclaration Name="ADS_PORT" Type="UINT" Comment="Server ADS port"/>
+			<VarDeclaration Name="SERVER_IPV4_OR_HOSTNAME" Type="WSTRING" Comment="ADS Server IPv4 address or hostame"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

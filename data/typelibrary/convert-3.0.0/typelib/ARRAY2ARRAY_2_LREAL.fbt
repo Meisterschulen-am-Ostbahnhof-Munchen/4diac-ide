@@ -26,7 +26,7 @@
 			<VarDeclaration Name="OUT" Type="LREAL" Comment="array output" ArraySize="2"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION" Comment="Service Interface Function Block Type">
+	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
 	</Service>
 	<Attribute Name="eclipse4diac::core::GenericClassName" Value="'GEN_ARRAY2ARRAY'"/>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

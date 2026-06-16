@@ -20,18 +20,19 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="IN" Type="SINT" Comment=""/>
+			<VarDeclaration Name="IN" Type="SINT"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUT" Type="USINT" Comment=""/>
+			<VarDeclaration Name="OUT" Type="USINT"/>
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="REQ" Comment="">
-			<ST><![CDATA[ALGORITHM REQ
+		<ECState Name="REQ">
+			<ECAction Algorithm="REQ" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="REQ">
+			<ST><![CDATA[
 OUT := SINT_TO_USINT(IN);
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

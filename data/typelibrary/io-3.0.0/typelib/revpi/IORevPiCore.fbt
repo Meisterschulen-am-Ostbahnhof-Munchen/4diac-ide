@@ -26,12 +26,12 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
-			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Update interval in Hz"  InitialValue="25"/>
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
+			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Update interval in Hz" InitialValue="25"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 		<Plugs>
 			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::revpi::IORevPiBusAdapter"/>

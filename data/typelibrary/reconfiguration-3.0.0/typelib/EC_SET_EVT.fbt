@@ -35,7 +35,7 @@
 			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status: RDY, NO_SUCH_OBJECT, INVALID_STATE"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION" Comment="Sets an event in- or output event of a FB instance (e.g. like an event sniffer)">
+	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
 		<ServiceSequence Name="normal_establishment">
 			<ServiceTransaction>
 				<InputPrimitive Interface="APPLICATION" Event="INIT+"/>

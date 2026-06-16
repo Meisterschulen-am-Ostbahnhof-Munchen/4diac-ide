@@ -22,14 +22,14 @@
 	</InterfaceList>
 	<BasicFB>
 		<ECC>
-			<ECState Name="START" Comment="Initial State"  x="550" y="425">
+			<ECState Name="START" Comment="Initial State" x="550" y="425">
 			</ECState>
-			<ECState Name="State" Comment="Output events"  x="1755" y="280">
+			<ECState Name="State" Comment="Output events" x="1755" y="280">
 				<ECAction Output="EO1"/>
 				<ECAction Output="EO2"/>
 			</ECState>
-			<ECTransition Source="START" Destination="State" Condition="EI" Comment="" x="1270" y="395"/>
-			<ECTransition Source="State" Destination="START" Condition="1" Comment="" x="1265" y="605"/>
+			<ECTransition Source="START" Destination="State" Condition="EI" x="1270" y="395"/>
+			<ECTransition Source="State" Destination="START" Condition="1" x="1265" y="605"/>
 		</ECC>
 	</BasicFB>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

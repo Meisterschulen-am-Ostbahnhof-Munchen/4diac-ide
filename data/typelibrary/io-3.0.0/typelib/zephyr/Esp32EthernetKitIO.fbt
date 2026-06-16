@@ -26,19 +26,19 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
 			<VarDeclaration Name="LED0" Type="STRING"/>
 			<VarDeclaration Name="SW0" Type="STRING"/>
 			<VarDeclaration Name="ADC_CH_0" Type="STRING"/>
 			<VarDeclaration Name="PWM" Type="STRING"/>
-			<VarDeclaration Name="UpdateInterval" Type="TIME" Comment="Update interval"  InitialValue="T#40ms"/>
+			<VarDeclaration Name="UpdateInterval" Type="TIME" Comment="Update interval" InitialValue="T#40ms"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="STRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="STRING" Comment="Service Status"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION" Comment="Template for Modular IO with Esp32EthernetKit board">
+	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
 	</Service>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>

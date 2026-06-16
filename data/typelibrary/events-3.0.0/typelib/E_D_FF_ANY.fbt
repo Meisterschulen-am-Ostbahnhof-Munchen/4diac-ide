@@ -31,11 +31,13 @@
 			<ECState Name="SET" Comment="Initialization" x="1235" y="665">
 				<ECAction Algorithm="LATCH" Output="EO"/>
 			</ECState>
-			<ECTransition Source="SET" Destination="START" Condition="1" Comment="" x="946.67" y="1186.67"/>
-			<ECTransition Source="START" Destination="SET" Condition="CLK[NE(Q, D)]" Comment="" x="980" y="320"/>
+			<ECTransition Source="SET" Destination="START" Condition="1" x="946.67" y="1186.67"/>
+			<ECTransition Source="START" Destination="SET" Condition="CLK[NE(Q, D)]" x="980" y="320"/>
 		</ECC>
 		<Algorithm Name="LATCH" Comment="new algorithm">
-			<ST><![CDATA[Q := D;]]></ST>
+			<ST><![CDATA[
+Q := D;
+]]></ST>
 		</Algorithm>
 	</BasicFB>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

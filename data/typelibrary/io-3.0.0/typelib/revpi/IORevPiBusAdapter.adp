@@ -30,7 +30,7 @@
 			<VarDeclaration Name="Index" Type="UINT"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="PLUG" LeftInterface="SOCKET" Comment="Bus Adapter for Revolution Pi by KUNBUS GmbH">
+	<Service RightInterface="PLUG" LeftInterface="SOCKET">
 		<ServiceSequence Name="request_confirm">
 			<ServiceTransaction>
 				<InputPrimitive Interface="SOCKET" Event="REQ" Parameters="REQD"/>

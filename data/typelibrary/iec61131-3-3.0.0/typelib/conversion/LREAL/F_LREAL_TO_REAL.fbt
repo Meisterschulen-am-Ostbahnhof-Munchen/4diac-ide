@@ -20,18 +20,19 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="IN" Type="LREAL" Comment=""/>
+			<VarDeclaration Name="IN" Type="LREAL"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUT" Type="REAL" Comment=""/>
+			<VarDeclaration Name="OUT" Type="REAL"/>
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="REQ" Comment="">
-			<ST><![CDATA[ALGORITHM REQ
+		<ECState Name="REQ">
+			<ECAction Algorithm="REQ" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="REQ">
+			<ST><![CDATA[
 OUT := LREAL_TO_REAL(IN);
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

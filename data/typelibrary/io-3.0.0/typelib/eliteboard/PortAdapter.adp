@@ -22,8 +22,8 @@
 			<VarDeclaration Name="GPIO_Port_Addr" Type="DWORD" Comment="IOMM Base Address"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="SOCKET" LeftInterface="PLUG" Comment="Adapter Interface">
-		<ServiceSequence Name="request_confirm" Comment="">
+	<Service RightInterface="SOCKET" LeftInterface="PLUG">
+		<ServiceSequence Name="request_confirm">
 			<ServiceTransaction>
 				<InputPrimitive Interface="SOCKET" Event="REQ" Parameters="REQD"/>
 				<OutputPrimitive Interface="PLUG" Event="REQ" Parameters="REQD"/>
@@ -33,7 +33,7 @@
 				<OutputPrimitive Interface="SOCKET" Event="CNF" Parameters="CNFD"/>
 			</ServiceTransaction>
 		</ServiceSequence>
-		<ServiceSequence Name="indication_response" Comment="">
+		<ServiceSequence Name="indication_response">
 			<ServiceTransaction>
 				<InputPrimitive Interface="PLUG" Event="IND" Parameters="INDD"/>
 				<OutputPrimitive Interface="SOCKET" Event="IND" Parameters="INDD"/>

@@ -41,27 +41,27 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
-			<VarDeclaration Name="DO_1" Type="STRING" Comment="Digital Output"  InitialValue="''"/>
-			<VarDeclaration Name="DO_2" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_3" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_4" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_5" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_6" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_7" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_8" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_9" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_10" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_11" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_12" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_13" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_14" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_15" Type="STRING" Comment="Digital Output" />
-			<VarDeclaration Name="DO_16" Type="STRING" Comment="Digital Output" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
+			<VarDeclaration Name="DO_1" Type="STRING" Comment="Digital Output" InitialValue="''"/>
+			<VarDeclaration Name="DO_2" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_3" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_4" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_5" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_6" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_7" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_8" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_9" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_10" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_11" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_12" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_13" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_14" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_15" Type="STRING" Comment="Digital Output"/>
+			<VarDeclaration Name="DO_16" Type="STRING" Comment="Digital Output"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 		<Plugs>
 			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::plcnext::PLCnextBusAdapter"/>

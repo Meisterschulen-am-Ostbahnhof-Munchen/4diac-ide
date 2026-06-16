@@ -20,18 +20,19 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="IN" Type="STRING" Comment=""/>
+			<VarDeclaration Name="IN" Type="STRING"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUT" Type="WSTRING" Comment=""/>
+			<VarDeclaration Name="OUT" Type="WSTRING"/>
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="REQ" Comment="">
-			<ST><![CDATA[ALGORITHM REQ
+		<ECState Name="REQ">
+			<ECAction Algorithm="REQ" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="REQ">
+			<ST><![CDATA[
 OUT := STRING_TO_WSTRING(IN);
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

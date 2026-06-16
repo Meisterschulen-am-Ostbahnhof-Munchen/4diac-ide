@@ -71,50 +71,40 @@
 				<ECAction Algorithm="Load"/>
 				<ECAction Algorithm="UpdateQUQD" Output="LDO"/>
 			</ECState>
-			<ECTransition Source="START" Destination="CU" Condition="CU[(CV&lt;4294967295)]" Comment="" x="140" y="1100"/>
-			<ECTransition Source="CU" Destination="START" Condition="1" Comment="" x="493.33" y="933.33"/>
-			<ECTransition Source="START" Destination="R" Condition="R" Comment="" x="706.67" y="1120"/>
-			<ECTransition Source="R" Destination="START" Condition="1" Comment="" x="740" y="1240"/>
-			<ECTransition Source="START" Destination="CD" Condition="CD[(CV &gt; 0)]" Comment="" x="1460" y="700"/>
-			<ECTransition Source="CD" Destination="START" Condition="1" Comment="" x="1780" y="920"/>
-			<ECTransition Source="START" Destination="LD" Condition="LD" Comment="" x="1820" y="1140"/>
-			<ECTransition Source="LD" Destination="START" Condition="1" Comment="" x="1513.33" y="1273.33"/>
+			<ECTransition Source="START" Destination="CU" Condition="CU[(CV&lt;4294967295)]" x="140" y="1100"/>
+			<ECTransition Source="CU" Destination="START" Condition="1" x="493.33" y="933.33"/>
+			<ECTransition Source="START" Destination="R" Condition="R" x="706.67" y="1120"/>
+			<ECTransition Source="R" Destination="START" Condition="1" x="740" y="1240"/>
+			<ECTransition Source="START" Destination="CD" Condition="CD[(CV &gt; 0)]" x="1460" y="700"/>
+			<ECTransition Source="CD" Destination="START" Condition="1" x="1780" y="920"/>
+			<ECTransition Source="START" Destination="LD" Condition="LD" x="1820" y="1140"/>
+			<ECTransition Source="LD" Destination="START" Condition="1" x="1513.33" y="1273.33"/>
 		</ECC>
 		<Algorithm Name="CountUp">
-			<ST><![CDATA[ALGORITHM CountUp
+			<ST><![CDATA[
 CV := CV + 1;
 
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
 		<Algorithm Name="Reset">
 			<ST><![CDATA[
-
-ALGORITHM Reset
 CV := 0;
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
 		<Algorithm Name="Load">
 			<ST><![CDATA[
-
-ALGORITHM Load
 CV := PV;
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
 		<Algorithm Name="UpdateQUQD">
 			<ST><![CDATA[
-
-ALGORITHM UpdateQUQD
-QU := (CV>= PV);
+QU := (CV >= PV);
 QD := (CV = 0);
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
 		<Algorithm Name="CountDown">
 			<ST><![CDATA[
-
-ALGORITHM CountDown
 CV := CV - 1;
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</BasicFB>

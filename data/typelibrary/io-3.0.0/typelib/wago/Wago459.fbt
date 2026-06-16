@@ -31,20 +31,20 @@
 		</EventOutputs>
 		<InputVars>
 			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
-			<VarDeclaration Name="AnalogInput_1" Type="STRING" Comment=""/>
-			<VarDeclaration Name="AnalogInput_2" Type="STRING" Comment=""/>
-			<VarDeclaration Name="AnalogInput_3" Type="STRING" Comment=""/>
-			<VarDeclaration Name="AnalogInput_4" Type="STRING" Comment=""/>
+			<VarDeclaration Name="AnalogInput_1" Type="STRING"/>
+			<VarDeclaration Name="AnalogInput_2" Type="STRING"/>
+			<VarDeclaration Name="AnalogInput_3" Type="STRING"/>
+			<VarDeclaration Name="AnalogInput_4" Type="STRING"/>
 		</InputVars>
 		<OutputVars>
 			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
 			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 		<Plugs>
-			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::wago::WagoBusAdapter" Comment=""/>
+			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::wago::WagoBusAdapter"/>
 		</Plugs>
 		<Sockets>
-			<AdapterDeclaration Name="BusAdapterIn" Type="eclipse4diac::io::wago::WagoBusAdapter" Comment=""/>
+			<AdapterDeclaration Name="BusAdapterIn" Type="eclipse4diac::io::wago::WagoBusAdapter"/>
 		</Sockets>
 	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

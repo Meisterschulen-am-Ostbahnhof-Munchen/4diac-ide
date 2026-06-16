@@ -30,13 +30,13 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
-			<VarDeclaration Name="PARAMS" Type="STRING" Comment="Service Parameters" />
-			<VarDeclaration Name="OUT" Type="DWORD" Comment="Output data to resource" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
+			<VarDeclaration Name="PARAMS" Type="STRING" Comment="Service Parameters"/>
+			<VarDeclaration Name="OUT" Type="DWORD" Comment="Output data to resource"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="STRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="STRING" Comment="Service Status"/>
 		</OutputVars>
 	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

@@ -43,32 +43,32 @@
 		</EventOutputs>
 		<InputVars>
 			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
-			<VarDeclaration Name="DigitalOutput_1" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_2" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_3" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_4" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_5" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_6" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_7" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_8" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_9" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_10" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_11" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_12" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_13" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_14" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_15" Type="STRING" Comment=""/>
-			<VarDeclaration Name="DigitalOutput_16" Type="STRING" Comment=""/>
+			<VarDeclaration Name="DigitalOutput_1" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_2" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_3" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_4" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_5" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_6" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_7" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_8" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_9" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_10" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_11" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_12" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_13" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_14" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_15" Type="STRING"/>
+			<VarDeclaration Name="DigitalOutput_16" Type="STRING"/>
 		</InputVars>
 		<OutputVars>
 			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
 			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 		<Plugs>
-			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::wago::WagoBusAdapter" Comment=""/>
+			<AdapterDeclaration Name="BusAdapterOut" Type="eclipse4diac::io::wago::WagoBusAdapter"/>
 		</Plugs>
 		<Sockets>
-			<AdapterDeclaration Name="BusAdapterIn" Type="eclipse4diac::io::wago::WagoBusAdapter" Comment=""/>
+			<AdapterDeclaration Name="BusAdapterIn" Type="eclipse4diac::io::wago::WagoBusAdapter"/>
 		</Sockets>
 	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

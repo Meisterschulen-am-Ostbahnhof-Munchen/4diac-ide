@@ -29,7 +29,7 @@
 			<VarDeclaration Name="QI" Type="BOOL"/>
 			<VarDeclaration Name="MasterId" Type="UINT"/>
 			<VarDeclaration Name="Index" Type="UINT"/>
-			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Global update interval of slave modules in Hz" />
+			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Global update interval of slave modules in Hz"/>
 		</OutputVars>
 	</InterfaceList>
 	<Service RightInterface="PLUG" LeftInterface="SOCKET">

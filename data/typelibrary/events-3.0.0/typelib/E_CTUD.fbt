@@ -69,33 +69,41 @@
 				<ECAction Algorithm="Load"/>
 				<ECAction Algorithm="UpdateQUQD" Output="LDO"/>
 			</ECState>
-			<ECTransition Source="START" Destination="CU" Condition="CU[(CV&lt;65535)]" Comment="" x="145" y="1100"/>
-			<ECTransition Source="CU" Destination="START" Condition="1" Comment="" x="495" y="935"/>
-			<ECTransition Source="START" Destination="R" Condition="R" Comment="" x="710" y="1125"/>
-			<ECTransition Source="R" Destination="START" Condition="1" Comment="" x="745" y="1240"/>
-			<ECTransition Source="START" Destination="CD" Condition="CD[(CV &gt; 0)]" Comment="" x="1460" y="705"/>
-			<ECTransition Source="CD" Destination="START" Condition="1" Comment="" x="1780" y="925"/>
-			<ECTransition Source="START" Destination="LD" Condition="LD" Comment="" x="1825" y="1145"/>
-			<ECTransition Source="LD" Destination="START" Condition="1" Comment="" x="1515" y="1275"/>
+			<ECTransition Source="START" Destination="CU" Condition="CU[(CV&lt;65535)]" x="145" y="1100"/>
+			<ECTransition Source="CU" Destination="START" Condition="1" x="495" y="935"/>
+			<ECTransition Source="START" Destination="R" Condition="R" x="710" y="1125"/>
+			<ECTransition Source="R" Destination="START" Condition="1" x="745" y="1240"/>
+			<ECTransition Source="START" Destination="CD" Condition="CD[(CV &gt; 0)]" x="1460" y="705"/>
+			<ECTransition Source="CD" Destination="START" Condition="1" x="1780" y="925"/>
+			<ECTransition Source="START" Destination="LD" Condition="LD" x="1825" y="1145"/>
+			<ECTransition Source="LD" Destination="START" Condition="1" x="1515" y="1275"/>
 		</ECC>
 		<Algorithm Name="CountUp" Comment="Count Up">
-			<ST><![CDATA[CV := CV + 1;
+			<ST><![CDATA[
+CV := CV + 1;
 
 ]]></ST>
 		</Algorithm>
 		<Algorithm Name="Reset" Comment="Reset">
-			<ST><![CDATA[CV := 0;
+			<ST><![CDATA[
+CV := 0;
 ]]></ST>
 		</Algorithm>
 		<Algorithm Name="Load" Comment="ALG">
-			<ST><![CDATA[CV := PV;]]></ST>
+			<ST><![CDATA[
+CV := PV;
+]]></ST>
 		</Algorithm>
 		<Algorithm Name="UpdateQUQD" Comment="ALG">
-			<ST><![CDATA[QU := (CV>= PV);
-QD := (CV = 0);]]></ST>
+			<ST><![CDATA[
+QU := (CV >= PV);
+QD := (CV = 0);
+]]></ST>
 		</Algorithm>
 		<Algorithm Name="CountDown" Comment="ALG">
-			<ST><![CDATA[CV := CV - 1;]]></ST>
+			<ST><![CDATA[
+CV := CV - 1;
+]]></ST>
 		</Algorithm>
 	</BasicFB>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

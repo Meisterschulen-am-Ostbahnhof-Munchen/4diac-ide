@@ -1,31 +1,32 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<FBType Comment="find the character position of the beginning of the first occurrence of IN2 in IN1, no occurrence returns 0" Name="F_FIND">
-  <Identification Description="Copyright (c) 2013 TU Wien ACIN&#13;&#10; &#13;&#10;This program and the accompanying materials are made&#13;&#10;available under the terms of the Eclipse Public License 2.0&#13;&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#13;&#10;&#13;&#10;SPDX-License-Identifier: EPL-2.0" Standard="61131-3" Classification="standard character and string function"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<FBType Name="F_FIND" Comment="find the character position of the beginning of the first occurrence of IN2 in IN1, no occurrence returns 0">
+	<Identification Standard="61131-3" Classification="standard character and string function" Description="Copyright (c) 2013 TU Wien ACIN&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0">
+	</Identification>
 	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
 	</VersionInfo>
-  <VersionInfo Author="Monika Wenger" Date="2013-08-30" Organization="TU Wien ACIN" Version="1.0"/>
+	<VersionInfo Organization="TU Wien ACIN" Version="1.0" Author="Monika Wenger" Date="2013-08-30">
+	</VersionInfo>
 	<CompilerInfo packageName="iec61131::charString">
 	</CompilerInfo>
-  <InterfaceList>
-    <EventInputs>
-      <Event Comment="Service Request" Name="REQ" Type="Event">
-        <With Var="IN1"/>
-        <With Var="IN2"/>
-      </Event>
-    </EventInputs>
-    <EventOutputs>
-      <Event Comment="Confirmation of Requested Service" Name="CNF" Type="Event">
-        <With Var="OUT"/>
-      </Event>
-    </EventOutputs>
-    <InputVars>
-      <VarDeclaration Comment="input string 1" Name="IN1" Type="ANY_STRING"/>
-      <VarDeclaration Comment="input string 2" Name="IN2" Type="ANY_STRING"/>
-    </InputVars>
-    <OutputVars>
-      <VarDeclaration Comment="number of occurrence" Name="OUT" Type="ANY_INT"/>
-    </OutputVars>
-  </InterfaceList>
+	<InterfaceList>
+		<EventInputs>
+			<Event Name="REQ" Type="Event" Comment="Service Request">
+				<With Var="IN1"/>
+				<With Var="IN2"/>
+			</Event>
+		</EventInputs>
+		<EventOutputs>
+			<Event Name="CNF" Type="Event" Comment="Confirmation of Requested Service">
+				<With Var="OUT"/>
+			</Event>
+		</EventOutputs>
+		<InputVars>
+			<VarDeclaration Name="IN1" Type="ANY_STRING" Comment="input string 1"/>
+			<VarDeclaration Name="IN2" Type="ANY_STRING" Comment="input string 2"/>
+		</InputVars>
+		<OutputVars>
+			<VarDeclaration Name="OUT" Type="ANY_INT" Comment="number of occurrence"/>
+		</OutputVars>
+	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>

@@ -44,7 +44,7 @@
 			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION" Comment="Service Interface Function Block Type">
+	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
 		<ServiceSequence Name="normal_establishment">
 			<ServiceTransaction>
 				<InputPrimitive Interface="APPLICATION" Event="INIT+" Parameters="PARAMS"/>

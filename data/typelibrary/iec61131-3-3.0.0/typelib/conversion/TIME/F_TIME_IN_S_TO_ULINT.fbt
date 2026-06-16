@@ -20,18 +20,19 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="IN" Type="TIME" Comment=""/>
+			<VarDeclaration Name="IN" Type="TIME"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUT" Type="ULINT" Comment=""/>
+			<VarDeclaration Name="OUT" Type="ULINT"/>
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="REQ" Comment="">
-			<ST><![CDATA[ALGORITHM REQ
+		<ECState Name="REQ">
+			<ECAction Algorithm="REQ" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="REQ">
+			<ST><![CDATA[
 OUT := TIME_IN_S_TO_ULINT(IN);
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

@@ -22,13 +22,13 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
-			<VarDeclaration Name="PARAMS" Type="STRING" Comment="Local ADS address to set" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
+			<VarDeclaration Name="PARAMS" Type="STRING" Comment="Local ADS address to set"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status" />
-			<VarDeclaration Name="LOCAL_ADS_ADDRESS" Type="STRING" Comment="Resulting ADS address" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
+			<VarDeclaration Name="LOCAL_ADS_ADDRESS" Type="STRING" Comment="Resulting ADS address"/>
 		</OutputVars>
 	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

@@ -10,25 +10,25 @@
 	</CompilerInfo>
 	<InterfaceList>
 		<EventInputs>
-			<Event Name="MAP" Type="Event" Comment="">
+			<Event Name="MAP" Type="Event">
 			</Event>
 		</EventInputs>
 		<EventOutputs>
-			<Event Name="MAPO" Type="Event" Comment="">
+			<Event Name="MAPO" Type="Event">
 			</Event>
 		</EventOutputs>
 		<Plugs>
-			<AdapterDeclaration Name="PortA" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortB" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortC" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortD" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortE" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortF" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortG" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortH" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortI" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortJ" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
-			<AdapterDeclaration Name="PortK" Type="eclipse4diac::io::eliteboard::PortAdapter" Comment=""/>
+			<AdapterDeclaration Name="PortA" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortB" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortC" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortD" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortE" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortF" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortG" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortH" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortI" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortJ" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
+			<AdapterDeclaration Name="PortK" Type="eclipse4diac::io::eliteboard::PortAdapter"/>
 		</Plugs>
 	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

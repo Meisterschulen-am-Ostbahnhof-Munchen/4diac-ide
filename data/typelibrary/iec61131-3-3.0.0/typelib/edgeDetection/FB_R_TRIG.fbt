@@ -28,14 +28,15 @@
 	</InterfaceList>
 	<SimpleFB>
 		<InternalVars>
-			<VarDeclaration Name="MEM" Type="BOOL" Comment=""/>
+			<VarDeclaration Name="MEM" Type="BOOL"/>
 		</InternalVars>
-		<Algorithm Name="REQ" Comment="">
-			<ST><![CDATA[ALGORITHM REQ
+		<ECState Name="REQ">
+			<ECAction Algorithm="REQ" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="REQ">
+			<ST><![CDATA[
 Q := CLK AND NOT MEM;
 MEM := CLK;
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>

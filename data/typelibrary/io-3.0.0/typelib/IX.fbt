@@ -39,13 +39,13 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
-			<VarDeclaration Name="PARAMS" Type="STRING" Comment="Service Parameters" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
+			<VarDeclaration Name="PARAMS" Type="STRING" Comment="Service Parameters"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="STRING" Comment="Service Status" />
-			<VarDeclaration Name="IN" Type="BOOL" Comment="Input data from resource" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="STRING" Comment="Service Status"/>
+			<VarDeclaration Name="IN" Type="BOOL" Comment="Input data from resource"/>
 		</OutputVars>
 	</InterfaceList>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

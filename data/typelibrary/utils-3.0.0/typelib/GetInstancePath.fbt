@@ -26,8 +26,8 @@
 			<VarDeclaration Name="Path" Type="STRING" Comment="Instance path of this FB"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION" Comment="Service Interface Function Block Type">
-		<ServiceSequence Name="Normal_Operation" Comment="">
+	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
+		<ServiceSequence Name="Normal_Operation">
 			<ServiceTransaction>
 				<InputPrimitive Interface="APPLICATION" Event="REQ" Parameters="Sep"/>
 				<OutputPrimitive Interface="RESOURCE" Event="acquire path information" Parameters="Sep"/>

@@ -24,12 +24,12 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="TIMELOW" Type="TIME" Comment="Time for OUT to be FALSE" />
-			<VarDeclaration Name="TIMEHIGH" Type="TIME" Comment="Time for OUT to be TRUE" />
-			<VarDeclaration Name="N" Type="UINT" Comment="Number of events to generate" />
+			<VarDeclaration Name="TIMELOW" Type="TIME" Comment="Time for OUT to be FALSE"/>
+			<VarDeclaration Name="TIMEHIGH" Type="TIME" Comment="Time for OUT to be TRUE"/>
+			<VarDeclaration Name="N" Type="UINT" Comment="Number of events to generate"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUT" Type="BOOL" Comment="Output value, starts with FALSE and switches between TRUE and FALSE for the given high and low times" />
+			<VarDeclaration Name="OUT" Type="BOOL" Comment="Output value, starts with FALSE and switches between TRUE and FALSE for the given high and low times"/>
 		</OutputVars>
 	</InterfaceList>
 	<FBNetwork>

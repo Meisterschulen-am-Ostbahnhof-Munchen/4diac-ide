@@ -42,7 +42,7 @@
 			</Event>
 		</EventOutputs>
 		<InputVars>
-			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier" />
+			<VarDeclaration Name="QI" Type="BOOL" Comment="Event Input Qualifier"/>
 			<VarDeclaration Name="IN1" Type="WSTRING"/>
 			<VarDeclaration Name="IN2" Type="WSTRING"/>
 			<VarDeclaration Name="IN3" Type="WSTRING"/>
@@ -59,14 +59,14 @@
 			<VarDeclaration Name="OUT6" Type="WSTRING"/>
 			<VarDeclaration Name="OUT7" Type="WSTRING"/>
 			<VarDeclaration Name="OUT8" Type="WSTRING"/>
-			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Update interval in Hz"  InitialValue="25"/>
+			<VarDeclaration Name="UpdateInterval" Type="UINT" Comment="Update interval in Hz" InitialValue="25"/>
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier" />
-			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status" />
+			<VarDeclaration Name="QO" Type="BOOL" Comment="Event Output Qualifier"/>
+			<VarDeclaration Name="STATUS" Type="WSTRING" Comment="Service Status"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION" Comment="Access IOs of the PLC01A1 module">
+	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
 	</Service>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>

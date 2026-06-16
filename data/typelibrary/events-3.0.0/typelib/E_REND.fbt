@@ -33,13 +33,13 @@
 			</ECState>
 			<ECState Name="EI2" Comment="EI2 occured at least once" x="1145" y="1585">
 			</ECState>
-			<ECTransition Source="START" Destination="EI2" Condition="EI2" Comment="" x="1020" y="1180"/>
-			<ECTransition Source="START" Destination="EI1" Condition="EI1" Comment="" x="1040" y="865"/>
-			<ECTransition Source="EI2" Destination="START" Condition="R" Comment="" x="655" y="1485"/>
-			<ECTransition Source="EI1" Destination="START" Condition="R" Comment="" x="800" y="695"/>
-			<ECTransition Source="EI1" Destination="EO" Condition="EI2" Comment="" x="1465" y="705"/>
-			<ECTransition Source="EI2" Destination="EO" Condition="EI1" Comment="" x="1440" y="1325"/>
-			<ECTransition Source="EO" Destination="START" Condition="1" Comment="" x="1165" y="1065"/>
+			<ECTransition Source="START" Destination="EI2" Condition="EI2" x="1020" y="1180"/>
+			<ECTransition Source="START" Destination="EI1" Condition="EI1" x="1040" y="865"/>
+			<ECTransition Source="EI2" Destination="START" Condition="R" x="655" y="1485"/>
+			<ECTransition Source="EI1" Destination="START" Condition="R" x="800" y="695"/>
+			<ECTransition Source="EI1" Destination="EO" Condition="EI2" x="1465" y="705"/>
+			<ECTransition Source="EI2" Destination="EO" Condition="EI1" x="1440" y="1325"/>
+			<ECTransition Source="EO" Destination="START" Condition="1" x="1165" y="1065"/>
 		</ECC>
 	</BasicFB>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>

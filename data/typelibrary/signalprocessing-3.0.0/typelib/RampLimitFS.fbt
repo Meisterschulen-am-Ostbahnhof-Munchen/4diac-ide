@@ -51,65 +51,72 @@
 		</OutputVars>
 	</InterfaceList>
 	<SimpleFB>
-		<Algorithm Name="ZERO" Comment="">
-			<ST><![CDATA[ALGORITHM ZERO
-OUT := VAL_ZERO;
-END_ALGORITHM]]></ST>
-		</Algorithm>
-		<Algorithm Name="UP_SLOW" Comment="">
+		<ECState Name="ZERO">
+			<ECAction Algorithm="ZERO" Output="CNF"/>
+		</ECState>
+		<ECState Name="UP_SLOW">
+			<ECAction Algorithm="UP_SLOW" Output="CNF"/>
+		</ECState>
+		<ECState Name="UP_FAST">
+			<ECAction Algorithm="UP_FAST" Output="CNF"/>
+		</ECState>
+		<ECState Name="DOWN_SLOW">
+			<ECAction Algorithm="DOWN_SLOW" Output="CNF"/>
+		</ECState>
+		<ECState Name="DOWN_FAST">
+			<ECAction Algorithm="DOWN_FAST" Output="CNF"/>
+		</ECState>
+		<ECState Name="FULL">
+			<ECAction Algorithm="FULL" Output="CNF"/>
+		</ECState>
+		<ECState Name="LOAD">
+			<ECAction Algorithm="LOAD" Output="CNF"/>
+		</ECState>
+		<Algorithm Name="ZERO">
 			<ST><![CDATA[
-
-ALGORITHM UP_SLOW
+OUT := VAL_ZERO;
+]]></ST>
+		</Algorithm>
+		<Algorithm Name="UP_SLOW">
+			<ST><![CDATA[
 OUT := ADD(OUT, SLOW);
 IF GT(OUT, VAL_FULL) THEN
 	OUT := VAL_FULL;
 END_IF;
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
-		<Algorithm Name="UP_FAST" Comment="">
+		<Algorithm Name="UP_FAST">
 			<ST><![CDATA[
-
-ALGORITHM UP_FAST
 OUT := ADD(OUT, FAST);
 IF GT(OUT, VAL_FULL) THEN
 	OUT := VAL_FULL;
 END_IF;
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
-		<Algorithm Name="DOWN_SLOW" Comment="">
+		<Algorithm Name="DOWN_SLOW">
 			<ST><![CDATA[
-
-ALGORITHM DOWN_SLOW
 OUT := SUB(OUT, SLOW);
 IF LT(OUT, VAL_ZERO) THEN
 	OUT := VAL_ZERO;
 END_IF;
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
-		<Algorithm Name="DOWN_FAST" Comment="">
+		<Algorithm Name="DOWN_FAST">
 			<ST><![CDATA[
-
-ALGORITHM DOWN_FAST
 OUT := SUB(OUT, FAST);
 IF LT(OUT, VAL_ZERO) THEN
 	OUT := VAL_ZERO;
 END_IF;
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
-		<Algorithm Name="FULL" Comment="">
+		<Algorithm Name="FULL">
 			<ST><![CDATA[
-
-ALGORITHM FULL
 OUT := VAL_FULL;
-END_ALGORITHM]]></ST>
+]]></ST>
 		</Algorithm>
-		<Algorithm Name="LOAD" Comment="">
+		<Algorithm Name="LOAD">
 			<ST><![CDATA[
-
-ALGORITHM LOAD
 OUT := PV;
-END_ALGORITHM
-
 ]]></ST>
 		</Algorithm>
 	</SimpleFB>
