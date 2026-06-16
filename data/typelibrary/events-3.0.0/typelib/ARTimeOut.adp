@@ -16,7 +16,6 @@
       </Event>
       <Event Comment="stop timeout notification" Name="STOP" Type="Event"/>
     </EventOutputs>
-    <InputVars/>
     <OutputVars>
       <VarDeclaration Comment="timeout duration" InitialValue="" Name="DT" Type="TIME"/>
     </OutputVars>
