@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 /*******************************************************************************
- * Copyright (c) 2023 Martin Erich Jobst
+ * Copyright (c) 2023 Johannes Kepler University
  * 
  * All rights reserved.
  * 
@@ -29,15 +29,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * Contributors:
- *   Martin Jobst
+ *   Sebastian Hollersbacher
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
  -->
-<GlobalConstants Name="GlobalConstants" Comment="Global constants">
-	<Identification Standard="61499-1">
-	</Identification>
-	<VersionInfo Version="1.0" Author="mjobst" Date="2023-07-12">
-	</VersionInfo>
-	<GlobalConstants>
-	</GlobalConstants>
-</GlobalConstants>
+<AttributeDeclaration Name="TemplateAttributeDeclaration" Comment="A Template for an Attribute Type">
+  <Identification>
+  </Identification>
+  <VersionInfo Version="0.0" Author="4DIAC-IDE" Date="2023-11-21">
+  </VersionInfo>
+  <StructuredType>
+  </StructuredType>
+</AttributeDeclaration>
