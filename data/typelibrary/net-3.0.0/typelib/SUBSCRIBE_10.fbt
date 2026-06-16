@@ -57,8 +57,6 @@
 			<VarDeclaration Name="RD_10" Type="ANY"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
-	</Service>
 	<Attribute Name="eclipse4diac::core::GenericClassName" Value="'GEN_SUBSCRIBE'"/>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>

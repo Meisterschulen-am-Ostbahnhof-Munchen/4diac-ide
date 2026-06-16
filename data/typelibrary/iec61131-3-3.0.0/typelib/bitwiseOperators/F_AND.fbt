@@ -28,7 +28,5 @@
 			<VarDeclaration Name="OUT" Type="ANY_BIT" Comment="Output"/>
 		</OutputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
-	</Service>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>

@@ -24,7 +24,5 @@
 			<VarDeclaration Name="DT" Type="TIME" Comment="Delay time, &gt;0"/>
 		</InputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
-	</Service>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>

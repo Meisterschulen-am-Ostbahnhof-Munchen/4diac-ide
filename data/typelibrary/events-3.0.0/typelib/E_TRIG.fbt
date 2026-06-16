@@ -22,8 +22,6 @@
 			<VarDeclaration Name="EVENTTYPE" Type="STRING" Comment="Event type to be triggered" InitialValue="'EInit'"/>
 		</InputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
-	</Service>
 	<Attribute Name="Documentation" Type="CDATA"><![CDATA[]]></Attribute>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>

@@ -20,8 +20,6 @@
 			<VarDeclaration Name="IN" Type="ANY_STRUCT"/>
 		</InputVars>
 	</InterfaceList>
-	<Service RightInterface="RESOURCE" LeftInterface="APPLICATION">
-	</Service>
 	<Attribute Name="eclipse4diac::core::GenericClassName" Value="'GEN_STRUCT_DEMUX'"/>
 	<Attribute Name="eclipse4diac::core::TypeHash" Value="''"/>
 </FBType>
