@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="RT_E_DELAY" Comment="Delayed propagation of an event-Cancellable">
-	<Identification Description="Copyright (c) 2008, 2014 ACIN, Profactor GmbH&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0">
-	</Identification>
-	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
-	</VersionInfo>
-	<VersionInfo Organization="Profactor GmbH" Version="1.1" Author="Alois Zoitl" Date="2011-06-04">
-	</VersionInfo>
-	<VersionInfo Organization="ACIN" Version="1.0" Author="Alois Zoitl" Date="2008-07-10">
-	</VersionInfo>
-	<CompilerInfo packageName="eclipse4diac::rtevents">
-	</CompilerInfo>
+	<Identification Description="Copyright (c) 2008, 2014 ACIN, Profactor GmbH&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0"/>
+	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package"/>
+	<VersionInfo Organization="Profactor GmbH" Version="1.1" Author="Alois Zoitl" Date="2011-06-04"/>
+	<VersionInfo Organization="ACIN" Version="1.0" Author="Alois Zoitl" Date="2008-07-10"/>
+	<CompilerInfo packageName="eclipse4diac::rtevents"/>
 	<InterfaceList>
 		<EventInputs>
 			<Event Name="INIT" Type="Event">
@@ -21,15 +16,13 @@
 			<Event Name="START" Type="Event" Comment="Begin Delay">
 				<With Var="DT"/>
 			</Event>
-			<Event Name="STOP" Type="Event" Comment="Cancel Delay">
-			</Event>
+			<Event Name="STOP" Type="Event" Comment="Cancel Delay"/>
 		</EventInputs>
 		<EventOutputs>
 			<Event Name="INITO" Type="Event">
 				<With Var="QO"/>
 			</Event>
-			<Event Name="EO" Type="Event" Comment="Delayed Event">
-			</Event>
+			<Event Name="EO" Type="Event" Comment="Delayed Event"/>
 		</EventOutputs>
 		<InputVars>
 			<VarDeclaration Name="QI" Type="BOOL"/>

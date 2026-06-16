@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="E_CTU" Comment="Event driven up counter">
-	<Identification Standard="61499-1 Annex 2" Description="Copyright (c) 2017 fortiss GmbH&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0">
-	</Identification>
-	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
-	</VersionInfo>
-	<VersionInfo Organization="fortiss GmbH" Version="1.0" Author="Alois Zoitl" Date="2017-09-21" Remarks="initial API and implementation and/or initial documentation">
-	</VersionInfo>
-	<CompilerInfo packageName="iec61499::events">
-	</CompilerInfo>
+	<Identification Standard="61499-1 Annex 2" Description="Copyright (c) 2017 fortiss GmbH&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0"/>
+	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package"/>
+	<VersionInfo Organization="fortiss GmbH" Version="1.0" Author="Alois Zoitl" Date="2017-09-21" Remarks="initial API and implementation and/or initial documentation"/>
+	<CompilerInfo packageName="iec61499::events"/>
 	<InterfaceList>
 		<EventInputs>
 			<Event Name="CU" Type="Event" Comment="Count up">
 				<With Var="PV"/>
 			</Event>
-			<Event Name="R" Type="Event" Comment="Reset">
-			</Event>
+			<Event Name="R" Type="Event" Comment="Reset"/>
 		</EventInputs>
 		<EventOutputs>
 			<Event Name="CUO" Type="Event" Comment="Count up output">
@@ -36,8 +31,7 @@
 	</InterfaceList>
 	<BasicFB>
 		<ECC>
-			<ECState Name="START" Comment="Initial State" x="550" y="425">
-			</ECState>
+			<ECState Name="START" Comment="Initial State" x="550" y="425"/>
 			<ECState Name="CU" Comment="Count Up" x="1570" y="165">
 				<ECAction Algorithm="CU" Output="CUO"/>
 			</ECState>

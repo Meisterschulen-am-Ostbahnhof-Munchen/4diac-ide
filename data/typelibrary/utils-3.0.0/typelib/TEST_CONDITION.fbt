@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="TEST_CONDITION" Comment="Service Interface Function Block Type">
-	<Identification Standard="61499-2" Description="Copyright (c) 2019 fortiss GmbH This program and the accompanying materials are made available under the terms of the Eclipse Public License 2.0 which is available at https://www.eclipse.org/legal/epl-2.0/ SPDX-License-Identifier: PL-2.0">
-	</Identification>
-	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
-	</VersionInfo>
-	<VersionInfo Organization="fortiss GmbH" Version="1.0" Author="Jose Cabral" Date="2019-01-16">
-	</VersionInfo>
-	<CompilerInfo packageName="eclipse4diac::utils">
-	</CompilerInfo>
+	<Identification Standard="61499-2" Description="Copyright (c) 2019 fortiss GmbH This program and the accompanying materials are made available under the terms of the Eclipse Public License 2.0 which is available at https://www.eclipse.org/legal/epl-2.0/ SPDX-License-Identifier: PL-2.0"/>
+	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package"/>
+	<VersionInfo Organization="fortiss GmbH" Version="1.0" Author="Jose Cabral" Date="2019-01-16"/>
+	<CompilerInfo packageName="eclipse4diac::utils"/>
 	<InterfaceList>
 		<EventInputs>
 			<Event Name="REQ" Type="Event" Comment="Request Test">
@@ -15,8 +11,7 @@
 			</Event>
 		</EventInputs>
 		<EventOutputs>
-			<Event Name="CNF" Type="Event" Comment="Test finished">
-			</Event>
+			<Event Name="CNF" Type="Event" Comment="Test finished"/>
 		</EventOutputs>
 		<InputVars>
 			<VarDeclaration Name="check" Type="BOOL" Comment="Test fails if check == 0, passes otherwise"/>

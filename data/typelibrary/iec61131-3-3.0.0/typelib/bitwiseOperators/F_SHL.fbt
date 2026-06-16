@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="F_SHL" Comment="shift left">
-	<Identification Standard="61131-3" Classification="standard bit shift function" Description="Copyright (c) 2011 TU Wien ACIN&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0">
-	</Identification>
-	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
-	</VersionInfo>
-	<VersionInfo Organization="TU Wien ACIN" Version="1.0" Author="Monika Wenger" Date="2011-06-21">
-	</VersionInfo>
-	<CompilerInfo packageName="iec61131::bitwiseOperators">
-	</CompilerInfo>
+	<Identification Standard="61131-3" Classification="standard bit shift function" Description="Copyright (c) 2011 TU Wien ACIN&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0"/>
+	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package"/>
+	<VersionInfo Organization="TU Wien ACIN" Version="1.0" Author="Monika Wenger" Date="2011-06-21"/>
+	<CompilerInfo packageName="iec61131::bitwiseOperators"/>
 	<InterfaceList>
 		<EventInputs>
 			<Event Name="REQ" Type="Event" Comment="Service Request">

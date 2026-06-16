@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FBType Name="FB_RANDOM" Comment="Generate a REAL Randomly">
-	<Identification Standard="61499-1" Classification="Mathematic" Function="RANDOM" Type="Mathematical function" Description="Copyright (c) 2012 Profactor GmbH&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0 ">
-	</Identification>
-	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package">
-	</VersionInfo>
-	<VersionInfo Organization="Profactor GmbH" Version="1.0" Author="Gerhard Ebenhofer" Date="2012-05-31">
-	</VersionInfo>
-	<CompilerInfo packageName="eclipse4diac::utils">
-	</CompilerInfo>
+	<Identification Standard="61499-1" Classification="Mathematic" Function="RANDOM" Type="Mathematical function" Description="Copyright (c) 2012 Profactor GmbH&#10; &#10;This program and the accompanying materials are made&#10;available under the terms of the Eclipse Public License 2.0&#10;which is available at https://www.eclipse.org/legal/epl-2.0/&#10;&#10;SPDX-License-Identifier: EPL-2.0 "/>
+	<VersionInfo Version="3.0" Author="Patrick Aigner" Date="2025-04-14" Remarks="changed package"/>
+	<VersionInfo Organization="Profactor GmbH" Version="1.0" Author="Gerhard Ebenhofer" Date="2012-05-31"/>
+	<CompilerInfo packageName="eclipse4diac::utils"/>
 	<InterfaceList>
 		<EventInputs>
 			<Event Name="INIT" Type="EInit" Comment="Initializes the random with the specified seed, if not called the generated values will always be identical">
 				<With Var="SEED"/>
 			</Event>
-			<Event Name="REQ" Type="Event" Comment="Calculates a new random number between 0 and 1">
-			</Event>
+			<Event Name="REQ" Type="Event" Comment="Calculates a new random number between 0 and 1"/>
 		</EventInputs>
 		<EventOutputs>
-			<Event Name="INITO" Type="EInit">
-			</Event>
+			<Event Name="INITO" Type="EInit"/>
 			<Event Name="CNF" Type="Event" Comment="Execution Confirmation">
 				<With Var="VAL"/>
 			</Event>
@@ -32,8 +26,7 @@
 	</InterfaceList>
 	<BasicFB>
 		<ECC>
-			<ECState Name="START" Comment="Initial State" x="855" y="285">
-			</ECState>
+			<ECState Name="START" Comment="Initial State" x="855" y="285"/>
 			<ECState Name="REQ" Comment="Normal execution" x="215" y="755">
 				<ECAction Algorithm="REQ" Output="CNF"/>
 			</ECState>
