@@ -34,7 +34,7 @@
  *******************************************************************************/
  -->
 
-<FBType Name="SimpleInit" Comment="Simple FB with init event and one algorithm">
+<FBType Name="TemplateSimpleInit" Comment="Simple FB with init event and one algorithm">
   <Identification Standard="61499-1" />
   <VersionInfo Organization="TU Wien/ACIN" Version="0.0" Author="Peter Gsellmann" Date="2018-10-15" />
   <InterfaceList>
@@ -50,10 +50,6 @@
       <Event Name="CNF" Type="Event" Comment="Execution Confirmation">
       </Event>
     </EventOutputs>
-    <InputVars>
-    </InputVars>
-    <OutputVars>
-    </OutputVars>
   </InterfaceList>
   <SimpleFB>
     <ECState Name="INIT" Comment="">
