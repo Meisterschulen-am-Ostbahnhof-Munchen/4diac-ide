@@ -22,13 +22,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -70,6 +73,7 @@ public class DeploymentDebugDevice extends DeploymentDebugElement implements IDe
 	private final Map<String, DeploymentDebugResource> resources = new ConcurrentSkipListMap<>();
 	private final Map<String, IWatch> watches = new ConcurrentSkipListMap<>();
 	private final AtomicLong variableUpdateCount = new AtomicLong();
+	private final AtomicBoolean reconnecting = new AtomicBoolean();
 
 	private boolean terminate;
 
@@ -135,11 +139,41 @@ public class DeploymentDebugDevice extends DeploymentDebugElement implements IDe
 	}
 
 	protected void handleDeviceError(final DeploymentException exception) {
-		FordiacLogHelper.logWarning(exception.getLocalizedMessage(), exception);
-		if (canDisconnect()) {
-			deviceManagementExecutor.shutdown();
-			terminated();
+		if (!reconnecting.compareAndSet(false, true)) {
+			return;
 		}
+		FordiacLogHelper.logWarning(
+				MessageFormat.format(Messages.DeploymentDebugDevice_Reconnecting, device.getName()), exception);
+		incrementVariableUpdateCount();
+		watches.values().forEach(IWatch::disconnected);
+		getPrimaryDebugTarget().updateWatches(false);
+		scheduleReconnect();
+	}
+
+	private void scheduleReconnect() {
+		final Job[] holder = new Job[1];
+		holder[0] = Job.createSystem(
+				MessageFormat.format(Messages.DeploymentDebugDevice_ReconnectJobName, device.getName()),
+				monitor -> {
+					if (monitor.isCanceled() || deviceManagementExecutor.isShutdown()) {
+						reconnecting.set(false);
+						return;
+					}
+					try {
+						deviceManagementExecutor.disconnect();
+					} catch (final DeploymentException e) {
+						// socket may already be broken, continue to connect
+					}
+					try {
+						deviceManagementExecutor.connect();
+						reconnecting.set(false);
+						FordiacLogHelper.logInfo(MessageFormat.format(Messages.DeploymentDebugDevice_Reconnected,
+								device.getName()));
+					} catch (final DeploymentException e) {
+						holder[0].schedule(pollingInterval.toMillis());
+					}
+				});
+		holder[0].schedule(pollingInterval.toMillis());
 	}
 
 	public void connect() throws DebugException {
