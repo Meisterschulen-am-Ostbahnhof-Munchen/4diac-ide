@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 /*******************************************************************************
- * Copyright (c) 2023 Martin Erich Jobst
+ * Copyright (c) 2020 Johannes Kepler University
  * 
  * All rights reserved.
  * 
@@ -29,27 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * Contributors:
- *   Martin Jobst
+ *   Daniel Lindhuber
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
  -->
-<Function Name="Function" Comment="Function with empty body">
-	<Identification Standard="61499-1">
-	</Identification>
-	<VersionInfo Version="1.0" Author="mjobst" Date="2023-06-29">
-	</VersionInfo>
-	<InterfaceList>
-		<EventInputs>
-			<Event Name="REQ" Type="Event" Comment="">
-			</Event>
-		</EventInputs>
-		<EventOutputs>
-			<Event Name="CNF" Type="Event" Comment="">
-			</Event>
-		</EventOutputs>
-		<InputVars>
-		</InputVars>
-		<OutputVars>
-		</OutputVars>
-	</InterfaceList>
-</Function>
+<DataType Name="TemplateStruct" Comment="A Template for a Data Type">
+  <VersionInfo Organization="4DIAC-Consortium" Version="0.0" Author="4DIAC-IDE" Date="2020-04-28" />
+  <ASN1Tag Class="APPLICATION" Number="1" />
+  <StructuredType>
+    <VarDeclaration Name="MemberName" Type="ANY_ELEMENTARY" Comment="Description" />
+  </StructuredType>
+</DataType>

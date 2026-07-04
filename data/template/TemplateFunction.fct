@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- 
 /*******************************************************************************
- * Copyright (c) 2020 Johannes Kepler University
+ * Copyright (c) 2023 Martin Erich Jobst
  * 
  * All rights reserved.
  * 
@@ -29,13 +29,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * Contributors:
- *   Daniel Lindhuber
+ *   Martin Jobst
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
  -->
-<DataType Name="Struct" Comment="A Template for a Data Type">
-  <VersionInfo Organization="4DIAC-Consortium" Version="0.0" Author="4DIAC-IDE" Date="2020-04-28" />
-  <ASN1Tag Class="APPLICATION" Number="1" />
-  <StructuredType>
-  </StructuredType>
-</DataType>
+<Function Name="TemplateFunction" Comment="Function with empty body">
+	<Identification Standard="61499-1">
+	</Identification>
+	<VersionInfo Version="1.0" Author="mjobst" Date="2023-06-29" Organization="4DIAC-Consortium">
+	</VersionInfo>
+	<InterfaceList>
+		<EventInputs>
+			<Event Name="REQ" Type="Event" Comment="">
+			</Event>
+		</EventInputs>
+		<EventOutputs>
+			<Event Name="CNF" Type="Event" Comment="">
+			</Event>
+		</EventOutputs>
+		<InputVars>
+			<VarDeclaration Name="INPUT_VAR" Type="BOOL" Comment="Input variable" />
+		</InputVars>
+		<OutputVars>
+			<VarDeclaration Name="OUTPUT_VAR" Type="BOOL" Comment="Output variable" />
+		</OutputVars>
+	</InterfaceList>
+</Function>
