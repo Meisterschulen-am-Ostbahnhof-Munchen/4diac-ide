@@ -51,7 +51,7 @@
 			<VarDeclaration Name="INPUT_VAR" Type="BOOL" Comment="Input variable" />
 		</InputVars>
 		<OutputVars>
-			<VarDeclaration Name="OUTPUT_VAR" Type="BOOL" Comment="Output variable" />
+			<VarDeclaration Name="OUTPUT_VAR" Type="BOOL" Comment="Output variable (normally not used!)" />
 		</OutputVars>
 	</InterfaceList>
 </Function>
