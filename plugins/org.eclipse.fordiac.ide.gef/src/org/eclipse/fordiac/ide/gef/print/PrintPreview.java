@@ -22,6 +22,8 @@ import org.eclipse.draw2d.PrintFigureOperation;
 import org.eclipse.draw2d.PrinterGraphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.fordiac.ide.gef.Messages;
+import org.eclipse.fordiac.ide.gef.frame.DocumentFrame;
+import org.eclipse.fordiac.ide.gef.frame.DocumentFrameFigure;
 import org.eclipse.fordiac.ide.ui.FordiacLogHelper;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
@@ -58,6 +60,8 @@ public class PrintPreview extends Dialog {
 	private static final String ONLY_DIGIT_REGEX = "^\\d*$"; //$NON-NLS-1$
 	private static final Pattern ONLY_DIGIT_PATTERN = Pattern.compile(ONLY_DIGIT_REGEX, Pattern.MULTILINE);
 
+	private static final int PAGE_LIMIT = 5;
+
 	/**
 	 * The current page shown in the print preview. Always starting with 1.
 	 */
@@ -75,6 +79,7 @@ public class PrintPreview extends Dialog {
 
 	private Combo scaleSelection;
 	private Combo combo;
+	private Text pageLimitText;
 
 	private PrintMargin margin;
 
@@ -112,6 +117,15 @@ public class PrintPreview extends Dialog {
 		return SWT.RESIZE | SWT.CLOSE | SWT.MAX | SWT.APPLICATION_MODAL;
 	}
 
+	@Override
+	public boolean close() {
+		if (printer != null && !printer.isDisposed()) {
+			printer.dispose();
+			printer = null;
+		}
+		return super.close();
+	}
+
 	/**
 	 * Adds some GUI elements for defining some print options to the specified
 	 * composite
@@ -119,7 +133,7 @@ public class PrintPreview extends Dialog {
 	 * @param composite The container of the elements
 	 */
 	private void createOptionsGUI(final Composite parent) {
-		final GridLayout layout = new GridLayout(6, false);
+		final GridLayout layout = new GridLayout(7, false);
 		layout.marginHeight = 0;
 		parent.setLayout(layout);
 
@@ -129,11 +143,32 @@ public class PrintPreview extends Dialog {
 		scaleSelection.add(Messages.PrintPreview_LABEL_FitPage);
 		scaleSelection.add(Messages.PrintPreview_LABEL_FitWidth);
 		scaleSelection.add(Messages.PrintPreview_LABEL_FitHeight);
+		scaleSelection.add(Messages.PrintPreview_LABEL_PageLimit);
 		scaleSelection.select(0);
 		scaleSelection.addListener(SWT.Selection, ev -> {
+			pageLimitText.setEnabled(scaleSelection.getSelectionIndex() == 4);
 			updatePageNumbers();
 			canvas.redraw();
 		});
+
+		pageLimitText = new Text(parent, SWT.SINGLE | SWT.BORDER);
+		pageLimitText.setText("1"); //$NON-NLS-1$
+		pageLimitText.addListener(SWT.Verify, ev -> {
+			if (!ev.doit) {
+				return;
+			}
+			if (ev.keyCode == SWT.DEL || ev.keyCode == SWT.BS) {
+				return;
+			}
+			if (ev.character == SWT.NULL) {
+				ev.doit = true;
+			} else {
+				final String currentValue = ((Text) ev.widget).getText();
+				final String resultingValue = currentValue.substring(0, ev.start) + ev.text + currentValue.substring(ev.end);
+				ev.doit = ONLY_DIGIT_PATTERN.matcher(resultingValue).matches();
+			}
+		});
+		pageLimitText.setEnabled(false);
 
 		printBorder = new Button(parent, SWT.CHECK);
 		printBorder.setText(Messages.PrintPreview_LABEL_PrintBorder);
@@ -183,10 +218,9 @@ public class PrintPreview extends Dialog {
 		canvas.setLayoutData(gridData);
 
 		canvas.addPaintListener(e -> {
-			if (printer == null || printer.isDisposed()) {
-				return;
-			}
-			final Rectangle printerBounds = printer.getBounds();
+			final Point dpi = (printer != null && !printer.isDisposed()) ? printer.getDPI() : Display.getCurrent().getDPI();
+			final Rectangle printerBounds = (printer != null && !printer.isDisposed()) ? printer.getBounds()
+					: new Rectangle(0, 0, (int) (8.27 * dpi.x), (int) (11.69 * dpi.y));
 			final Point canvasSize = canvas.getSize();
 
 			double viewScaleFactor = canvasSize.x * 1.0 / printerBounds.width;
@@ -222,7 +256,7 @@ public class PrintPreview extends Dialog {
 	}
 
 	private org.eclipse.draw2d.geometry.Point getClipRectLocationForPage(int page, final double scale) {
-		final org.eclipse.draw2d.geometry.Rectangle bounds = figure.getBounds();
+		final org.eclipse.draw2d.geometry.Rectangle bounds = getPrintArea();
 		final double scaledPageWidth = margin.getWidth() / scale;
 		final double scaledPageHeight = margin.getHeight() / scale;
 		page -= 1;
@@ -234,9 +268,28 @@ public class PrintPreview extends Dialog {
 				(int) (bounds.y + currentRow * scaledPageHeight));
 	}
 
+	/**
+	 * Returns the full print area = content bounds unioned with the IEC document
+	 * frame paper size. This ensures the frame (drawn at origin 0,0) is included
+	 * in the tiling calculation.
+	 */
+	private org.eclipse.draw2d.geometry.Rectangle getPrintArea() {
+		final org.eclipse.draw2d.geometry.Rectangle area = figure.getBounds().getCopy();
+		for (final IFigure child : figure.getChildren()) {
+			if (child instanceof final DocumentFrameFigure dff) {
+				final DocumentFrame frame = dff.getFrame();
+				if (frame != null && frame.getPaperSize() != null) {
+					area.union(new org.eclipse.draw2d.geometry.Rectangle(0, 0,
+							frame.getPaperSize().getWidth(), frame.getPaperSize().getHeight()));
+				}
+			}
+		}
+		return area;
+	}
+
 	private void updatePageNumbers() {
 
-		final org.eclipse.draw2d.geometry.Rectangle rectangle = figure.getBounds();
+		final org.eclipse.draw2d.geometry.Rectangle rectangle = getPrintArea();
 
 		final double scale = getScale();
 		numberOfPages = (int) (Math.ceil((rectangle.preciseWidth() * scale) / margin.getWidth())
@@ -248,18 +301,31 @@ public class PrintPreview extends Dialog {
 	}
 
 	private double getScale() {
-		double scale = printer.getDPI().x * 1.0 / Display.getCurrent().getDPI().x * 1.0;
+		final org.eclipse.draw2d.geometry.Rectangle printArea = getPrintArea();
+		final Point displayDpi = Display.getCurrent().getDPI();
+		final Point printerDpi = (printer != null && !printer.isDisposed()) ? printer.getDPI() : displayDpi;
+		double scale = printerDpi.x * 1.0 / displayDpi.x * 1.0;
 
 		switch (getOptionsSelection()) {
 		case PrintFigureOperation.FIT_PAGE:
-			scale *= Math.min(margin.getWidth() / (scale * figure.getBounds().width),
-					margin.getHeight() / (scale * figure.getBounds().height));
+			scale *= Math.min(margin.getWidth() / (scale * printArea.width),
+					margin.getHeight() / (scale * printArea.height));
 			break;
 		case PrintFigureOperation.FIT_WIDTH:
-			scale *= (margin.getWidth() / (scale * figure.getBounds().width));
+			scale *= (margin.getWidth() / (scale * printArea.width));
 			break;
 		case PrintFigureOperation.FIT_HEIGHT:
-			scale *= (margin.getHeight() / (scale * figure.getBounds().height));
+			scale *= (margin.getHeight() / (scale * printArea.height));
+			break;
+		case PAGE_LIMIT:
+			int limit = 1;
+			try {
+				limit = Integer.parseInt(pageLimitText.getText());
+			} catch (final NumberFormatException e) {
+				// fallback to 1
+			}
+			scale = computePageLimitScale(limit, printArea.width, printArea.height,
+					margin.getWidth(), margin.getHeight());
 			break;
 		case PrintFigureOperation.TILE: // when tile is selected we keep the default printer scale factor
 		default:
@@ -267,6 +333,21 @@ public class PrintPreview extends Dialog {
 		}
 
 		return scale;
+	}
+
+	private double computePageLimitScale(final int pageLimit, final double figW, final double figH,
+			final double marginW, final double marginH) {
+		final int limit = Math.max(1, pageLimit);
+		final Point displayDpi = Display.getCurrent().getDPI();
+		final Point printerDpi = (printer != null && !printer.isDisposed()) ? printer.getDPI() : displayDpi;
+		final double base = printerDpi.x * 1.0 / displayDpi.x * 1.0;
+		final double areaFit = Math.sqrt(limit * marginW * marginH / (figW * figH));
+		double scale = Math.min(areaFit, base); // cap at 1:1 so small content does not print oversized
+		final double step = 0.01;
+		while ((Math.ceil(figW * scale / marginW) * Math.ceil(figH * scale / marginH)) > limit && scale > step) {
+			scale -= step;
+		}
+		return Math.max(scale, step);
 	}
 
 	private void createButtonArea(final Composite parent) {
@@ -389,21 +470,36 @@ public class PrintPreview extends Dialog {
 	}
 
 	private void performPrinting() {
-		final PrintDialog dialog = new PrintDialog(getShell());
-		// Prompts the printer dialog to let the user select a printer.
-		final PrinterData printerData = dialog.open();
+		PrinterData printerData = null;
+		try {
+			final PrintDialog dialog = new PrintDialog(getShell());
+			// Prompts the printer dialog to let the user select a printer.
+			printerData = dialog.open();
+		} catch (final Throwable e) {
+			FordiacLogHelper.logError(Messages.PrintPreview_ERROR_StartingPrintJob, e);
+			return;
+		}
 
 		if (printerData == null) {
 			return;
 		}
 		// Loads the printer.
-		final Printer newPrinter = new Printer(printerData);
+		Printer newPrinter = null;
+		try {
+			newPrinter = new Printer(printerData);
+		} catch (final Throwable e) {
+			FordiacLogHelper.logError(Messages.PrintPreview_ERROR_StartingPrintJob, e);
+			return;
+		}
 		final double value = Double.parseDouble(combo.getItem(combo.getSelectionIndex()));
 		// calculate from cm to inches
 		setPrinter(newPrinter, value / 2.54);
 		// print the document
 		print(newPrinter);
-		printer.dispose();
+		if (printer != null && !printer.isDisposed()) {
+			printer.dispose();
+			printer = null;
+		}
 		close();
 	}
 
@@ -458,16 +554,25 @@ public class PrintPreview extends Dialog {
 	 */
 	void setPrinter(Printer newPrinter, final double marginSize) {
 		if (newPrinter == null) {
-			newPrinter = new Printer(Printer.getDefaultPrinterData());
+			try {
+				final PrinterData defaultPrinterData = Printer.getDefaultPrinterData();
+				if (defaultPrinterData != null) {
+					newPrinter = new Printer(defaultPrinterData);
+				}
+			} catch (final Throwable e) {
+				FordiacLogHelper.logError("Could not initialize default printer", e); //$NON-NLS-1$
+			}
 		}
-		if (null != printer) {
+		if (null != printer && !printer.isDisposed()) {
 			printer.dispose();
 		}
 
 		printer = newPrinter;
 		margin = PrintMargin.getPrintMargin(newPrinter, marginSize);
 		updatePageNumbers();
-		canvas.redraw();
+		if (canvas != null && !canvas.isDisposed()) {
+			canvas.redraw();
+		}
 	}
 
 	private void drawOnePage(final double scale, final Graphics g, final int pageNumber) {
@@ -556,10 +661,11 @@ class PrintMargin {
 	 */
 	static PrintMargin getPrintMargin(final Printer printer, final double marginLeft, final double marginRight,
 			final double marginTop, final double marginBottom) {
-		final Rectangle clientArea = printer.getClientArea();
-		final Rectangle trim = printer.computeTrim(0, 0, 0, 0);
-
-		final Point dpi = printer.getDPI();
+		final Point dpi = (printer != null && !printer.isDisposed()) ? printer.getDPI() : Display.getCurrent().getDPI();
+		final Rectangle clientArea = (printer != null && !printer.isDisposed()) ? printer.getClientArea()
+				: new Rectangle(0, 0, (int) (8.27 * dpi.x), (int) (11.69 * dpi.y));
+		final Rectangle trim = (printer != null && !printer.isDisposed()) ? printer.computeTrim(0, 0, 0, 0)
+				: new Rectangle(0, 0, 0, 0);
 
 		final int leftMargin = (int) (marginLeft * dpi.x) - trim.x;
 		final int rightMargin = clientArea.width + trim.width - (int) (marginRight * dpi.x) - trim.x;
