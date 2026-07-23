@@ -23,4 +23,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.fordiac.ide.deployment.eval,
  org.eclipse.fordiac.ide.deployment.debug,
  org.eclipse.fordiac.ide.ui,
- org.eclipse.gef
+ org.eclipse.gef,
+ org.eclipse.emf.ecore
+

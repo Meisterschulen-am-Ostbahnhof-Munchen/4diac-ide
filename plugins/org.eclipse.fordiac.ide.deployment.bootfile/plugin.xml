@@ -56,5 +56,56 @@
 				</parameter>
 			</command>
 		</menuContribution>
+		<menuContribution
+			locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+			<toolbar
+				id="org.eclipse.fordiac.ide.deployment.bootfile.toolbar">
+				<command
+					commandId="org.eclipse.fordiac.ide.deployment.bootfile.createBootFileDirectly"
+					icon="fordiacimage://ICON_EXPORT"
+					tooltip="Create FORTE Bootfile (Directly in boot-files)"
+					id="org.eclipse.fordiac.ide.deployment.bootfile.toolbar.CreateBootfilesDirectly"
+					label="Create FORTE Bootfile">
+				</command>
+			</toolbar>
+		</menuContribution>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			id="org.eclipse.fordiac.ide.deployment.bootfile.createBootFileDirectly"
+			name="Create FORTE Bootfile (Direct)"
+			description="Directly generates FORTE bootfiles for the selected resource without showing the wizard.">
+		</command>
+	</extension>
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.fordiac.ide.deployment.bootfile.CreateBootfileDirectHandler"
+			commandId="org.eclipse.fordiac.ide.deployment.bootfile.createBootFileDirectly">
+			<enabledWhen>
+				<with variable="selection">
+					<iterate
+						ifEmpty="false"
+						operator="or">
+						<or>
+							<instanceof
+								value="org.eclipse.fordiac.ide.model.libraryElement.Device">
+							</instanceof>
+							<instanceof
+								value="org.eclipse.fordiac.ide.model.libraryElement.Resource">
+							</instanceof>
+							<instanceof
+								value="org.eclipse.fordiac.ide.model.libraryElement.AutomationSystem">
+							</instanceof>
+							<instanceof
+								value="org.eclipse.core.resources.IFile">
+							</instanceof>
+						</or>
+					</iterate>
+				</with>
+			</enabledWhen>
+		</handler>
 	</extension>
 </plugin>
+
