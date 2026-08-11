@@ -79,7 +79,10 @@ public class PrintPreview extends Dialog {
 
 	private Combo scaleSelection;
 	private Combo combo;
+	private Combo orientationCombo;
 	private Text pageLimitText;
+
+	private boolean isLandscape = false;
 
 	private PrintMargin margin;
 
@@ -190,6 +193,17 @@ public class PrintPreview extends Dialog {
 			setPrinter(printer, value / 2.54);
 		});
 		new Label(parent, SWT.NULL).setText(Messages.PrintPreview_LABEL_CM);
+
+		new Label(parent, SWT.NULL).setText(Messages.PrintPreview_LABEL_Orientation);
+		orientationCombo = new Combo(parent, SWT.READ_ONLY);
+		orientationCombo.add(Messages.PrintPreview_LABEL_Portrait);
+		orientationCombo.add(Messages.PrintPreview_LABEL_Landscape);
+		orientationCombo.select(0);
+		orientationCombo.addListener(SWT.Selection, ev -> {
+			isLandscape = orientationCombo.getSelectionIndex() == 1;
+			final double marginValue = Double.parseDouble(combo.getItem(combo.getSelectionIndex()));
+			setPrinter(printer, marginValue / 2.54);
+		});
 	}
 
 	/**
@@ -199,6 +213,20 @@ public class PrintPreview extends Dialog {
 	 */
 	private int getOptionsSelection() {
 		return scaleSelection.getSelectionIndex() + 1;
+	}
+
+	/**
+	 * Returns the effective printer bounds, swapping width/height when landscape
+	 * orientation is selected.
+	 */
+	private Rectangle getEffectivePrinterBounds() {
+		final Point dpi = (printer != null && !printer.isDisposed()) ? printer.getDPI() : Display.getCurrent().getDPI();
+		Rectangle bounds = (printer != null && !printer.isDisposed()) ? printer.getBounds()
+				: new Rectangle(0, 0, (int) (8.27 * dpi.x), (int) (11.69 * dpi.y));
+		if (isLandscape) {
+			bounds = new Rectangle(bounds.y, bounds.x, bounds.height, bounds.width);
+		}
+		return bounds;
 	}
 
 	@Override
@@ -218,9 +246,7 @@ public class PrintPreview extends Dialog {
 		canvas.setLayoutData(gridData);
 
 		canvas.addPaintListener(e -> {
-			final Point dpi = (printer != null && !printer.isDisposed()) ? printer.getDPI() : Display.getCurrent().getDPI();
-			final Rectangle printerBounds = (printer != null && !printer.isDisposed()) ? printer.getBounds()
-					: new Rectangle(0, 0, (int) (8.27 * dpi.x), (int) (11.69 * dpi.y));
+			final Rectangle printerBounds = getEffectivePrinterBounds();
 			final Point canvasSize = canvas.getSize();
 
 			double viewScaleFactor = canvasSize.x * 1.0 / printerBounds.width;
@@ -568,7 +594,7 @@ public class PrintPreview extends Dialog {
 		}
 
 		printer = newPrinter;
-		margin = PrintMargin.getPrintMargin(newPrinter, marginSize);
+		margin = PrintMargin.getPrintMargin(newPrinter, marginSize, isLandscape);
 		updatePageNumbers();
 		if (canvas != null && !canvas.isDisposed()) {
 			canvas.redraw();
@@ -652,7 +678,21 @@ class PrintMargin {
 	 * @return
 	 */
 	static PrintMargin getPrintMargin(final Printer printer, final double margin) {
-		return getPrintMargin(printer, margin, margin, margin, margin);
+		return getPrintMargin(printer, margin, margin, margin, margin, false);
+	}
+
+	/**
+	 * Returns a PrintMargin object containing the true border margins for the
+	 * specified printer with the given margin in inches, optionally swapping
+	 * dimensions for landscape orientation.
+	 *
+	 * @param printer
+	 * @param margin
+	 * @param landscape
+	 * @return
+	 */
+	static PrintMargin getPrintMargin(final Printer printer, final double margin, final boolean landscape) {
+		return getPrintMargin(printer, margin, margin, margin, margin, landscape);
 	}
 
 	/**
@@ -661,11 +701,25 @@ class PrintMargin {
 	 */
 	static PrintMargin getPrintMargin(final Printer printer, final double marginLeft, final double marginRight,
 			final double marginTop, final double marginBottom) {
+		return getPrintMargin(printer, marginLeft, marginRight, marginTop, marginBottom, false);
+	}
+
+	/**
+	 * Returns a PrintMargin object containing the true border margins for the
+	 * specified printer with the given margin width (in inches) for each side,
+	 * optionally swapping dimensions for landscape orientation.
+	 */
+	static PrintMargin getPrintMargin(final Printer printer, final double marginLeft, final double marginRight,
+			final double marginTop, final double marginBottom, final boolean landscape) {
 		final Point dpi = (printer != null && !printer.isDisposed()) ? printer.getDPI() : Display.getCurrent().getDPI();
-		final Rectangle clientArea = (printer != null && !printer.isDisposed()) ? printer.getClientArea()
+		Rectangle clientArea = (printer != null && !printer.isDisposed()) ? printer.getClientArea()
 				: new Rectangle(0, 0, (int) (8.27 * dpi.x), (int) (11.69 * dpi.y));
 		final Rectangle trim = (printer != null && !printer.isDisposed()) ? printer.computeTrim(0, 0, 0, 0)
 				: new Rectangle(0, 0, 0, 0);
+
+		if (landscape) {
+			clientArea = new Rectangle(clientArea.y, clientArea.x, clientArea.height, clientArea.width);
+		}
 
 		final int leftMargin = (int) (marginLeft * dpi.x) - trim.x;
 		final int rightMargin = clientArea.width + trim.width - (int) (marginRight * dpi.x) - trim.x;
