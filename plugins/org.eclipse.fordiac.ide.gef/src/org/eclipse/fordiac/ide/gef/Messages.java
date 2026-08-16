@@ -92,7 +92,12 @@ public final class Messages extends NLS {
 	public static String PrintPreview_LABEL_PrintBorder;
 	public static String PrintPreview_LABEL_PrintPreview;
 	public static String PrintPreview_LABEL_Scale;
+	public static String PrintPreview_LABEL_PageLimit;
+	public static String PrintPreview_LABEL_Percent;
 	public static String PrintPreview_LABEL_Tile;
+	public static String PrintPreview_LABEL_Orientation;
+	public static String PrintPreview_LABEL_Portrait;
+	public static String PrintPreview_LABEL_Landscape;
 	public static String SetProfileCommand_LABEL_SetProfile;
 
 	public static String UtilityMarker_ActiveMarker;

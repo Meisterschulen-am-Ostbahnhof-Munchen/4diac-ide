@@ -33,6 +33,7 @@ import org.eclipse.fordiac.ide.gef.listeners.DiagramFontChangeListener;
 import org.eclipse.fordiac.ide.gef.listeners.FigureFontUpdateListener;
 import org.eclipse.fordiac.ide.gef.listeners.IFontUpdateListener;
 import org.eclipse.fordiac.ide.gef.preferences.GefPreferenceConstantsCache;
+import org.eclipse.fordiac.ide.gef.frame.ConfigureFrameAction;
 import org.eclipse.fordiac.ide.gef.print.PrintPreviewAction;
 import org.eclipse.fordiac.ide.gef.ruler.FordiacRulerComposite;
 import org.eclipse.fordiac.ide.gef.tools.AdvancedPanningSelectionTool;
@@ -499,6 +500,10 @@ public abstract class DiagramEditorWithFlyoutPalette extends GraphicalEditorWith
 		action = new PrintPreviewAction(getGraphicalViewer());
 		registry.registerAction(action);
 		getEditorSite().getActionBars().setGlobalActionHandler(ActionFactory.PRINT.getId(), action);
+
+		// register the configure frame action in the toolbar
+		action = new ConfigureFrameAction();
+		registry.registerAction(action);
 	}
 
 	@Override

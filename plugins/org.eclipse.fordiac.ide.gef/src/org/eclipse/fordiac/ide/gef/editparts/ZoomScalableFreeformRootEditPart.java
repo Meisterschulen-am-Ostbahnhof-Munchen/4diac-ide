@@ -36,7 +36,10 @@ import org.eclipse.draw2d.backgrounds.shadows.RectangleDropShadowBorder;
 import org.eclipse.draw2d.zoom.AbstractZoomManager;
 import org.eclipse.fordiac.ide.gef.figures.AbstractFreeformFigure;
 import org.eclipse.fordiac.ide.gef.figures.BackgroundFreeformFigure;
+import org.eclipse.fordiac.ide.gef.figures.CoordinateOriginFigure;
 import org.eclipse.fordiac.ide.gef.figures.ModuloFreeformFigure;
+import org.eclipse.fordiac.ide.gef.frame.DocumentFrame;
+import org.eclipse.fordiac.ide.gef.frame.DocumentFrameFigure;
 import org.eclipse.fordiac.ide.gef.tools.AdvancedMarqueeDragTracker;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
@@ -61,10 +64,18 @@ import org.eclipse.ui.handlers.IHandlerService;
 public class ZoomScalableFreeformRootEditPart extends ScalableFreeformRootEditPart {
 
 	public static final String TOP_LAYER = "TOPLAYER"; //$NON-NLS-1$
+	public static final String ORIGIN_LAYER = "ORIGIN_LAYER"; //$NON-NLS-1$
+	public static final String FRAME_LAYER = "FRAME_LAYER"; //$NON-NLS-1$
+
+	private final DocumentFrame documentFrame = new DocumentFrame();
 
 	public ZoomScalableFreeformRootEditPart(final IWorkbenchPartSite site, final ActionRegistry actionRegistry) {
 		configureZoomManger();
 		setupZoomActions(site, actionRegistry);
+	}
+
+	public DocumentFrame getDocumentFrame() {
+		return documentFrame;
 	}
 
 	@Override
@@ -75,6 +86,8 @@ public class ZoomScalableFreeformRootEditPart extends ScalableFreeformRootEditPa
 	@Override
 	protected LayeredPane createPrintableLayers() {
 		final FreeformLayeredPane layeredPane = new FreeformLayeredPane();
+		layeredPane.add(new DocumentFrameFigure(documentFrame), FRAME_LAYER);
+		layeredPane.add(new CoordinateOriginFigure(), ORIGIN_LAYER);
 		layeredPane.add(new FreeformLayer(), PRIMARY_LAYER);
 		final ConnectionLayer connectionLayer = new ConnectionLayer();
 		layeredPane.add(connectionLayer, CONNECTION_LAYER);
@@ -107,6 +120,9 @@ public class ZoomScalableFreeformRootEditPart extends ScalableFreeformRootEditPa
 	@Override
 	protected ScalableFreeformLayeredPane createScaledLayers() {
 		final ScalableFreeformLayeredPane pane = super.createScaledLayers();
+		pane.add(new DocumentFrameFigure(documentFrame), FRAME_LAYER, 0);
+		// CoordinateOriginFigure intentionally only in createPrintableLayers()
+		// — visible in print output but not in the editor
 		pane.add(new FreeformLayer(), HANDLE_LAYER);
 		pane.add(new FeedbackLayer(), FEEDBACK_LAYER);
 		return pane;
