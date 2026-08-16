@@ -61,6 +61,7 @@ public class PrintPreview extends Dialog {
 	private static final Pattern ONLY_DIGIT_PATTERN = Pattern.compile(ONLY_DIGIT_REGEX, Pattern.MULTILINE);
 
 	private static final int PAGE_LIMIT = 5;
+	private static final int PERCENT = 6;
 
 	/**
 	 * The current page shown in the print preview. Always starting with 1.
@@ -81,6 +82,7 @@ public class PrintPreview extends Dialog {
 	private Combo combo;
 	private Combo orientationCombo;
 	private Text pageLimitText;
+	private Text percentText;
 
 	private boolean isLandscape = false;
 
@@ -147,9 +149,11 @@ public class PrintPreview extends Dialog {
 		scaleSelection.add(Messages.PrintPreview_LABEL_FitWidth);
 		scaleSelection.add(Messages.PrintPreview_LABEL_FitHeight);
 		scaleSelection.add(Messages.PrintPreview_LABEL_PageLimit);
+		scaleSelection.add(Messages.PrintPreview_LABEL_Percent);
 		scaleSelection.select(0);
 		scaleSelection.addListener(SWT.Selection, ev -> {
-			pageLimitText.setEnabled(scaleSelection.getSelectionIndex() == 4);
+			pageLimitText.setEnabled(scaleSelection.getSelectionIndex() == PAGE_LIMIT);
+			percentText.setEnabled(scaleSelection.getSelectionIndex() == PERCENT);
 			updatePageNumbers();
 			canvas.redraw();
 		});
@@ -172,6 +176,31 @@ public class PrintPreview extends Dialog {
 			}
 		});
 		pageLimitText.setEnabled(false);
+
+		percentText = new Text(parent, SWT.SINGLE | SWT.BORDER);
+		percentText.setText("100"); //$NON-NLS-1$
+		percentText.addListener(SWT.Verify, ev -> {
+			if (!ev.doit) {
+				return;
+			}
+			if (ev.keyCode == SWT.DEL || ev.keyCode == SWT.BS) {
+				return;
+			}
+			if (ev.character == SWT.NULL) {
+				ev.doit = true;
+			} else {
+				final String currentValue = ((Text) ev.widget).getText();
+				final String resultingValue = currentValue.substring(0, ev.start) + ev.text + currentValue.substring(ev.end);
+				ev.doit = ONLY_DIGIT_PATTERN.matcher(resultingValue).matches();
+			}
+		});
+		percentText.addListener(SWT.Modify, ev -> {
+			if (scaleSelection.getSelectionIndex() == PERCENT) {
+				updatePageNumbers();
+				canvas.redraw();
+			}
+		});
+		percentText.setEnabled(false);
 
 		printBorder = new Button(parent, SWT.CHECK);
 		printBorder.setText(Messages.PrintPreview_LABEL_PrintBorder);
@@ -352,6 +381,15 @@ public class PrintPreview extends Dialog {
 			}
 			scale = computePageLimitScale(limit, printArea.width, printArea.height,
 					margin.getWidth(), margin.getHeight());
+			break;
+		case PERCENT:
+			int percent = 100;
+			try {
+				percent = Integer.parseInt(percentText.getText());
+			} catch (final NumberFormatException e) {
+				// fallback to 100
+			}
+			scale *= percent / 100.0;
 			break;
 		case PrintFigureOperation.TILE: // when tile is selected we keep the default printer scale factor
 		default:
