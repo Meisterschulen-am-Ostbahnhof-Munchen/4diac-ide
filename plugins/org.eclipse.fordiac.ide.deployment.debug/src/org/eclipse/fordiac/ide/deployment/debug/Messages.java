@@ -28,6 +28,9 @@ public class Messages extends NLS {
 	public static String DeploymentDebugDevice_ConnectError;
 	public static String DeploymentDebugDevice_DisconnectError;
 	public static String DeploymentDebugDevice_ReadWatchesError;
+	public static String DeploymentDebugDevice_Reconnected;
+	public static String DeploymentDebugDevice_Reconnecting;
+	public static String DeploymentDebugDevice_ReconnectJobName;
 	public static String DeploymentDebugDevice_TerminateError;
 	public static String DeploymentDebugErrorValue_Error;
 	public static String EventWatch_TriggerEventError;
