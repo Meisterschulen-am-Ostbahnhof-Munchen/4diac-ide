@@ -127,7 +127,7 @@ public class TypeFromTemplateCreator {
 		if ((type instanceof final FunctionFBType functionFBType)
 				&& (functionFBType.getBody() instanceof final TextFunctionBody body)) {
 			// for function types we need to also set the name inside the body
-			body.setText(body.getText().replace("Function", functionFBType.getName())); //$NON-NLS-1$
+			body.setText(body.getText().replace("TemplateFunction", functionFBType.getName())); //$NON-NLS-1$
 		}
 	}
 

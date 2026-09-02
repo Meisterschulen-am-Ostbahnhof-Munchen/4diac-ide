@@ -50,7 +50,7 @@ import org.eclipse.swt.graphics.Image;
 public class CreateDataTypeMarkerResolution extends AbstractCommandMarkerResolution<ITypedElement> {
 
 	private static final String TEMPLATE_PATH = Platform.getInstallLocation().getURL().getFile() + File.separatorChar
-			+ "template" + File.separatorChar + "Struct.dtp"; //$NON-NLS-1$ //$NON-NLS-2$
+			+ "template" + File.separatorChar + "TemplateStruct.dtp"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private DataTypeEntry newEntry;
 
