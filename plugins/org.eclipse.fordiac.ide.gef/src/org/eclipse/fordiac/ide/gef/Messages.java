@@ -87,12 +87,20 @@ public final class Messages extends NLS {
 	public static String PrintPreview_LABEL_NextPage;
 	public static String PrintPreview_LABEL_Of;
 	public static String PrintPreview_LABEL_Page;
+	public static String PrintPreview_LABEL_Pages;
 	public static String PrintPreview_LABEL_Print;
 	public static String PrintPreview_LABEL_PrinterSettings;
 	public static String PrintPreview_LABEL_PrintBorder;
 	public static String PrintPreview_LABEL_PrintPreview;
 	public static String PrintPreview_LABEL_Scale;
+	public static String PrintPreview_LABEL_Set;
+	public static String PrintPreview_LABEL_PageLimit;
+	public static String PrintPreview_LABEL_Percent;
 	public static String PrintPreview_LABEL_Tile;
+	public static String PrintPreview_LABEL_Orientation;
+	public static String PrintPreview_LABEL_Portrait;
+	public static String PrintPreview_LABEL_Landscape;
+	public static String PrintPreview_LABEL_PaperFormat;
 	public static String SetProfileCommand_LABEL_SetProfile;
 
 	public static String UtilityMarker_ActiveMarker;
