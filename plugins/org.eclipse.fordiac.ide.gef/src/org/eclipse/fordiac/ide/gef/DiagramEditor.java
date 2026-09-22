@@ -24,6 +24,7 @@ import org.eclipse.fordiac.ide.gef.annotation.FordiacAnnotationModelEventDispatc
 import org.eclipse.fordiac.ide.gef.annotation.GraphicalViewerAnnotationModelEventDispatcher;
 import org.eclipse.fordiac.ide.gef.dnd.ParameterDropTargetListener;
 import org.eclipse.fordiac.ide.gef.editparts.ZoomScalableFreeformRootEditPart;
+import org.eclipse.fordiac.ide.gef.frame.ConfigureFrameAction;
 import org.eclipse.fordiac.ide.gef.handlers.AdvancedGraphicalViewerKeyHandler;
 import org.eclipse.fordiac.ide.gef.preferences.GefPreferenceConstantsCache;
 import org.eclipse.fordiac.ide.gef.print.PrintPreviewAction;
@@ -489,6 +490,9 @@ public abstract class DiagramEditor extends GraphicalEditor
 		registry.registerAction(action);
 		getEditorSite().getActionBars().setGlobalActionHandler(ActionFactory.PRINT.getId(), action);
 
+		// register the configure frame action for the context menu
+		action = new ConfigureFrameAction();
+		registry.registerAction(action);
 	}
 
 	@Override

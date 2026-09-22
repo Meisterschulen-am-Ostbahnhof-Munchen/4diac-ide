@@ -14,6 +14,7 @@
 package org.eclipse.fordiac.ide.gef.print;
 
 import org.eclipse.fordiac.ide.gef.Messages;
+import org.eclipse.fordiac.ide.gef.utilities.GraphicalViewerResolver;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
@@ -53,19 +54,23 @@ public class PrintPreviewAction extends Action {
 
 	private static GraphicalViewer getViewer() {
 		final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		final IEditorPart editor = window.getActivePage().getActiveEditor();
-		if (null != editor) {
-			return editor.getAdapter(GraphicalViewer.class);
+		if (window == null || window.getActivePage() == null) {
+			return null;
 		}
-		return null;
+		final IEditorPart editor = window.getActivePage().getActiveEditor();
+		return GraphicalViewerResolver.resolveActiveViewer(editor);
 	}
 
 	/** opens the IEC61499PrintDialog. */
 	@Override
 	public void run() {
-		if (null != viewer) {
-			final Shell shell = viewer.getControl().getShell();
-			final PrintPreview preview = new PrintPreview(shell, viewer, Messages.PrintPreviewAction_LABEL_PrintPreview);
+		// Always resolve from the currently active editor so we print whichever
+		// tab (FB Interface / FB Network) is visible.
+		final GraphicalViewer activeViewer = getViewer();
+		if (null != activeViewer) {
+			final Shell shell = activeViewer.getControl().getShell();
+			final PrintPreview preview = new PrintPreview(shell, activeViewer,
+					Messages.PrintPreviewAction_LABEL_PrintPreview);
 			preview.setBlockOnOpen(true);
 			preview.open();
 		}
