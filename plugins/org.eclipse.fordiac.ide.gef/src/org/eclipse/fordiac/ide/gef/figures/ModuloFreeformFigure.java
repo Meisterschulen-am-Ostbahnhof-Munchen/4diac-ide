@@ -13,6 +13,7 @@
 package org.eclipse.fordiac.ide.gef.figures;
 
 import org.eclipse.draw2d.FreeformFigure;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.fordiac.ide.gef.editparts.ZoomScalableFreeformRootEditPart;
 import org.eclipse.gef.LayerConstants;
@@ -61,6 +62,15 @@ public class ModuloFreeformFigure extends AbstractFreeformFigure {
 			contentsExtent.union(
 					((FreeformFigure) getZoomScalableFreeformRootEditPart().getLayer(LayerConstants.FEEDBACK_LAYER))
 							.getFreeformExtent());
+		}
+		// Include the print/document frame layer, otherwise the editor's scrollable
+		// canvas never extends far enough to reach it - it would stay unreachable (and
+		// thus invisible, no matter how it positions/sizes itself) regardless of
+		// scrolling or zooming, since the frame can be considerably larger than the
+		// actual model content it surrounds (it spans a full configured paper size).
+		final IFigure frameLayer = getZoomScalableFreeformRootEditPart().getLayer(ZoomScalableFreeformRootEditPart.FRAME_LAYER);
+		if (frameLayer instanceof final FreeformFigure freeformFrameLayer) {
+			contentsExtent.union(freeformFrameLayer.getFreeformExtent());
 		}
 		return contentsExtent;
 	}

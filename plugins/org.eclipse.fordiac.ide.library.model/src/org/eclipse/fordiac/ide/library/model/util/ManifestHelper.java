@@ -14,6 +14,7 @@
 package org.eclipse.fordiac.ide.library.model.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -40,6 +41,7 @@ import org.eclipse.fordiac.ide.library.model.library.Product;
 import org.eclipse.fordiac.ide.library.model.library.Required;
 import org.eclipse.fordiac.ide.library.model.library.VersionInfo;
 import org.eclipse.fordiac.ide.library.model.library.util.LibraryResourceFactoryImpl;
+import org.eclipse.fordiac.ide.model.util.XMLResourceOptions;
 import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.osgi.framework.Version;
 
@@ -400,6 +402,7 @@ public final class ManifestHelper {
 		final XMLResource resource = (XMLResource) resourceFactory.createResource(uri);
 		resource.getDefaultSaveOptions().put(XMLResource.OPTION_ENCODING, UTF_8);
 		resource.getDefaultLoadOptions().put(XMLResource.OPTION_ENCODING, UTF_8);
+		resource.getDefaultLoadOptions().putAll(XMLResourceOptions.DEFAULT_LOAD_OPTIONS);
 		return resource;
 	}
 
@@ -413,6 +416,8 @@ public final class ManifestHelper {
 		final Resource resource = createResource(uri);
 		try {
 			resource.load(null);
+		} catch (final FileNotFoundException e) {
+			return null; // suppress logging of file not found exception
 		} catch (final IOException e) {
 			FordiacLogHelper.logWarning("Could not load manifest for URI " + uri, e); //$NON-NLS-1$
 			return null;

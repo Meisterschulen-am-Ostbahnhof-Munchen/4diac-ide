@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.fordiac.ide.gef;
 
+import org.eclipse.fordiac.ide.gef.frame.ConfigureFrameAction;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.editparts.ZoomManager;
@@ -70,6 +71,11 @@ public class FordiacContextMenuProvider extends ContextMenuProvider {
 		MenuManager alignSubMenu = createAlignSubmenu();
 		if (!alignSubMenu.isEmpty()) {
 			menu.appendToGroup(IWorkbenchActionConstants.GROUP_REORGANIZE, alignSubMenu);
+		}
+
+		final IAction configureFrame = registry.getAction(ConfigureFrameAction.ID);
+		if ((null != configureFrame) && configureFrame.isEnabled()) {
+			menu.appendToGroup(GEFActionConstants.GROUP_VIEW, configureFrame);
 		}
 	}
 
