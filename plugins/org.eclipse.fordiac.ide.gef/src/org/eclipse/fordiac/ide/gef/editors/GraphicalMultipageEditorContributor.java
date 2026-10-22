@@ -26,6 +26,7 @@ import org.eclipse.gef.ui.actions.UndoRetargetAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.fordiac.ide.gef.print.PrintPreviewAction;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
@@ -97,6 +98,7 @@ public class GraphicalMultipageEditorContributor extends MultiPageEditorActionBa
 		buildActions();
 		declareGlobalActionKeys();
 		super.init(bars);
+		bars.setGlobalActionHandler(ActionFactory.PRINT.getId(), new PrintPreviewAction(null));
 	}
 
 }
