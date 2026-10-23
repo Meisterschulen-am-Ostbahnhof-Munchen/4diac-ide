@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -43,7 +44,6 @@ import org.eclipse.fordiac.ide.library.provider.OfflineLibraryProvider;
 import org.eclipse.fordiac.ide.library.provider.OnlineLibraryProvider;
 import org.eclipse.fordiac.ide.library.ui.Messages;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryTags;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
@@ -201,10 +201,10 @@ public class LibraryPlanningPage extends WizardPage {
 	private Map<String, List<LibraryDescriptor>> getAvailableLibraries() {
 		final Map<String, List<LibraryDescriptor>> availableLibraries = new HashMap<>();
 		offlineLibraryProvider.getAll().forEach((symbolicName, libraries) -> availableLibraries
-				.computeIfAbsent(symbolicName, k -> new ArrayList<>()).addAll(libraries));
+				.computeIfAbsent(symbolicName, _ -> new ArrayList<>()).addAll(libraries));
 		onlineLibraryProvider.getAll().forEach((symbolicName, libraries) -> availableLibraries
-				.computeIfAbsent(symbolicName, k -> new ArrayList<>()).addAll(libraries));
-		availableLibraries.replaceAll((k, v) -> v.stream().distinct().toList());
+				.computeIfAbsent(symbolicName, _ -> new ArrayList<>()).addAll(libraries));
+		availableLibraries.replaceAll((_, v) -> v.stream().distinct().toList());
 		return availableLibraries;
 	}
 
@@ -246,7 +246,7 @@ public class LibraryPlanningPage extends WizardPage {
 			LinkedLibrary.getStandard(project, new NullProgressMonitor()).forEach(folder -> stdLibNode.children()
 					.add(LibraryChange.createEmpty(folder.getSymbolicName(), folder.getVersion().toString())));
 		} catch (final CoreException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 		}
 
 		return List.of(extLibNode, stdLibNode);
@@ -357,13 +357,8 @@ public class LibraryPlanningPage extends WizardPage {
 						return;
 					}
 
-					if (status.isOK()) {
-						setMessage(null);
-					} else {
-						final String combinedMessage = Arrays.stream(status.getChildren()).map(IStatus::getMessage)
-								.collect(Collectors.joining(System.lineSeparator()));
-						setMessage(combinedMessage, toMessageProviderSeverity(status));
-					}
+					final String message = status.isOK() ? null : getMessage(status);
+					setMessage(message, toMessageProviderSeverity(status));
 
 					treeViewer.refresh();
 				});
@@ -374,6 +369,15 @@ public class LibraryPlanningPage extends WizardPage {
 
 		job.setUser(false);
 		job.schedule();
+	}
+
+	private static String getMessage(final IStatus status) {
+		if (status.isMultiStatus()) {
+			final int severity = status.getSeverity();
+			return Arrays.stream(status.getChildren()).filter(child -> child.getSeverity() == severity)
+					.map(IStatus::getMessage).collect(Collectors.joining(System.lineSeparator()));
+		}
+		return status.getMessage();
 	}
 
 	private static int toMessageProviderSeverity(final IStatus status) {

@@ -140,7 +140,7 @@ public abstract class AbstractBreadCrumbEditor extends AbstractCloseAbleFormEdit
 	}
 
 	@Override
-	public void setInput(final IEditorInput input) {
+	protected void setInput(final IEditorInput input) {
 		pages.stream().filter(IReusableEditor.class::isInstance).map(IReusableEditor.class::cast)
 				.forEach(e -> e.setInput(updateInput(e.getEditorInput(), input)));
 		super.setInputWithNotify(input);
@@ -209,7 +209,7 @@ public abstract class AbstractBreadCrumbEditor extends AbstractCloseAbleFormEdit
 
 	protected IEditorInput createEditorInput(final Object model) {
 		return switch (model) {
-		case final IFile file -> getEditorInput();
+		case final IFile _ -> getEditorInput();
 		case final EObject subElement -> new SubEditorInput(getEditorInput(), subElement);
 		case null, default -> null;
 		};
@@ -217,10 +217,17 @@ public abstract class AbstractBreadCrumbEditor extends AbstractCloseAbleFormEdit
 
 	@Override
 	public boolean closeChildEditor(final IEditorPart childEditor) {
+		if (pages == null) {
+			return false;
+		}
 		final int pageIndex = pages.indexOf(childEditor);
 		if (pageIndex != -1) {
+			final boolean wasActive = getActiveEditor() == childEditor;
 			removePage(pageIndex);
 			updateEditorMapping(pageIndex);
+			if (wasActive) {
+				breadcrumb.openParent();
+			}
 			return true;
 		}
 		return false;

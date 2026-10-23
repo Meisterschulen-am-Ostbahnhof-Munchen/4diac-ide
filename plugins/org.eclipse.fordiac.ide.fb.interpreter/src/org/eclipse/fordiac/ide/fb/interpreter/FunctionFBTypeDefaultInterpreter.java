@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2021 Johannes Kepler University Linz and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Antonio Garmendía, Bianca Wiesmayr
+ *       - initial implementation and/or documentation
+ *   Paul Pavlicek - cleanup
+ *   Felix Schmid - implemented functions and subapps
+ *   Jose Cabral  - extracted from DefaultRunFBType
+ *******************************************************************************/
 package org.eclipse.fordiac.ide.fb.interpreter;
 
 import java.util.ArrayList;
@@ -20,7 +36,7 @@ import org.eclipse.fordiac.ide.model.libraryElement.VarDeclaration;
 public class FunctionFBTypeDefaultInterpreter extends FBTypeWithEvaluatorDefaultInterpreter {
 
 	public FunctionFBTypeDefaultInterpreter(final EventOccurrence eventOccurrence,
-			final Map<String, Evaluator> evaluatorCache) {
+			final Map<String, EvaluatorCacheEntry> evaluatorCache) {
 		super(eventOccurrence, evaluatorCache);
 	}
 
@@ -48,12 +64,15 @@ public class FunctionFBTypeDefaultInterpreter extends FBTypeWithEvaluatorDefault
 		// STFunctionSource and then getting functions -> varDeclarationBlock ->
 		// varDeclaration + converting it with VariableOperations.newVariable
 
-		Evaluator eval = evaluatorCache.get(Utils.getCacheKey(eventOccurrence));
-		if (eval == null) {
+		final String cacheKey = Utils.getCacheKey(eventOccurrence);
+		EvaluatorCacheEntry cacheEntry = evaluatorCache.get(cacheKey);
+		if (cacheEntry == null) {
 			final FBVariable fbVar = new FBVariable("THIS", functionFBType, Collections.emptyList()); //$NON-NLS-1$
-			eval = EvaluatorFactory.createEvaluator(functionFBType, FunctionFBType.class, fbVar, List.of(), null);
-			evaluatorCache.put(Utils.getCacheKey(eventOccurrence), eval);
+			final Evaluator evaluator = EvaluatorFactory.createEvaluator(functionFBType, FunctionFBType.class, fbVar,
+					List.of(), null);
+			cacheEntry = new EvaluatorCacheEntry(evaluator, DefaultRunFBType.getEvaluatorExecutor());
+			evaluatorCache.put(cacheKey, cacheEntry);
 		}
-		executeEvaluator(eval, varDecls, functionFBType, eventOccurrence, functionFBType.getName());
+		executeEvaluator(cacheEntry.evaluator(), varDecls, functionFBType, eventOccurrence, cacheEntry.executor());
 	}
 }

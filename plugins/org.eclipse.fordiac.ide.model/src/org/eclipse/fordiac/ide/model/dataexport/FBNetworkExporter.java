@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.fordiac.ide.model.LibraryElementTags;
 import org.eclipse.fordiac.ide.model.datatype.helper.IecTypes;
+import org.eclipse.fordiac.ide.model.helpers.PackageNameHelper;
 import org.eclipse.fordiac.ide.model.libraryElement.AdapterType;
 import org.eclipse.fordiac.ide.model.libraryElement.AutomationSystem;
 import org.eclipse.fordiac.ide.model.libraryElement.BlockFBNetworkElement;
@@ -41,13 +42,13 @@ import org.eclipse.fordiac.ide.model.libraryElement.FBType;
 import org.eclipse.fordiac.ide.model.libraryElement.Group;
 import org.eclipse.fordiac.ide.model.libraryElement.IInterfaceElement;
 import org.eclipse.fordiac.ide.model.libraryElement.InterfaceList;
+import org.eclipse.fordiac.ide.model.libraryElement.OverrideAttribute;
 import org.eclipse.fordiac.ide.model.libraryElement.Resource;
 import org.eclipse.fordiac.ide.model.libraryElement.ResourceType;
 import org.eclipse.fordiac.ide.model.libraryElement.ResourceTypeFB;
 import org.eclipse.fordiac.ide.model.libraryElement.SubApp;
 import org.eclipse.fordiac.ide.model.libraryElement.SubAppType;
 import org.eclipse.fordiac.ide.model.libraryElement.TypedSubApp;
-import org.eclipse.fordiac.ide.model.libraryElement.VarDeclaration;
 import org.eclipse.fordiac.ide.model.typelibrary.impl.SubAppTypeEntryImpl;
 
 class FBNetworkExporter extends CommonElementExporter {
@@ -163,6 +164,16 @@ class FBNetworkExporter extends CommonElementExporter {
 			addDependency(configFb.getDataType());
 		}
 		addAttributes(fbnElement.getAttributes());
+
+		if (fbnElement instanceof final TypedSubApp tsa) {
+			for (final OverrideAttribute attribute : tsa.getOverrideAttributes()) {
+				final var name = attribute.getAttributeDeclaration() != null
+						? PackageNameHelper.getFullTypeName(addDependency(attribute.getAttributeDeclaration()))
+						: attribute.getName();
+				addAttributeElement(attribute.getLocation() + "." + name, attribute.getType(), //$NON-NLS-1$
+						attribute.getValue(), attribute.getComment());
+			}
+		}
 
 		if (!isUntypedSubapp(fbnElement) && fbnElement instanceof final BlockFBNetworkElement blockFbnEl) {
 			// for untyped subapp initial values are stored in the vardeclarations
@@ -285,8 +296,7 @@ class FBNetworkExporter extends CommonElementExporter {
 	}
 
 	private static boolean isExportableConnectionEndpoint(final IInterfaceElement endPoint) {
-		return (endPoint != null)
-				&& (endPoint.eContainer() instanceof InterfaceList || endPoint.eContainer() instanceof VarDeclaration);
+		return endPoint != null && endPoint.getInterfaceList() != null;
 	}
 
 	public static boolean isExportableErrorMarker(final FBNetworkElement fbNetworkElement) {

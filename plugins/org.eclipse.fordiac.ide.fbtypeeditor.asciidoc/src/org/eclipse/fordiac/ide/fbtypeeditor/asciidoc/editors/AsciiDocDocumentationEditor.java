@@ -9,6 +9,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Andrea Zoitl - added toolbar
  *******************************************************************************/
 package org.eclipse.fordiac.ide.fbtypeeditor.asciidoc.editors;
 
@@ -19,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -26,25 +28,41 @@ import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
 import org.eclipse.fordiac.ide.model.ui.editors.LibraryElementProvider;
 import org.eclipse.fordiac.ide.typeeditor.ITypeEditorPage;
 import org.eclipse.fordiac.ide.ui.imageprovider.FordiacImage;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.FileEditorInput;
 
 @SuppressWarnings("restriction")
 public class AsciiDocDocumentationEditor extends MarkupEditor implements ITypeEditorPage {
 
+	public static final String TOOLBAR_LOCATION = "toolbar:org.eclipse.fordiac.ide.fbtypeeditor.asciidoc.toolbar"; //$NON-NLS-1$
+
 	// The editor input of the type file given to us.
-	IEditorInput originEditorInput;
+	private IEditorInput originEditorInput;
+	private Composite toolbarContainer;
+	private IMenuService menuService;
+	private ToolBarManager toolBarManager;
 
 	@Override
 	public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
@@ -58,12 +76,88 @@ public class AsciiDocDocumentationEditor extends MarkupEditor implements ITypeEd
 
 	@Override
 	public void createPartControl(final Composite parent) {
-		super.createPartControl(parent);
+		GridLayoutFactory.fillDefaults().numColumns(1).applyTo(parent);
+
+		toolbarContainer = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 0).applyTo(toolbarContainer);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(toolbarContainer);
+
+		toolBarManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+		final ToolBar toolbarControl = toolBarManager.createControl(toolbarContainer);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(toolbarControl);
+
+		menuService = getSite().getService(IMenuService.class);
+		if (menuService != null) {
+			menuService.populateContributionManager(toolBarManager, TOOLBAR_LOCATION);
+		}
+		toolBarManager.update(true);
+
+		final Label separator = new Label(toolbarContainer, SWT.SEPARATOR | SWT.HORIZONTAL);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(separator);
+
+		final Composite newParent = new Composite(parent, SWT.NONE);
+		newParent.setLayout(new FillLayout());
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newParent);
+
+		super.createPartControl(newParent);
 
 		final Browser browser = findBrowser(parent);
 		if (browser != null) {
 			browser.addLocationListener(new ModelLocationListener());
 		}
+
+		// Find the Mylyn tab folder and dynamically toggle toolbar visibility on switch
+		final CTabFolder tabFolder = findTabFolder(newParent);
+		if (tabFolder != null) {
+
+			final Runnable updateToolbarVisibility = () -> {
+				if (toolbarContainer != null && !toolbarContainer.isDisposed()) {
+					// Index 0 represents the "Source" tab, Index 1 is the "Preview" tab
+					final boolean isSourcePage = tabFolder.getSelectionIndex() == 0;
+					toolbarContainer.setVisible(isSourcePage);
+					if (toolbarContainer.getLayoutData() instanceof final GridData gridData) {
+						gridData.exclude = !isSourcePage;
+					}
+					// Request parent to adjust bounds immediately to reclaim/release space
+					parent.layout(true, true);
+				}
+			};
+
+			tabFolder.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent e) {
+					updateToolbarVisibility.run();
+				}
+			});
+			updateToolbarVisibility.run();
+		}
+	}
+
+	// Helper method to traverse the widget tree and find the CTabFolder control
+	private CTabFolder findTabFolder(final Control control) {
+		if (control instanceof final CTabFolder tabFolder) {
+			return tabFolder;
+		}
+		if (control instanceof final Composite comp) {
+			for (final Control child : comp.getChildren()) {
+				final CTabFolder tf = findTabFolder(child);
+				if (tf != null) {
+					return tf;
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void dispose() {
+		if (toolBarManager != null) {
+			if (menuService != null) {
+				menuService.releaseContributions(toolBarManager);
+			}
+			toolBarManager.dispose();
+		}
+		super.dispose();
 	}
 
 	private Browser findBrowser(final Control control) {
@@ -92,7 +186,7 @@ public class AsciiDocDocumentationEditor extends MarkupEditor implements ITypeEd
 				}
 				return new FileEditorInput(docFile);
 			} catch (final CoreException e) {
-				FordiacLogHelper.logError("Cann not get ascii doc file!", e); //$NON-NLS-1$
+				ILog.get().error("Cann not get ascii doc file!", e); //$NON-NLS-1$
 			}
 		}
 		return null;

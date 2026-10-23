@@ -114,15 +114,15 @@ public class PackageInfoWidget extends TypeInfoWidget {
 		changePackageNameButton = getWidgetFactory().createButton(composite, null, SWT.PUSH);
 		changePackageNameButton.setToolTipText(Messages.ChangePackageNameRefactoring_Tooltip);
 		changePackageNameButton.setImage(getChangePackageNameImage());
-		changePackageNameButton.addDisposeListener(e -> disposeChangePackageNameImage());
+		changePackageNameButton.addDisposeListener(_ -> disposeChangePackageNameImage());
 		changePackageNameButton
-				.addSelectionListener(SelectionListener.widgetSelectedAdapter(ev -> openPackageNameRefactoring()));
+				.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> openPackageNameRefactoring()));
 		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(changePackageNameButton);
 		quickFixButton = getWidgetFactory().createButton(composite, null, SWT.PUSH);
 		quickFixButton.setToolTipText(Messages.ChangePackageNameRefactoring_QuickFixTooltip);
 		quickFixButton.setImage(getQuickFixImage());
-		quickFixButton.addDisposeListener(e -> disposeQuickFixImage());
-		quickFixButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(ev -> openPackageNameQuickFix()));
+		quickFixButton.addDisposeListener(_ -> disposeQuickFixImage());
+		quickFixButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> openPackageNameQuickFix()));
 		final GridData quickFixLayoutData = GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create();
 		quickFixLayoutData.exclude = true;
 		quickFixButton.setLayoutData(quickFixLayoutData);
@@ -146,7 +146,7 @@ public class PackageInfoWidget extends TypeInfoWidget {
 		organizeImportsButton
 				.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ELCL_SYNCED));
 		organizeImportsButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		organizeImportsButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(ev -> {
+		organizeImportsButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			executeCommand(new OrganizeImportsCommand(getType()));
 			packageViewer.refresh();
 		}));
@@ -157,7 +157,7 @@ public class PackageInfoWidget extends TypeInfoWidget {
 		configureImportsTableLayout(packageViewer, tableComposite);
 		packageViewer.setContentProvider(new PackageContentProvider());
 
-		buttons.bindToTableViewer(packageViewer, this, ref -> new AddNewImportCommand(getType()),
+		buttons.bindToTableViewer(packageViewer, this, _ -> new AddNewImportCommand(getType()),
 				ref -> new DeleteImportCommand(getType().getCompilerInfo(), (Import) ref));
 	}
 
@@ -181,8 +181,8 @@ public class PackageInfoWidget extends TypeInfoWidget {
 
 	private Image getQuickFixImage() {
 		if (quickFixImage == null) {
-			final ImageDescriptor imageDescriptor = AbstractUIPlugin
-					.imageDescriptorFromPlugin("org.eclipse.ui.ide", QUICK_FIX_ICON); //$NON-NLS-1$
+			final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui.ide", //$NON-NLS-1$
+					QUICK_FIX_ICON);
 			if (imageDescriptor != null) {
 				quickFixImage = imageDescriptor.createImage();
 			}
@@ -383,8 +383,13 @@ public class PackageInfoWidget extends TypeInfoWidget {
 		@Override
 		protected void setValue(final Object element, final Object value) {
 			if (element instanceof final Import imp && value instanceof final String importedNamespace) {
-				commandExecutor.executeCommand(new ChangeImportNamespaceCommand(imp, importedNamespace));
-				getViewer().refresh(element);
+				if (importedNamespace.isBlank()) {
+					commandExecutor.executeCommand(new DeleteImportCommand((CompilerInfo) imp.eContainer(), imp));
+					getViewer().refresh();
+				} else {
+					commandExecutor.executeCommand(new ChangeImportNamespaceCommand(imp, importedNamespace.strip()));
+					getViewer().refresh(element);
+				}
 			}
 		}
 	}

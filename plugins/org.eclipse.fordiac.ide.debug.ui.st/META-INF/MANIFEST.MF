@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Debug UI
 Bundle-SymbolicName: org.eclipse.fordiac.ide.debug.ui.st;singleton:=true
-Bundle-Version: 3.1.200.qualifier
+Bundle-Version: 3.1.300.qualifier
 Bundle-Vendor: Eclipse 4diac
 Automatic-Module-Name: org.eclipse.fordiac.ide.debug.ui.st
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -32,4 +32,3 @@ Require-Bundle: org.eclipse.core.runtime,
 Export-Package: org.eclipse.fordiac.ide.debug.ui.st,
  org.eclipse.fordiac.ide.debug.ui.st.breakpoint,
  org.eclipse.fordiac.ide.debug.ui.st.util
-Import-Package: org.eclipse.fordiac.ide.util

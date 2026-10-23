@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,11 +14,14 @@
 package org.eclipse.fordiac.ide.globalconstantseditor;
 
 import org.eclipse.fordiac.ide.globalconstantseditor.globalConstants.GlobalConstantsPackage;
+import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryTags;
+import org.eclipse.fordiac.ide.structuredtextcore.STCoreStandaloneSetup;
 
 import com.google.inject.Injector;
 
 /**
- * Initialization support for running Xtext languages without Equinox extension registry.
+ * Initialization support for running Xtext languages without Equinox extension
+ * registry.
  */
 public class GlobalConstantsStandaloneSetup extends GlobalConstantsStandaloneSetupGenerated {
 
@@ -30,6 +33,7 @@ public class GlobalConstantsStandaloneSetup extends GlobalConstantsStandaloneSet
 	public void register(final Injector injector) {
 		GlobalConstantsPackage.eINSTANCE.eClass();
 		super.register(injector);
+		STCoreStandaloneSetup.registerFileExtensions(injector, TypeLibraryTags.GLOBAL_CONST_FILE_ENDING);
 	}
 
 }

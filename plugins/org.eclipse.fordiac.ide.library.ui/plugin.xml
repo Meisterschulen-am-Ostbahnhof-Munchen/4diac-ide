@@ -24,42 +24,64 @@
             extensions="MF"
             id="org.eclipse.fordiac.ide.library.ui.editors.ManifestEditor"
             matchingStrategy="org.eclipse.fordiac.ide.ui.editors.FordiacEditorMatchingStrategy"
-            name="Manifest Editor">
+            name="%editor.manifest.name">
       </editor>
       <editorContentTypeBinding
             contentTypeId="org.eclipse.fordiac.ide.library.ui.manifest"
             editorId="org.eclipse.fordiac.ide.library.ui.editors.ManifestEditor">
       </editorContentTypeBinding>
    </extension>
+   
+   
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"
             file-names="MANIFEST.MF"
             id="org.eclipse.fordiac.ide.library.ui.manifest"
-            name="Manifest file"
+            name="%content-type.manifest.name"
             priority="normal">
       </content-type>
    </extension>
+   
+   
    <extension
          point="org.eclipse.ui.importWizards">
       <category
             id="org.eclipse.fordiac.ide.library.ui.wizards.importCategory"
-            name="Library Importer">
+            name="%wizard.libraryCategory.name">
       </category>
   <wizard
       category="org.eclipse.fordiac.ide.library.ui.wizards.importCategory"
       class="org.eclipse.fordiac.ide.library.ui.wizards.UnifiedLibraryImportWizard"
+      icon="fordiacimage://ICON_LINKED_LIBRARY"
       id="org.eclipse.fordiac.ide.library.ui.wizards.UnifiedLibraryImportWizard"
-      name="Library Import">
-    <description>Browse and import libraries from GitLab, archives, or existing workspace libraries.</description>
+      name="%wizard.unifiedLibraryImport.name">
+    <description>%wizard.unifiedLibraryImport.description</description>
   </wizard>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.eclipse.fordiac.ide.library.ui.wizards.exportCategory"
+            name="%wizard.libraryCategory.name">
+      </category>
+  <wizard
+      category="org.eclipse.fordiac.ide.library.ui.wizards.exportCategory"
+      class="org.eclipse.fordiac.ide.library.ui.wizards.LibraryExportWizard"
+      icon="fordiacimage://ICON_LINKED_LIBRARY"
+      id="org.eclipse.fordiac.ide.library.ui.wizards.LibraryExportWizard"
+      name="%wizard.libraryExport.name">
+    <description>%wizard.libraryExport.description</description>
+  </wizard>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.activities">
     <activity
-    	name="Library Import Wizard Hiding Activity"
-    	description="Activity for disabling the library import wizards when the selection is not correct"
+    	name="%activity.wizardDisabling.name"
+    	description="%activity.wizardDisabling.description"
     	id="org.eclipse.fordiac.ide.ui.wizardDisabling">
     	<enabledWhen>
     		<and>
@@ -93,9 +115,9 @@
 	<extension point="org.eclipse.ui.commands">
   		<command
       		id="org.eclipse.fordiac.ide.library.ui.openManageLibraryWizard"
-      		name="Open My Wizard"/>
+      		name="%command.openManageLibraryWizard.name"/>
 	</extension>
-
+	
 <extension point="org.eclipse.ui.handlers">
   <handler
       commandId="org.eclipse.fordiac.ide.library.ui.openManageLibraryWizard"
@@ -138,7 +160,7 @@
             category="org.eclipse.fordiac.ide.preferences.FordiacPreferencePage"
             class="org.eclipse.fordiac.ide.library.ui.preferences.LibraryPreferencePage"
             id="org.eclipse.fordiac.ide.library.preferences.LibraryPreferences"
-            name="Library">
+            name="%preferencePage.library.name">
       </page>
    </extension>
    <extension
@@ -147,7 +169,7 @@
             category="org.eclipse.fordiac.ide.properties.FordiacPropertyPage"
             class="org.eclipse.fordiac.ide.library.ui.preferences.LibraryPreferencePage"
             id="org.eclipse.fordiac.ide.library.properties.LibraryPreferences"
-            name="Library">
+            name="%propertyPage.library.name">
          <enabledWhen>
             <adapt
                   type="org.eclipse.core.resources.IProject">

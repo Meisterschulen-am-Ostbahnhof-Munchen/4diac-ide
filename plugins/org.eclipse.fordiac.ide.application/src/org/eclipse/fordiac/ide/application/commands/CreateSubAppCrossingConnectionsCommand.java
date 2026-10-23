@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +14,8 @@
  *     - implemented special cases, handle existing pins gracefully
  *   Fabio Gandolfi
  *     - reuse connections if already exists between fb and subapp
+ *   Michael Oberlehner
+ *     - support struct member connections across subapplications
  *******************************************************************************/
 package org.eclipse.fordiac.ide.application.commands;
 
@@ -38,6 +40,7 @@ import org.eclipse.fordiac.ide.model.data.StructuredType;
 import org.eclipse.fordiac.ide.model.datatype.helper.IecTypes;
 import org.eclipse.fordiac.ide.model.helpers.ArraySizeHelper;
 import org.eclipse.fordiac.ide.model.helpers.ImportHelper;
+import org.eclipse.fordiac.ide.model.helpers.PackageNameHelper;
 import org.eclipse.fordiac.ide.model.helpers.VarInOutHelper;
 import org.eclipse.fordiac.ide.model.libraryElement.AdapterDeclaration;
 import org.eclipse.fordiac.ide.model.libraryElement.BlockFBNetworkElement;
@@ -108,6 +111,14 @@ public class CreateSubAppCrossingConnectionsCommand extends Command implements S
 		}
 		return new CreateSubAppCrossingConnectionsCommand(source, destination, sourceNetworks, destinationNetworks,
 				match);
+	}
+
+	public static boolean hasCommonFBNetwork(final IInterfaceElement source, final IInterfaceElement destination) {
+		Objects.requireNonNull(source);
+		Objects.requireNonNull(destination);
+		final List<FBNetwork> sourceNetworks = buildHierarchy(source);
+		final List<FBNetwork> destinationNetworks = buildHierarchy(destination);
+		return sourceNetworks.stream().anyMatch(destinationNetworks::contains);
 	}
 
 	@Override
@@ -310,8 +321,8 @@ public class CreateSubAppCrossingConnectionsCommand extends Command implements S
 		}
 
 		final Stream<? extends IInterfaceElement> pinStream = switch (ie) {
-		case final Event e when isRightPath -> outerFB.getInterface().getEventInputs().stream();
-		case final Event e -> outerFB.getInterface().getEventOutputs().stream();
+		case final Event _ when isRightPath -> outerFB.getInterface().getEventInputs().stream();
+		case final Event _ -> outerFB.getInterface().getEventOutputs().stream();
 
 		case final VarDeclaration v when isRightPath && v.isInOutVar() ->
 			outerFB.getInterface().getInOutVars().stream();
@@ -392,7 +403,7 @@ public class CreateSubAppCrossingConnectionsCommand extends Command implements S
 
 			// check if import is required by trying to resolve the type
 			final var resolvedEntry = ImportHelper.resolveImport(entry.getTypeName(), root,
-					dataTypeLib::getTypeIfExists, name -> null);
+					dataTypeLib::getTypeIfExists, _ -> null);
 			if (resolvedEntry == null) {
 				final var importCommand = new AddNewImportCommand(root, entry.getFullTypeName());
 				importCommand.execute();
@@ -410,12 +421,15 @@ public class CreateSubAppCrossingConnectionsCommand extends Command implements S
 		}
 
 		for (final String namespace : searchSupport.getImportedNamespaces()) {
-			final var constEntry = typeLibrary.getGlobalConstantsEntry(namespace);
+
+			final var constEntry = Optional.ofNullable(typeLibrary.getGlobalConstantsEntry(namespace)).orElseGet(
+					() -> typeLibrary.getGlobalConstantsEntry(PackageNameHelper.extractPackageName(namespace)));
+
 			if (constEntry == null) {
 				continue;
 			}
 			final var resolvedEntry = ImportHelper.resolveImport(constEntry.getTypeName(), root,
-					typeLibrary::getGlobalConstantsEntry, name -> null);
+					typeLibrary::getGlobalConstantsEntry, _ -> null);
 
 			if (resolvedEntry == null) {
 				final var importCommand = new AddNewImportCommand(root, namespace);

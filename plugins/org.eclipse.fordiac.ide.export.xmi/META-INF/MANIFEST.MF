@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: XMI Export
 Bundle-SymbolicName: org.eclipse.fordiac.ide.export.xmi;singleton:=true
-Bundle-Version: 3.2.100.qualifier
+Bundle-Version: 3.2.200.qualifier
 Bundle-Vendor: Eclipse 4diac
 Automatic-Module-Name: org.eclipse.fordiac.ide.export.xmi
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Require-Bundle: com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
@@ -24,3 +24,4 @@ Require-Bundle: com.google.guava,
  org.eclipse.fordiac.ide.structuredtextfunctioneditor.ui,
  org.eclipse.fordiac.ide.globalconstantseditor.ui
 Export-Package: org.eclipse.fordiac.ide.export.xmi
+Bundle-Localization: plugin

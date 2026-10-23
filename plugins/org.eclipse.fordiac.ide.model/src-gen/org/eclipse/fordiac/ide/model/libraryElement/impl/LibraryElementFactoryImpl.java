@@ -93,7 +93,6 @@ import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElementFactory;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElementPackage;
 import org.eclipse.fordiac.ide.model.libraryElement.Link;
-import org.eclipse.fordiac.ide.model.libraryElement.LocalVariable;
 import org.eclipse.fordiac.ide.model.libraryElement.Mapping;
 import org.eclipse.fordiac.ide.model.libraryElement.MappingTarget;
 import org.eclipse.fordiac.ide.model.libraryElement.Multiplexer;
@@ -101,6 +100,7 @@ import org.eclipse.fordiac.ide.model.libraryElement.OriginalSource;
 import org.eclipse.fordiac.ide.model.libraryElement.OtherAlgorithm;
 import org.eclipse.fordiac.ide.model.libraryElement.OtherMethod;
 import org.eclipse.fordiac.ide.model.libraryElement.OutputPrimitive;
+import org.eclipse.fordiac.ide.model.libraryElement.OverrideAttribute;
 import org.eclipse.fordiac.ide.model.libraryElement.Position;
 import org.eclipse.fordiac.ide.model.libraryElement.PositionableElement;
 import org.eclipse.fordiac.ide.model.libraryElement.Primitive;
@@ -241,7 +241,6 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 			case LibraryElementPackage.INTERFACE_LIST: return createInterfaceList();
 			case LibraryElementPackage.LIBRARY_ELEMENT: return createLibraryElement();
 			case LibraryElementPackage.LINK: return createLink();
-			case LibraryElementPackage.LOCAL_VARIABLE: return createLocalVariable();
 			case LibraryElementPackage.MAPPING: return createMapping();
 			case LibraryElementPackage.MAPPING_TARGET: return createMappingTarget();
 			case LibraryElementPackage.MULTIPLEXER: return createMultiplexer();
@@ -281,6 +280,7 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 			case LibraryElementPackage.VAR_DECLARATION: return createVarDeclaration();
 			case LibraryElementPackage.VERSION_INFO: return createVersionInfo();
 			case LibraryElementPackage.WITH: return createWith();
+			case LibraryElementPackage.OVERRIDE_ATTRIBUTE: return createOverrideAttribute();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -1011,17 +1011,6 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 	 * @generated
 	 */
 	@Override
-	public LocalVariable createLocalVariable() {
-		LocalVariableImpl localVariable = new LocalVariableImpl();
-		return localVariable;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Mapping createMapping() {
 		MappingImpl mapping = new MappingImpl();
 		return mapping;
@@ -1443,6 +1432,17 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 	public VarConfigInstance createVarConfigInstance() {
 		VarConfigInstanceImpl varConfigInstance = new VarConfigInstanceImpl();
 		return varConfigInstance;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public OverrideAttribute createOverrideAttribute() {
+		OverrideAttributeImpl overrideAttribute = new OverrideAttributeImpl();
+		return overrideAttribute;
 	}
 
 	/**

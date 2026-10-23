@@ -120,8 +120,8 @@ public class ActionEditingComposite<T extends BaseECAction> {
 
 			switch (property) {
 			case ACTION_ALGORITHM:
-				final List<Algorithm> algorithms = ECCContentAndLabelProvider.getAlgorithms(getBaseFBType());
-				final Algorithm alg = (selected < algorithms.size()) ? algorithms.get(selected) : null;
+				final List<Algorithm> algos = ECCContentAndLabelProvider.getAlgorithms(getBaseFBType());
+				final Algorithm alg = ((0 <= selected) && (selected < algos.size())) ? algos.get(selected) : null;
 				cmd = new ChangeAlgorithmCommand(selectedAction, alg);
 				break;
 			case ACTION_EVENT:
@@ -178,7 +178,7 @@ public class ActionEditingComposite<T extends BaseECAction> {
 		actionViewer.setLabelProvider(new ActionListLabelProvider());
 
 		actionMgmButtons.bindToTableViewer(actionViewer, commandExecutor,
-				ref -> new CreateECActionCommand<>(type.createNewAction(), type),
+				_ -> new CreateECActionCommand<>(type.createNewAction(), type),
 				ref -> new DeleteECActionCommand<>((T) ref, type),
 				ref -> new ChangeActionOrderCommand<>(type, (T) ref, true),
 				ref -> new ChangeActionOrderCommand<>(type, (T) ref, false));

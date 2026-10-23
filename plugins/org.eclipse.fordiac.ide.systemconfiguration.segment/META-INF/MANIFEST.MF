@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.fordiac.ide.systemconfiguration.segment;singleton:=true
-Bundle-Version: 3.1.200.qualifier
+Bundle-Version: 3.1.300.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.fordiac.ide.model.commands,
  org.eclipse.fordiac.ide.systemconfiguration,
  org.eclipse.ui.views.properties.tabbed
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Automatic-Module-Name: org.eclipse.fordiac.ide.systemconfiguration.segment
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.fordiac.ide.util

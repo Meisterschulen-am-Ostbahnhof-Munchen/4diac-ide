@@ -6,7 +6,7 @@
 		<relativePath>../../pom.xml</relativePath>
 		<groupId>org.eclipse.fordiac</groupId>
 		<artifactId>parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.4.0-SNAPSHOT</version>
 	</parent>
 
 
@@ -33,8 +33,8 @@
 					<target>
 						<artifact>
 							<groupId>org.eclipse.fordiac</groupId>
-							<artifactId>org.eclipse.fordiac.ide.product</artifactId>
-							<version>3.3.0-SNAPSHOT</version>
+							<artifactId>org.eclipse.fordiac.ide.target</artifactId>
+							<version>3.4.0-SNAPSHOT</version>
 						</artifact>
 					</target>
 					<filters>
@@ -106,7 +106,7 @@
 									<filtering>true</filtering>
 								</resource>
 							</resources>
-							<overwrite>true</overwrite>
+							<changeDetection>always</changeDetection>
 						</configuration>
 					</execution>
 				</executions>

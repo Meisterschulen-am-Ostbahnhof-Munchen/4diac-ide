@@ -115,6 +115,19 @@ public class Messages extends NLS {
 
 	public static String UnifiedLibraryImportWizardPage_work_with;
 
+	public static String LibraryExporter_Title;
+	public static String LibraryExporter_Description;
+	public static String LibraryExporter_OutputDirectory;
+	public static String LibraryExporter_Browse;
+	public static String LibraryExporter_BrowseText;
+	public static String LibraryExporter_BrowseMessage;
+	public static String LibraryExporter_ErrorTitle;
+	public static String LibraryExporter_ErrorMessage;
+	public static String LibraryExporter_TypeSelection;
+	public static String LibraryExporter_UseIncludeExclude;
+	public static String LibraryExporter_ExportAllTypes;
+	public static String LibraryExporter_ExportTypesAsSIFB;
+
 	// Manage Library Wizard
 	public static String ManageLibraryWizard_Label;
 	public static String ManageLibraryWizard_Description;

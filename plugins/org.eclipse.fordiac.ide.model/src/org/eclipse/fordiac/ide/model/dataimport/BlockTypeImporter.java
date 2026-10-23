@@ -20,6 +20,7 @@
  *  Martin Jobst - refactor marker handling
  *  Alois Zoitl  - updated for new adapter FB handling
  *  Martin Jobst - extract interface importer
+ *  Franz Höpfinger - fix Service comment being read onto the wrong element
  ********************************************************************************/
 package org.eclipse.fordiac.ide.model.dataimport;
 
@@ -31,7 +32,6 @@ import java.util.List;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.fordiac.ide.model.LibraryElementTags;
 import org.eclipse.fordiac.ide.model.Messages;
@@ -51,10 +51,6 @@ public abstract class BlockTypeImporter extends TypeImporter {
 
 	private InterfaceListImporter interfaceListImporter;
 
-	protected BlockTypeImporter(final IFile file) {
-		super(file);
-	}
-
 	protected BlockTypeImporter(final InputStream inputStream, final TypeLibrary typeLibrary) {
 		super(inputStream, typeLibrary);
 	}
@@ -65,7 +61,7 @@ public abstract class BlockTypeImporter extends TypeImporter {
 
 	public FBType loadInterface() throws IOException, XMLStreamException, TypeImportException {
 		setElement(createRootModelElement());
-		try (ImporterStreams streams = createInputStreams(getInputStream())) {
+		try (ImporterStreams _ = createInputStreams(getInputStream())) {
 			proceedToStartElementNamed(getStartElementName());
 			readNameCommentAttributes(getElement());
 
@@ -122,7 +118,7 @@ public abstract class BlockTypeImporter extends TypeImporter {
 		final ServiceInterface leftInter = LibraryElementFactory.eINSTANCE.createServiceInterface();
 		leftInter.setName(leftInterface);
 		type.getService().setLeftInterface(leftInter);
-		readCommentAttribute(type);
+		readCommentAttribute().ifPresent(type.getService()::setComment);
 
 		processChildren(LibraryElementTags.SERVICE_ELEMENT, name -> {
 			if (LibraryElementTags.SERVICE_SEQUENCE_ELEMENT.equals(name)) {

@@ -567,15 +567,6 @@ public interface LibraryElementFactory extends EFactory {
 	Link createLink();
 
 	/**
-	 * Returns a new object of class '<em>Local Variable</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Local Variable</em>'.
-	 * @generated
-	 */
-	LocalVariable createLocalVariable();
-
-	/**
 	 * Returns a new object of class '<em>Mapping</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -925,6 +916,15 @@ public interface LibraryElementFactory extends EFactory {
 	 * @generated
 	 */
 	VarConfigInstance createVarConfigInstance();
+
+	/**
+	 * Returns a new object of class '<em>Override Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Override Attribute</em>'.
+	 * @generated
+	 */
+	OverrideAttribute createOverrideAttribute();
 
 	/**
 	 * Returns the package supported by this factory.

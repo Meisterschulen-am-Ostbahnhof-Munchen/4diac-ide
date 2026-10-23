@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2021 Johannes Kepler University Linz and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Antonio Garmendía, Bianca Wiesmayr
+ *       - initial implementation and/or documentation
+ *   Paul Pavlicek - cleanup
+ *   Felix Schmid - implemented functions and subapps
+ *   Jose Cabral  - extracted from DefaultRunFBType
+ *******************************************************************************/
 package org.eclipse.fordiac.ide.fb.interpreter;
 
 import java.util.List;
@@ -9,7 +25,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.fordiac.ide.fb.interpreter.OpSem.EventOccurrence;
 import org.eclipse.fordiac.ide.fb.interpreter.OpSem.SimpleFBTypeRuntime;
 import org.eclipse.fordiac.ide.fb.interpreter.mm.VariableUtils;
-import org.eclipse.fordiac.ide.model.eval.Evaluator;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElementFactory;
 import org.eclipse.fordiac.ide.model.libraryElement.SimpleECAction;
 import org.eclipse.fordiac.ide.model.libraryElement.SimpleFBType;
@@ -17,7 +32,7 @@ import org.eclipse.fordiac.ide.model.libraryElement.SimpleFBType;
 public class SimpleFBTypeDefaultInterpreter extends FBTypeWithEvaluatorDefaultInterpreter {
 
 	public SimpleFBTypeDefaultInterpreter(final EventOccurrence eventOccurrence,
-			final Map<String, Evaluator> evaluatorCache) {
+			final Map<String, EvaluatorCacheEntry> evaluatorCache) {
 		super(eventOccurrence, evaluatorCache);
 	}
 

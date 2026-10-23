@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Replay Debugging UI
 Bundle-SymbolicName: org.eclipse.fordiac.ide.debug.replaydebugging.ui;singleton:=true
-Bundle-Version: 3.3.0.qualifier
+Bundle-Version: 3.3.100.qualifier
 Automatic-Module-Name: org.eclipse.fordiac.ide.debug.replaydebugging.ui
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Require-Bundle: 
  org.eclipse.core.runtime,
  org.eclipse.debug.core,
@@ -23,6 +23,5 @@ Require-Bundle:
  org.eclipse.osgi,
  org.eclipse.swt,
  org.eclipse.ui.ide
-Import-Package: org.eclipse.fordiac.ide.util,
- org.eclipse.ui.contexts,
+Import-Package: org.eclipse.ui.contexts,
  org.eclipse.ui.handlers

@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Deployment Debug
 Bundle-SymbolicName: org.eclipse.fordiac.ide.deployment.debug;singleton:=true
-Bundle-Version: 3.2.100.qualifier
+Bundle-Version: 3.2.200.qualifier
 Bundle-Vendor: Eclipse 4diac
 Automatic-Module-Name: org.eclipse.fordiac.ide.deployment.debug
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -21,4 +21,3 @@ Export-Package: org.eclipse.fordiac.ide.deployment.debug,
  org.eclipse.fordiac.ide.deployment.debug.fb,
  org.eclipse.fordiac.ide.deployment.debug.preferences,
  org.eclipse.fordiac.ide.deployment.debug.watch
-Import-Package: org.eclipse.fordiac.ide.util
