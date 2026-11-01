@@ -162,7 +162,8 @@ public class STAlgorithmInitialValueBuilderParticipant implements IXtextBuilderP
 			}
 			switch (allContents.next()) {
 			case final FBNetworkElement fbNetworkElement when fbNetworkElement.isMapped()
-					&& fbNetworkElement.getMapping().getTo() == fbNetworkElement -> allContents.prune();
+					&& fbNetworkElement.getMapping().getTo() == fbNetworkElement ->
+				allContents.prune();
 			case final Attribute attribute -> {
 				validateType(attribute, delta, typeUsageCollector, ignoreWarnings, context, monitor);
 				validateValue(attribute, delta, typeUsageCollector, variableUsageValidator, ignoreWarnings, context,
@@ -229,7 +230,7 @@ public class STAlgorithmInitialValueBuilderParticipant implements IXtextBuilderP
 		}
 		// only track usage if the type is an error type; it is already reported
 		// elsewhere, so parsing the value against it would only add a misleading marker
-		if (isErrorType((DataType) varDeclaration.getType())) {
+		if (isErrorType(varDeclaration.getType())) {
 			validate(varDeclaration.getValue(), delta, typeUsageCollector, variableUsageValidator, new ArrayList<>(),
 					context);
 			return;

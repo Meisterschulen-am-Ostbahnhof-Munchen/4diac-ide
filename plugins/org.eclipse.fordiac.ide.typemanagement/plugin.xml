@@ -132,15 +132,20 @@
            name="%command.RenameElement">
      </command>
      <command
+           categoryId="org.eclipse.ltk.ui.category.refactoring"
+           id="org.eclipse.fordiac.ide.typemanagement.addStructMember"
+           name="%command.AddStructMember">
+     </command>
+     <command
            id="org.eclipse.fordiac.ide.typemanagement.connectionstostruct"
            name="%command.ConnectionsToStruct">
      </command>
       <command
       id="org.eclipse.fordiac.ide.typemanagement.insertAdapterProxy"
-      name="Insert Adapter Proxy"/>
+      name="%command.insertAdapterProxy.name"/>
         <command
       id="org.eclipse.fordiac.ide.typemanagement.refactoring.adapter.replaceConnectionWithAdapter"
-      name="Replace Connection with Adapter"/>
+      name="%command.replaceConnectionWithAdapter.name"/>
      <command
            id="org.eclipse.fordiac.ide.typemanagement.repairbrokenconnection"
            name="%command.RepairBrokenConnection">
@@ -159,6 +164,12 @@
             contextId="org.eclipse.fordiac.ide.gef"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="SHIFT+ALT+R">
+      </key>
+      <key
+            commandId="org.eclipse.fordiac.ide.typemanagement.addStructMember"
+            contextId="org.eclipse.fordiac.ide.gef"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="SHIFT+ALT+M">
       </key>
    </extension>
    <extension point="org.eclipse.ui.handlers">
@@ -181,6 +192,16 @@
                  </test>
               </iterate>
            </with></enabledWhen>
+     </handler>
+     <handler
+           class="org.eclipse.fordiac.ide.typemanagement.refactoring.structmember.ui.AddStructMemberRefactoringHandler"
+           commandId="org.eclipse.fordiac.ide.typemanagement.addStructMember">
+        <enabledWhen>
+           <with variable="selection">
+              <test property="org.eclipse.fordiac.ide.typemanagement.addStructMemberSupported">
+              </test>
+           </with>
+        </enabledWhen>
      </handler>
      <handler
            class="org.eclipse.fordiac.ide.typemanagement.refactoring.handler.ConnectionsToStructHandler"
@@ -583,6 +604,13 @@
             properties="ConnectionsToStructSupported"
             type="java.lang.Object">
       </propertyTester>
+      <propertyTester
+            class="org.eclipse.fordiac.ide.typemanagement.refactoring.structmember.ui.AddStructMemberPropertyTester"
+            id="org.eclipse.fordiac.ide.typemanagement.addStructMemberTester"
+            namespace="org.eclipse.fordiac.ide.typemanagement"
+            properties="addStructMemberSupported"
+            type="java.lang.Object">
+      </propertyTester>
        <propertyTester
             class="org.eclipse.fordiac.ide.typemanagement.refactoring.adapter.InsertAdapterProxyPropertyTester"
             id="org.eclipse.fordiac.ide.typemanagement.insertAdapterProxyTester"
@@ -671,6 +699,13 @@
                </visibleWhen>
             </command>
             <command
+                  commandId="org.eclipse.fordiac.ide.typemanagement.addStructMember"
+                  label="%AddStructMember_label"
+                  style="push">
+               <visibleWhen checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
                   commandId="org.eclipse.fordiac.ide.typemanagement.connectionstostruct"
                   label="%ConnectionsToStruct_label"
                   style="push">
@@ -680,7 +715,6 @@
             </command>
               <command
                   commandId="org.eclipse.fordiac.ide.typemanagement.insertAdapterProxy"
-                  label="Insert Adapter Proxy"
                   style="push">
                <visibleWhen
                      checkEnabled="true">
@@ -688,7 +722,6 @@
             </command>
        <command
           commandId="org.eclipse.fordiac.ide.typemanagement.refactoring.adapter.replaceConnectionWithAdapter"
-          label="Replace Connection with Adapter"
           style="push">
         <!-- Show only when selection passes the tester (prevents a greyed entry) -->
          <visibleWhen
@@ -754,7 +787,7 @@
         <command
             commandId="org.eclipse.ui.newWizard"
             label="%NewTypeWizard_label"
-            tooltip="Create a new type"
+            tooltip="%menu.newType.tooltip"
             icon="fordiacimage://ICON_NEW_FUNCTIONBLOCK">
             <parameter
                 name="newWizardId"
@@ -803,7 +836,6 @@
       locationURI="popup:org.eclipse.fordiac.ide.systemmanagement.ui.systemexplorer?after=group.search">
     <command
         commandId="org.eclipse.fordiac.refactoring.insertAdapterProxy"
-        label="Insert Adapter Proxy"
         style="push">
       <visibleWhen checkEnabled="true">
         <with variable="selection">

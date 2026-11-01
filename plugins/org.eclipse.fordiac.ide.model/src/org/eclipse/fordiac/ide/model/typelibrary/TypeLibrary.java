@@ -43,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -52,6 +53,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.emf.common.notify.impl.SingletonAdapterImpl;
@@ -67,10 +69,10 @@ import org.eclipse.fordiac.ide.model.errormarker.ErrorMarkerBuilder;
 import org.eclipse.fordiac.ide.model.errormarker.FordiacErrorMarker;
 import org.eclipse.fordiac.ide.model.errormarker.FordiacMarkerHelper;
 import org.eclipse.fordiac.ide.model.helpers.PackageNameHelper;
-import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
+import org.eclipse.fordiac.ide.model.libraryElement.ErrorLibraryElement;
+import org.eclipse.fordiac.ide.model.libraryElement.ErrorLibraryElementFactory;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElementPackage;
 import org.eclipse.fordiac.ide.model.typelibrary.impl.TypeEntryFactory;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 
 public final class TypeLibrary extends ConcurrentNotifierImpl {
 
@@ -231,7 +233,7 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 			return null;
 		}
 
-		return fileMap.computeIfAbsent(file, f -> {
+		return fileMap.computeIfAbsent(file, _ -> {
 			final TypeEntry entry = TypeEntryFactory.INSTANCE.createTypeEntry(file);
 			if (entry != null) {
 				final Optional<String> message = IdentifierVerifier.verifyIdentifier(entry.getTypeName());
@@ -252,23 +254,11 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 		if (entry == null) {
 			throw new IllegalArgumentException("Unknown type class " + typeClass.getName()); //$NON-NLS-1$
 		}
-		final LibraryElement libraryElement = entry.getType();
-		PackageNameHelper.setFullTypeName(libraryElement, typeName);
-		entry.setType(libraryElement); // update type name in entry
+		final ErrorLibraryElement libraryElement = ErrorLibraryElementFactory.INSTANCE.create(typeName, typeClass);
+		entry.setType(libraryElement);
 		entry.setTypeLibrary(this);
 		final TypeEntry oldEntry = putBlockTypeEntryIfAbsent(entry);
 		return oldEntry != null ? oldEntry : entry;
-	}
-
-	private TypeEntry removeErrorTypeEntry(final TypeEntry entry) {
-		TypeEntry oldEntry = getBlockTypeEntry(entry);
-		while (oldEntry != null && oldEntry.getFile() == null) {
-			if (removeBlockTypeEntry(oldEntry)) {
-				return oldEntry;
-			}
-			oldEntry = getBlockTypeEntry(entry);
-		}
-		return null;
 	}
 
 	public void addTypeEntry(final TypeEntry entry) {
@@ -290,16 +280,15 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 				handleDuplicateTypeName(entry);
 			}
 		} else {
-			// remove stale error marker data type
-			final TypeEntry oldEntry = removeErrorTypeEntry(entry);
-			// add new type entry
-			typeEntryAdded = addBlockTypeEntry(entry);
+			// add new type entry, replace old error type entry if present
+			final AtomicReference<TypeEntry> replaced = new AtomicReference<>();
+			typeEntryAdded = addBlockTypeEntry(entry, replaced);
 			if (!typeEntryAdded) {
 				handleDuplicateTypeName(entry);
 			}
 			// trigger transitive refresh after new entry has been added
-			if (oldEntry != null) {
-				oldEntry.setTypeLibrary(null);
+			if (replaced.get() != null) {
+				replaced.get().setTypeLibrary(null);
 			}
 		}
 		boolean programTypeEntryAdded = true;
@@ -324,7 +313,7 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 			createTypeLibraryMarker(entry.getFile(),
 					MessageFormat.format(Messages.TypeLibrary_TypeExists, entry.getFullTypeName()));
 		} else {
-			FordiacLogHelper.logWarning(MessageFormat.format(Messages.TypeLibrary_TypeExists, entry.getFullTypeName()));
+			ILog.get().warn(MessageFormat.format(Messages.TypeLibrary_TypeExists, entry.getFullTypeName()));
 		}
 	}
 
@@ -414,14 +403,14 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 
 	protected void addPackageNameReference(final String packageName) {
 		if (packageName != null && !packageName.isEmpty()) {
-			packages.computeIfAbsent(packageName.toLowerCase(), key -> new AtomicInteger()).incrementAndGet();
+			packages.computeIfAbsent(packageName.toLowerCase(), _ -> new AtomicInteger()).incrementAndGet();
 		}
 	}
 
 	protected void removePackageNameReference(final String packageName) {
 		if (packageName != null && !packageName.isEmpty()) {
 			packages.computeIfPresent(packageName.toLowerCase(),
-					(key, value) -> value.decrementAndGet() > 0 ? value : null);
+					(_, value) -> value.decrementAndGet() > 0 ? value : null);
 		}
 	}
 
@@ -474,7 +463,7 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 			checkReferencedProjectsAdditions();
 			checkAdditions(project);
 		} catch (final CoreException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 		}
 	}
 
@@ -503,7 +492,7 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 		try {
 			currentReferencedProjects.addAll(Arrays.asList(project.getReferencedProjects()));
 		} catch (final CoreException e) {
-			FordiacLogHelper.logWarning(e.getMessage(), e);
+			ILog.get().warn(e.getMessage(), e);
 		}
 		for (final IProject referencedProject : referencedProjects) {
 			if (!currentReferencedProjects.contains(referencedProject)) {
@@ -530,6 +519,52 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 		return putBlockTypeEntryIfAbsent(entry) == null;
 	}
 
+	private boolean addBlockTypeEntry(final TypeEntry entry, final AtomicReference<TypeEntry> replaced) {
+		final String name = entry.getFullTypeName().toLowerCase();
+		return switch (entry) {
+		case final AdapterTypeEntry adpEntry -> addTypeEntry(adapterTypes, name, adpEntry, replaced);
+		case final AttributeTypeEntry atpEntry -> addTypeEntry(attributeTypes, name, atpEntry, replaced);
+		case final DeviceTypeEntry devEntry -> addTypeEntry(deviceTypes, name, devEntry, replaced);
+		case final FBTypeEntry fbtEntry -> addTypeEntry(fbTypes, name, fbtEntry, replaced);
+		case final ResourceTypeEntry resEntry -> addTypeEntry(resourceTypes, name, resEntry, replaced);
+		case final SegmentTypeEntry segEntry -> addTypeEntry(segmentTypes, name, segEntry, replaced);
+		case final SubAppTypeEntry subAppEntry -> addTypeEntry(subAppTypes, name, subAppEntry, replaced);
+		case final SystemEntry sysEntry -> addTypeEntry(systems, name, sysEntry, replaced);
+		case final GlobalConstantsEntry globalConstEntry ->
+			addTypeEntry(globalConstants, name, globalConstEntry, replaced);
+		default -> {
+			ILog.get().error("Unknown type entry to be added to library: " //$NON-NLS-1$
+					+ entry.getClass().getName());
+			yield false;
+		}
+		};
+	}
+
+	/**
+	 * Adds or replaces a type entry in the given map.
+	 *
+	 * @param <T>      the class of the type entry
+	 * @param entries  the map of type entries
+	 * @param name     the name to be used as the map key
+	 * @param entry    the entry to add
+	 * @param replaced the replaced entry if present, unchanged if not
+	 * @return true if the provided entry was added or already present in the map,
+	 *         false otherwise
+	 */
+	static <T extends TypeEntry> boolean addTypeEntry(final Map<String, T> entries, final String name, final T entry,
+			final AtomicReference<? super T> replaced) {
+		return entries.compute(name, (_, existing) -> {
+			if (existing == null) {
+				return entry; // no existing entry
+			}
+			if (existing.getFile() == null) {
+				replaced.set(existing);
+				return entry; // replace existing error entry
+			}
+			return existing; // keep existing valid entry
+		}) == entry;
+	}
+
 	private TypeEntry putBlockTypeEntryIfAbsent(final TypeEntry entry) {
 		final String fullTypeName = entry.getFullTypeName().toLowerCase();
 		return switch (entry) {
@@ -543,7 +578,7 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 		case final SystemEntry sysEntry -> systems.putIfAbsent(fullTypeName, sysEntry);
 		case final GlobalConstantsEntry globalConstEntry -> globalConstants.putIfAbsent(fullTypeName, globalConstEntry);
 		default -> {
-			FordiacLogHelper.logError("Unknown type entry to be added to library: " + entry.getClass().getName()); //$NON-NLS-1$
+			ILog.get().error("Unknown type entry to be added to library: " + entry.getClass().getName()); //$NON-NLS-1$
 			yield null;
 		}
 		};
@@ -562,7 +597,7 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 		case final SystemEntry sysEntry -> systems.remove(fullTypeName, sysEntry);
 		case final GlobalConstantsEntry globalConstEntry -> globalConstants.remove(fullTypeName, globalConstEntry);
 		default -> {
-			FordiacLogHelper.logError("Unknown type entry to be removed from library: " + entry.getClass().getName()); //$NON-NLS-1$
+			ILog.get().error("Unknown type entry to be removed from library: " + entry.getClass().getName()); //$NON-NLS-1$
 			yield true;
 		}
 		};
@@ -571,17 +606,17 @@ public final class TypeLibrary extends ConcurrentNotifierImpl {
 	private TypeEntry getBlockTypeEntry(final TypeEntry entry) {
 		final String fullTypeName = entry.getFullTypeName().toLowerCase();
 		return switch (entry) {
-		case final AdapterTypeEntry adpEntry -> adapterTypes.get(fullTypeName);
-		case final AttributeTypeEntry atpEntry -> attributeTypes.get(fullTypeName);
-		case final DeviceTypeEntry devEntry -> deviceTypes.get(fullTypeName);
-		case final FBTypeEntry fbtEntry -> fbTypes.get(fullTypeName);
-		case final ResourceTypeEntry resEntry -> resourceTypes.get(fullTypeName);
-		case final SegmentTypeEntry segEntry -> segmentTypes.get(fullTypeName);
-		case final SubAppTypeEntry subAppEntry -> subAppTypes.get(fullTypeName);
-		case final SystemEntry sysEntry -> systems.get(fullTypeName);
-		case final GlobalConstantsEntry globalConstEntry -> globalConstants.get(fullTypeName);
+		case final AdapterTypeEntry _ -> adapterTypes.get(fullTypeName);
+		case final AttributeTypeEntry _ -> attributeTypes.get(fullTypeName);
+		case final DeviceTypeEntry _ -> deviceTypes.get(fullTypeName);
+		case final FBTypeEntry _ -> fbTypes.get(fullTypeName);
+		case final ResourceTypeEntry _ -> resourceTypes.get(fullTypeName);
+		case final SegmentTypeEntry _ -> segmentTypes.get(fullTypeName);
+		case final SubAppTypeEntry _ -> subAppTypes.get(fullTypeName);
+		case final SystemEntry _ -> systems.get(fullTypeName);
+		case final GlobalConstantsEntry _ -> globalConstants.get(fullTypeName);
 		default -> {
-			FordiacLogHelper.logError("Unknown type entry to be retrieved from library: " + entry.getClass().getName()); //$NON-NLS-1$
+			ILog.get().error("Unknown type entry to be retrieved from library: " + entry.getClass().getName()); //$NON-NLS-1$
 			yield null;
 		}
 		};

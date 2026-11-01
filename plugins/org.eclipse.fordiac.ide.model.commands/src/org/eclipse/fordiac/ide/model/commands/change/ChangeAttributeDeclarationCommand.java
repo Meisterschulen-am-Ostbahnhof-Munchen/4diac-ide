@@ -18,6 +18,8 @@ import org.eclipse.fordiac.ide.model.helpers.ImportHelper;
 import org.eclipse.fordiac.ide.model.libraryElement.Attribute;
 import org.eclipse.fordiac.ide.model.libraryElement.AttributeDeclaration;
 import org.eclipse.fordiac.ide.model.libraryElement.ConfigurableObject;
+import org.eclipse.fordiac.ide.model.libraryElement.OverrideAttribute;
+import org.eclipse.fordiac.ide.model.libraryElement.TypedSubApp;
 import org.eclipse.fordiac.ide.model.typelibrary.AttributeTypeEntry;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibrary;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryManager;
@@ -48,9 +50,18 @@ public class ChangeAttributeDeclarationCommand extends AbstractChangeAttributeCo
 		final AttributeDeclaration newDecl = ImportHelper.resolveImport(newName, attribute.eContainer(), name -> {
 			final AttributeTypeEntry entry = typeLibrary.getAttributeTypeEntry(name);
 			return entry != null ? entry.getType() : null;
-		}, name -> null);
+		}, _ -> null);
 
-		if (newDecl != null && !newDecl.isValidObject((ConfigurableObject) attribute.eContainer())) {
+		final ConfigurableObject object;
+		if (attribute instanceof final OverrideAttribute override) {
+			object = ((TypedSubApp) override.eContainer()).findByQualifiedName(override.getLocation())
+					.filter(ConfigurableObject.class::isInstance).map(ConfigurableObject.class::cast).findFirst()
+					.orElse(null);
+		} else {
+			object = (ConfigurableObject) attribute.eContainer();
+		}
+
+		if (newDecl != null && !newDecl.isValidObject(object)) {
 			return false;
 		}
 
@@ -62,7 +73,7 @@ public class ChangeAttributeDeclarationCommand extends AbstractChangeAttributeCo
 		final TypeLibrary typeLibrary = TypeLibraryManager.INSTANCE.getTypeLibraryFromContext(attribute);
 
 		final AttributeTypeEntry entry = ImportHelper.resolveImport(newName, attribute.eContainer(),
-				typeLibrary::getAttributeTypeEntry, name -> null);
+				typeLibrary::getAttributeTypeEntry, _ -> null);
 		return forEntry(attribute, entry);
 	}
 

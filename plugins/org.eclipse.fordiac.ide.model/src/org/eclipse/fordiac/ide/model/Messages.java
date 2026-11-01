@@ -23,6 +23,9 @@ import org.eclipse.osgi.util.NLS;
 public final class Messages extends NLS {
 	private static final String BUNDLE_NAME = "plugin"; //$NON-NLS-1$
 
+	public static String AdapterDeclarationAnnotations_MultipleInputConnections;
+	public static String AdapterDeclarationAnnotations_MultipleOutputConnections;
+
 	public static String ArrayValueConverter_IllegalElementValue;
 
 	public static String ArrayValueConverter_InvalidArrayLiteral;
@@ -122,6 +125,7 @@ public final class Messages extends NLS {
 	public static String IdentifierVerifier_QualifiedNameNotValid;
 	public static String IdentifierVerifier_NotMatchingWithFilename;
 	public static String IdentifierVerifier_PackageNameMismatch;
+	public static String OverrideAttributeVerifier_InvalidPath;
 	public static String Import_ERROR_InputVariableTypeNotDefined;
 	public static String Import_ERROR_NameNotDefined;
 	public static String ImportUtils_ERROR_ParameterNotSet;
@@ -254,6 +258,7 @@ public final class Messages extends NLS {
 	public static String AttributeTarget_ServiceSequences_tooltip;
 
 	public static String BaseFBTypeAnnotations_UnsupportedInternalFBType;
+	public static String StructuredTypeAnnotations_CircularReference;
 
 	public static String BlockFBNetworkElementAnnotations_Unused;
 

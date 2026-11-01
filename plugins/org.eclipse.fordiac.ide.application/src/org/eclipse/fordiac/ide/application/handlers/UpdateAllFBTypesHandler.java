@@ -20,10 +20,10 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.fordiac.ide.model.commands.change.UpdateFBTypeCommand;
 import org.eclipse.fordiac.ide.model.libraryElement.FBNetwork;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -43,7 +43,7 @@ public class UpdateAllFBTypesHandler extends AbstractHandler {
 		final CommandStack stack = editor.getAdapter(CommandStack.class);
 
 		fbnetwork.getBlockFBNetworkElements().forEach(element -> {
-			if (element.getType() != null) {
+			if (element.getTypeEntry() != null) {
 				final Command updateFBTypeCmd = new UpdateFBTypeCommand(element);
 				if (updateFBTypeCmd.canExecute()) {
 					command.add(updateFBTypeCmd);
@@ -72,7 +72,7 @@ public class UpdateAllFBTypesHandler extends AbstractHandler {
 						monitor.done();
 					});
 				} catch (final InvocationTargetException | InterruptedException e) {
-					FordiacLogHelper.logError(e.getMessage(), e);
+					ILog.get().error(e.getMessage(), e);
 					// Restore interrupted state
 					Thread.currentThread().interrupt();
 				}

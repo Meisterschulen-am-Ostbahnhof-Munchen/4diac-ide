@@ -23,11 +23,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.fordiac.ide.model.ui
 Bundle-Vendor: Eclipse 4diac
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 3.3.0.qualifier
+Bundle-Version: 3.3.100.qualifier
 Bundle-Name: %FBTypeManagement.bundleName
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.fordiac.ide.typemanagement;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Export-Package: org.eclipse.fordiac.ide.typemanagement,
  org.eclipse.fordiac.ide.typemanagement.commands,
  org.eclipse.fordiac.ide.typemanagement.handlers,
@@ -37,6 +37,8 @@ Export-Package: org.eclipse.fordiac.ide.typemanagement,
  org.eclipse.fordiac.ide.typemanagement.refactoring.copy,
  org.eclipse.fordiac.ide.typemanagement.refactoring.edit,
  org.eclipse.fordiac.ide.typemanagement.refactoring.rename,
+ org.eclipse.fordiac.ide.typemanagement.refactoring.structmember;x-friends:="org.eclipse.fordiac.ide.typemanagement.tests",
+ org.eclipse.fordiac.ide.typemanagement.refactoring.structmember.ui;x-friends:="org.eclipse.fordiac.ide.application",
  org.eclipse.fordiac.ide.typemanagement.util,
  org.eclipse.fordiac.ide.typemanagement.wizards
 Automatic-Module-Name: org.eclipse.fordiac.ide.typemanagement

@@ -31,7 +31,7 @@ import java.util.Optional;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.fordiac.ide.model.LibraryElementTags;
 import org.eclipse.fordiac.ide.model.Messages;
@@ -64,7 +64,6 @@ import org.eclipse.fordiac.ide.model.systemconfiguration.CommunicationConfigurat
 import org.eclipse.fordiac.ide.model.typelibrary.DeviceTypeEntry;
 import org.eclipse.fordiac.ide.model.typelibrary.SegmentTypeEntry;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibrary;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 
 public class SystemImporter extends CommonElementImporter {
 
@@ -74,10 +73,6 @@ public class SystemImporter extends CommonElementImporter {
 
 	public SystemImporter(final InputStream inputStream, final TypeLibrary typeLibrary) {
 		super(inputStream, typeLibrary);
-	}
-
-	public SystemImporter(final IFile systemfile) {
-		super(systemfile);
 	}
 
 	@Override
@@ -91,26 +86,13 @@ public class SystemImporter extends CommonElementImporter {
 		super.loadElement();
 		finalizeMappingModel();
 		final long elapsed = System.nanoTime() - start;
-		FordiacLogHelper.logInfo("System \"" + getElement().getName() + "\" load time: " + elapsed / 1_000_000 + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		ILog.get().info("System \"" + getElement().getName() + "\" load time: " + elapsed / 1_000_000 + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
 	protected LibraryElement createRootModelElement() {
-		return createAutomationSystem();
-	}
-
-	/**
-	 * Create an empty automation system model
-	 *
-	 * this can either be used for the importer or for creating a new system
-	 *
-	 * @return the automation system model with its basic setup
-	 */
-	public static AutomationSystem createAutomationSystem() {
 		final AutomationSystem system = LibraryElementFactory.eINSTANCE.createAutomationSystem();
-		// create PhysicalConfiguration
-		final SystemConfiguration sysConf = LibraryElementFactory.eINSTANCE.createSystemConfiguration();
-		system.setSystemConfiguration(sysConf);
+		system.setSystemConfiguration(LibraryElementFactory.eINSTANCE.createSystemConfiguration());
 		return system;
 	}
 

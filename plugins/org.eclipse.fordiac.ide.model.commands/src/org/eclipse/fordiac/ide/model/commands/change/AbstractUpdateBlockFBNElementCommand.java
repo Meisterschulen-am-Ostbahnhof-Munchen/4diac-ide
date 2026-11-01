@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -62,7 +63,6 @@ import org.eclipse.fordiac.ide.model.libraryElement.Value;
 import org.eclipse.fordiac.ide.model.libraryElement.VarDeclaration;
 import org.eclipse.fordiac.ide.model.typelibrary.AdapterTypeEntry;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeEntry;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 
@@ -225,10 +225,10 @@ public abstract class AbstractUpdateBlockFBNElementCommand extends Command
 		// for each member access pin create the according pin in the new element and
 		// set it to visible, attributes for comments will be handled in the respective
 		// update methods
-		getOldElement().getInterface().getAllInterfaceElements()
-				.filter(ie -> ie.isVisible() && ie.eContainer() instanceof IInterfaceElement)
+		getOldElement().getInterface().getAllInterfaceElements() //
+				.filter(ie -> ie.isVisible() && ie.isMemberAccessPin())
 				.map(ie -> newInterface.getInterfaceElement(ie.getBlockRelativePath(), true))
-				.filter(ie -> ie != null && ie.eContainer() instanceof VarDeclaration)
+				.filter(ie -> ie != null && ie.isMemberAccessPin()) //
 				.forEach(ie -> ie.setVisible(true));
 	}
 
@@ -435,7 +435,7 @@ public abstract class AbstractUpdateBlockFBNElementCommand extends Command
 			yield v;
 		}
 		case null, default -> {
-			FordiacLogHelper.logWarning("Update FB wants to set a value to a non value holding interface element!"); //$NON-NLS-1$
+			ILog.get().warn("Update FB wants to set a value to a non value holding interface element!"); //$NON-NLS-1$
 			yield null;
 		}
 		};
@@ -469,7 +469,7 @@ public abstract class AbstractUpdateBlockFBNElementCommand extends Command
 				updatedSelected = createMissingMarker(oldIE, newElement);
 			}
 		}
-		if (updatedSelected instanceof VarDeclaration && updatedSelected.eContainer() instanceof VarDeclaration
+		if (updatedSelected instanceof VarDeclaration && updatedSelected.isMemberAccessPin()
 				&& !updatedSelected.isVisible() && oldIE.isVisible()) {
 			updatedSelected.setVisible(true);
 		}
@@ -537,6 +537,7 @@ public abstract class AbstractUpdateBlockFBNElementCommand extends Command
 		if (newElement instanceof final TypedSubApp newTsa && oldElement instanceof final TypedSubApp oldTsa
 				&& oldElement.getTypeEntry() == entry) {
 			newTsa.getVarConfigParams().addAll(EcoreUtil.copyAll(oldTsa.getVarConfigParams()));
+			newTsa.getOverrideAttributes().addAll(EcoreUtil.copyAll(oldTsa.getOverrideAttributes()));
 		}
 		newElement.getAttributes().addAll(EcoreUtil.copyAll(oldElement.getAttributes()));
 	}

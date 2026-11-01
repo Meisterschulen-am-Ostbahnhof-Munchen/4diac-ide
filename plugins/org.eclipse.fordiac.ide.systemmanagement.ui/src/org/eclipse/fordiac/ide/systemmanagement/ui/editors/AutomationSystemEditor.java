@@ -41,7 +41,6 @@ import org.eclipse.fordiac.ide.gef.DiagramEditorWithFlyoutPalette;
 import org.eclipse.fordiac.ide.gef.DiagramOutlinePage;
 import org.eclipse.fordiac.ide.gef.commands.OperationHistoryCommandStack;
 import org.eclipse.fordiac.ide.model.commands.QualNameChangeListenerManager;
-import org.eclipse.fordiac.ide.model.edit.ITypeEntryEditor;
 import org.eclipse.fordiac.ide.model.helpers.FBNetworkHelper;
 import org.eclipse.fordiac.ide.model.libraryElement.Application;
 import org.eclipse.fordiac.ide.model.libraryElement.AutomationSystem;
@@ -97,7 +96,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
-public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements ITypeEntryEditor {
+public class AutomationSystemEditor extends AbstractBreadCrumbEditor {
 
 	private AutomationSystem system;
 	private final OperationHistoryCommandStack commandStack = new OperationHistoryCommandStack();
@@ -170,7 +169,7 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 		if (fileExists) {
 			final Button textEditorButton = new Button(composite, SWT.NONE);
 			textEditorButton.setText(Messages.AutomationSystemEditor_OpenTextEditor);
-			textEditorButton.addListener(SWT.Selection, e -> EditorUtils.openTextEditor(getEditorInput()));
+			textEditorButton.addListener(SWT.Selection, _ -> EditorUtils.openTextEditor(getEditorInput()));
 		}
 		parent.layout(true, true);
 	}
@@ -210,15 +209,15 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 	@Override
 	protected EditorPart createEditorPart(final Object model) {
 		return switch (model) {
-		case final IFile file -> new SystemEditor();
-		case final CFBInstance cfb -> new CompositeInstanceViewer();
-		case final TypedSubApp subApp -> new SubappInstanceViewer();
+		case final IFile _ -> new SystemEditor();
+		case final CFBInstance _ -> new CompositeInstanceViewer();
+		case final TypedSubApp _ -> new SubappInstanceViewer();
 		case final UntypedSubApp subApp when subApp.isContainedInTypedInstance() -> new SubappInstanceViewer();
-		case final UntypedSubApp subApp -> new SubAppNetworkEditor();
-		case final Application application -> new ApplicationEditor();
-		case final SystemConfiguration systemConfiguration -> new SystemConfigurationEditor();
-		case final Device device -> new SystemConfigurationEditor();
-		case final Resource resource -> new ResourceDiagramEditor();
+		case final UntypedSubApp _ -> new SubAppNetworkEditor();
+		case final Application _ -> new ApplicationEditor();
+		case final SystemConfiguration _ -> new SystemConfigurationEditor();
+		case final Device _ -> new SystemConfigurationEditor();
+		case final Resource _ -> new ResourceDiagramEditor();
 		case null, default -> null;
 		};
 	}
@@ -388,7 +387,7 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 	}
 
 	@Override
-	public void setInput(final IEditorInput input) {
+	protected void setInput(final IEditorInput input) {
 		try {
 			LibraryElementProvider.INSTANCE.disconnect(getEditorInput());
 			LibraryElementProvider.INSTANCE.connect(input);

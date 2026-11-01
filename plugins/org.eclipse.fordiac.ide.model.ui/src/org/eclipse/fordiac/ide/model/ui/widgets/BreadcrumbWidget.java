@@ -57,7 +57,7 @@ public class BreadcrumbWidget implements ISelectionProvider {
 
 	public BreadcrumbWidget(final Composite parent) {
 		toolbar = new ToolBar(parent, SWT.FLAT | SWT.WRAP | SWT.RIGHT);
-		toolbar.addDisposeListener(e -> items.forEach(BreadcrumbItem::dispose));
+		toolbar.addDisposeListener(_ -> items.forEach(BreadcrumbItem::dispose));
 	}
 
 	public void setInput(final Object input) {
@@ -82,6 +82,12 @@ public class BreadcrumbWidget implements ISelectionProvider {
 		// an editor update
 		if (event != null) {
 			fireSelectionChanged(event);
+		}
+	}
+
+	public void openParent() {
+		if (items.size() > 1) {
+			setInput(items.get(items.size() - 2).getModel());
 		}
 	}
 

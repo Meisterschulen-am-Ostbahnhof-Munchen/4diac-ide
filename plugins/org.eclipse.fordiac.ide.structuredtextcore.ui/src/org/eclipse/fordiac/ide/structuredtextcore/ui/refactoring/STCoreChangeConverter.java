@@ -9,6 +9,7 @@
  *
  * Contributors:
  *   Martin Jobst - initial API and implementation and/or initial documentation
+ *   Michael Oberlehner - use the text editor of the language of the changed resource
  *******************************************************************************/
 package org.eclipse.fordiac.ide.structuredtextcore.ui.refactoring;
 
@@ -18,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -45,13 +45,15 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.TextChange;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -61,10 +63,10 @@ import org.eclipse.xtext.ide.serializer.IEmfResourceChange;
 import org.eclipse.xtext.ide.serializer.ITextDocumentChange;
 import org.eclipse.xtext.resource.IGlobalServiceProvider;
 import org.eclipse.xtext.ui.MarkerTypes;
+import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.refactoring2.ChangeConverter;
 import org.eclipse.xtext.ui.refactoring2.ResourceURIConverter;
-import org.eclipse.xtext.ui.util.DisplayRunnableWithResult;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Predicate;
@@ -185,7 +187,7 @@ public class STCoreChangeConverter extends ChangeConverter {
 	protected TextChange createDocumentChange(final ITextDocumentChange change) {
 		final IFile file = resourceUriConverter.toFile(change.getOldURI());
 		final FileEditorInput editorInput = new FileEditorInput(file);
-		final ITextEditor editor = findOpenEditor(editorInput);
+		final ITextEditor editor = findOpenEditor(editorInput, change.getResource().getLanguageName());
 		if (editor != null) {
 			final IDocumentProvider documentProvider = editor.getDocumentProvider();
 			if (documentProvider != null) {
@@ -209,24 +211,22 @@ public class STCoreChangeConverter extends ChangeConverter {
 		return globalServiceProvider.findService(resourceURI, XtextDocumentProvider.class);
 	}
 
-	@Override
-	protected ITextEditor findOpenEditor(final IFile file) {
-		return findOpenEditor(new FileEditorInput(file));
-	}
-
-	protected ITextEditor findOpenEditor(final IEditorInput editorInput) {
+	protected ITextEditor findOpenEditor(final IEditorInput editorInput, final String languageName) {
 		if (workbench == null) {
 			return null;
 		}
-		return new DisplayRunnableWithResult<ITextEditor>() {
-
-			@Override
-			protected ITextEditor run() throws Exception {
-				final IEditorPart editorPart = workbench.getActiveWorkbenchWindow().getActivePage()
-						.findEditor(editorInput);
-				return Adapters.adapt(editorPart, ITextEditor.class);
+		return Display.getDefault().syncCall(() -> {
+			final IEditorReference[] editorReferences = workbench.getActiveWorkbenchWindow().getActivePage()
+					.findEditors(editorInput, null, IWorkbenchPage.MATCH_INPUT);
+			for (final IEditorReference editorReference : editorReferences) {
+				final XtextEditor editor = STCoreRefactoringUtil.findXtextEditor(editorReference.getEditor(true),
+						editorInput, languageName);
+				if (editor != null) {
+					return editor;
+				}
 			}
-		}.syncExec();
+			return null;
+		});
 	}
 
 	protected static String getSourceElementName(final EObject element) {

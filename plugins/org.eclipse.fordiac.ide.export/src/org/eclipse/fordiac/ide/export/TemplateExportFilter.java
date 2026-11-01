@@ -32,7 +32,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -42,7 +44,6 @@ import org.eclipse.fordiac.ide.export.utils.DelayedFiles;
 import org.eclipse.fordiac.ide.export.utils.DelayedFiles.StoredFiles;
 import org.eclipse.fordiac.ide.model.libraryElement.INamedElement;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryManager;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.jface.dialogs.IDialogLabelKeys;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -177,11 +178,17 @@ public abstract class TemplateExportFilter extends ExportFilter {
 
 		} catch (final ExportException.UserInteraction e) {
 			throw (e);
-		} catch (final Exception t) {
-			FordiacLogHelper.logError(Messages.TemplateExportFilter_ErrorDuringTemplateGeneration, t);
-			this.getErrors().add(t.getMessage() != null ? t.getMessage()
-					: Messages.TemplateExportFilter_ErrorDuringTemplateGeneration);
+		} catch (final WrappedException e) {
+			handleExportException(e.getCause() != null ? e.getCause() : e);
+		} catch (final Exception e) {
+			handleExportException(e);
 		}
+	}
+
+	private void handleExportException(final Throwable throwable) {
+		ILog.get().error(Messages.TemplateExportFilter_ErrorDuringTemplateGeneration, throwable);
+		this.getErrors().add(throwable.getMessage() != null ? throwable.getMessage()
+				: Messages.TemplateExportFilter_ErrorDuringTemplateGeneration);
 	}
 
 	private DelayedFiles generateFileContent(final String destination, final String name, final EObject source)

@@ -104,7 +104,6 @@ import org.eclipse.fordiac.ide.model.libraryElement.Language;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElementPackage;
 import org.eclipse.fordiac.ide.model.libraryElement.Link;
-import org.eclipse.fordiac.ide.model.libraryElement.LocalVariable;
 import org.eclipse.fordiac.ide.model.libraryElement.Mapping;
 import org.eclipse.fordiac.ide.model.libraryElement.MappingTarget;
 import org.eclipse.fordiac.ide.model.libraryElement.Method;
@@ -113,6 +112,7 @@ import org.eclipse.fordiac.ide.model.libraryElement.OriginalSource;
 import org.eclipse.fordiac.ide.model.libraryElement.OtherAlgorithm;
 import org.eclipse.fordiac.ide.model.libraryElement.OtherMethod;
 import org.eclipse.fordiac.ide.model.libraryElement.OutputPrimitive;
+import org.eclipse.fordiac.ide.model.libraryElement.OverrideAttribute;
 import org.eclipse.fordiac.ide.model.libraryElement.Position;
 import org.eclipse.fordiac.ide.model.libraryElement.PositionableElement;
 import org.eclipse.fordiac.ide.model.libraryElement.Primitive;
@@ -182,12 +182,28 @@ public class LibraryElementValidator extends EObjectValidator {
 	public static final String DIAGNOSTIC_SOURCE = "org.eclipse.fordiac.ide.model.libraryElement"; //$NON-NLS-1$
 
 	/**
+	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Multiple Input Connections' of 'Adapter Declaration'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final int ADAPTER_DECLARATION__VALIDATE_MULTIPLE_INPUT_CONNECTIONS = 1;
+
+	/**
+	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Multiple Output Connections' of 'Adapter Declaration'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final int ADAPTER_DECLARATION__VALIDATE_MULTIPLE_OUTPUT_CONNECTIONS = 2;
+
+	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Name' of 'Attribute'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int ATTRIBUTE__VALIDATE_NAME = 1;
+	public static final int ATTRIBUTE__VALIDATE_NAME = 3;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Attribute Declaration' of 'Attribute'.
@@ -195,7 +211,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int ATTRIBUTE__VALIDATE_ATTRIBUTE_DECLARATION = 2;
+	public static final int ATTRIBUTE__VALIDATE_ATTRIBUTE_DECLARATION = 4;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Internal FBs' of 'Base FB Type'.
@@ -203,7 +219,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int BASE_FB_TYPE__VALIDATE_INTERNAL_FBS = 3;
+	public static final int BASE_FB_TYPE__VALIDATE_INTERNAL_FBS = 5;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Unused' of 'Block FB Network Element'.
@@ -211,7 +227,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int BLOCK_FB_NETWORK_ELEMENT__VALIDATE_UNUSED = 4;
+	public static final int BLOCK_FB_NETWORK_ELEMENT__VALIDATE_UNUSED = 6;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Package Name' of 'Compiler Info'.
@@ -219,7 +235,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int COMPILER_INFO__VALIDATE_PACKAGE_NAME = 5;
+	public static final int COMPILER_INFO__VALIDATE_PACKAGE_NAME = 7;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Data Type' of 'Configurable FB'.
@@ -227,7 +243,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONFIGURABLE_FB__VALIDATE_DATA_TYPE = 6;
+	public static final int CONFIGURABLE_FB__VALIDATE_DATA_TYPE = 8;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Missing Source' of 'Connection'.
@@ -235,7 +251,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_MISSING_SOURCE = 7;
+	public static final int CONNECTION__VALIDATE_MISSING_SOURCE = 9;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Missing Source Endpoint' of 'Connection'.
@@ -243,7 +259,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_MISSING_SOURCE_ENDPOINT = 8;
+	public static final int CONNECTION__VALIDATE_MISSING_SOURCE_ENDPOINT = 10;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Missing Destination' of 'Connection'.
@@ -251,7 +267,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_MISSING_DESTINATION = 9;
+	public static final int CONNECTION__VALIDATE_MISSING_DESTINATION = 11;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Missing Destination Endpoint' of 'Connection'.
@@ -259,7 +275,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_MISSING_DESTINATION_ENDPOINT = 10;
+	public static final int CONNECTION__VALIDATE_MISSING_DESTINATION_ENDPOINT = 12;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Duplicate' of 'Connection'.
@@ -267,7 +283,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_DUPLICATE = 11;
+	public static final int CONNECTION__VALIDATE_DUPLICATE = 13;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Type Mismatch' of 'Connection'.
@@ -275,7 +291,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_TYPE_MISMATCH = 12;
+	public static final int CONNECTION__VALIDATE_TYPE_MISMATCH = 14;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Mapped Var In Outs Do Not Cross Resource Boundaries' of 'Connection'.
@@ -283,7 +299,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_MAPPED_VAR_IN_OUTS_DO_NOT_CROSS_RESOURCE_BOUNDARIES = 13;
+	public static final int CONNECTION__VALIDATE_MAPPED_VAR_IN_OUTS_DO_NOT_CROSS_RESOURCE_BOUNDARIES = 15;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Out Array Sizes Are Compatible' of 'Connection'.
@@ -291,7 +307,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_VAR_IN_OUT_ARRAY_SIZES_ARE_COMPATIBLE = 14;
+	public static final int CONNECTION__VALIDATE_VAR_IN_OUT_ARRAY_SIZES_ARE_COMPATIBLE = 16;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Out String Lengths Match' of 'Connection'.
@@ -299,7 +315,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_VAR_IN_OUT_STRING_LENGTHS_MATCH = 15;
+	public static final int CONNECTION__VALIDATE_VAR_IN_OUT_STRING_LENGTHS_MATCH = 17;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Outs Are Not Connected To Outs' of 'Connection'.
@@ -307,7 +323,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_VAR_IN_OUTS_ARE_NOT_CONNECTED_TO_OUTS = 16;
+	public static final int CONNECTION__VALIDATE_VAR_IN_OUTS_ARE_NOT_CONNECTED_TO_OUTS = 18;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Out Connections Forms No Loop' of 'Connection'.
@@ -315,7 +331,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_VAR_IN_OUT_CONNECTIONS_FORMS_NO_LOOP = 17;
+	public static final int CONNECTION__VALIDATE_VAR_IN_OUT_CONNECTIONS_FORMS_NO_LOOP = 19;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Negated Connection' of 'Connection'.
@@ -323,7 +339,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONNECTION__VALIDATE_NEGATED_CONNECTION = 18;
+	public static final int CONNECTION__VALIDATE_NEGATED_CONNECTION = 20;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Member Input Connections' of 'Container Var Declaration'.
@@ -331,7 +347,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONTAINER_VAR_DECLARATION__VALIDATE_MEMBER_INPUT_CONNECTIONS = 19;
+	public static final int CONTAINER_VAR_DECLARATION__VALIDATE_MEMBER_INPUT_CONNECTIONS = 21;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Member Initial Values' of 'Container Var Declaration'.
@@ -339,7 +355,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int CONTAINER_VAR_DECLARATION__VALIDATE_MEMBER_INITIAL_VALUES = 20;
+	public static final int CONTAINER_VAR_DECLARATION__VALIDATE_MEMBER_INITIAL_VALUES = 22;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Value' of 'Error Marker Interface'.
@@ -347,7 +363,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int ERROR_MARKER_INTERFACE__VALIDATE_VALUE = 21;
+	public static final int ERROR_MARKER_INTERFACE__VALIDATE_VALUE = 23;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Attributes' of 'Error Marker Interface'.
@@ -355,7 +371,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int ERROR_MARKER_INTERFACE__VALIDATE_ATTRIBUTES = 22;
+	public static final int ERROR_MARKER_INTERFACE__VALIDATE_ATTRIBUTES = 24;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Comment' of 'Error Marker Interface'.
@@ -363,7 +379,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int ERROR_MARKER_INTERFACE__VALIDATE_COMMENT = 23;
+	public static final int ERROR_MARKER_INTERFACE__VALIDATE_COMMENT = 25;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Multiple Output Connections' of 'Event'.
@@ -371,7 +387,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int EVENT__VALIDATE_MULTIPLE_OUTPUT_CONNECTIONS = 24;
+	public static final int EVENT__VALIDATE_MULTIPLE_OUTPUT_CONNECTIONS = 26;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Collisions' of 'FB Network'.
@@ -379,7 +395,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int FB_NETWORK__VALIDATE_COLLISIONS = 25;
+	public static final int FB_NETWORK__VALIDATE_COLLISIONS = 27;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Name' of 'FB Network Element'.
@@ -387,7 +403,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int FB_NETWORK_ELEMENT__VALIDATE_NAME = 26;
+	public static final int FB_NETWORK_ELEMENT__VALIDATE_NAME = 28;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Type' of 'FB Network Element'.
@@ -395,7 +411,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int FB_NETWORK_ELEMENT__VALIDATE_TYPE = 27;
+	public static final int FB_NETWORK_ELEMENT__VALIDATE_TYPE = 29;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Collisions' of 'Group'.
@@ -403,7 +419,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int GROUP__VALIDATE_COLLISIONS = 28;
+	public static final int GROUP__VALIDATE_COLLISIONS = 30;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Name' of 'IInterface Element'.
@@ -411,7 +427,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int IINTERFACE_ELEMENT__VALIDATE_NAME = 29;
+	public static final int IINTERFACE_ELEMENT__VALIDATE_NAME = 31;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Unused' of 'IInterface Element'.
@@ -419,7 +435,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int IINTERFACE_ELEMENT__VALIDATE_UNUSED = 30;
+	public static final int IINTERFACE_ELEMENT__VALIDATE_UNUSED = 32;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Name' of 'INamed Element'.
@@ -427,7 +443,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int INAMED_ELEMENT__VALIDATE_NAME = 31;
+	public static final int INAMED_ELEMENT__VALIDATE_NAME = 33;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Type' of 'ITyped Element'.
@@ -435,7 +451,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int ITYPED_ELEMENT__VALIDATE_TYPE = 32;
+	public static final int ITYPED_ELEMENT__VALIDATE_TYPE = 34;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Name' of 'Library Element'.
@@ -443,7 +459,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int LIBRARY_ELEMENT__VALIDATE_NAME = 33;
+	public static final int LIBRARY_ELEMENT__VALIDATE_NAME = 35;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Package' of 'Library Element'.
@@ -451,7 +467,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int LIBRARY_ELEMENT__VALIDATE_PACKAGE = 34;
+	public static final int LIBRARY_ELEMENT__VALIDATE_PACKAGE = 36;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Actions Non Empty' of 'Simple EC State'.
@@ -459,7 +475,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int SIMPLE_EC_STATE__VALIDATE_ACTIONS_NON_EMPTY = 35;
+	public static final int SIMPLE_EC_STATE__VALIDATE_ACTIONS_NON_EMPTY = 37;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Event Usage' of 'Simple FB Type'.
@@ -467,7 +483,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int SIMPLE_FB_TYPE__VALIDATE_EVENT_USAGE = 36;
+	public static final int SIMPLE_FB_TYPE__VALIDATE_EVENT_USAGE = 38;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Type' of 'Typed Configureable Object'.
@@ -475,7 +491,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int TYPED_CONFIGUREABLE_OBJECT__VALIDATE_TYPE = 37;
+	public static final int TYPED_CONFIGUREABLE_OBJECT__VALIDATE_TYPE = 39;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Name' of 'Var Config Instance'.
@@ -483,7 +499,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_CONFIG_INSTANCE__VALIDATE_NAME = 38;
+	public static final int VAR_CONFIG_INSTANCE__VALIDATE_NAME = 40;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Multiple Input Connections' of 'Var Declaration'.
@@ -491,7 +507,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_MULTIPLE_INPUT_CONNECTIONS = 39;
+	public static final int VAR_DECLARATION__VALIDATE_MULTIPLE_INPUT_CONNECTIONS = 41;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate No Value For Generic Type Variable' of 'Var Declaration'.
@@ -499,7 +515,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_NO_VALUE_FOR_GENERIC_TYPE_VARIABLE = 40;
+	public static final int VAR_DECLARATION__VALIDATE_NO_VALUE_FOR_GENERIC_TYPE_VARIABLE = 42;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Illegal Variable Length Array Variable' of 'Var Declaration'.
@@ -507,7 +523,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_ILLEGAL_VARIABLE_LENGTH_ARRAY_VARIABLE = 41;
+	public static final int VAR_DECLARATION__VALIDATE_ILLEGAL_VARIABLE_LENGTH_ARRAY_VARIABLE = 43;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate No Value For Variable Length Array Variable' of 'Var Declaration'.
@@ -515,7 +531,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_NO_VALUE_FOR_VARIABLE_LENGTH_ARRAY_VARIABLE = 42;
+	public static final int VAR_DECLARATION__VALIDATE_NO_VALUE_FOR_VARIABLE_LENGTH_ARRAY_VARIABLE = 44;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Value For Generic Instance Variable' of 'Var Declaration'.
@@ -523,7 +539,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_VALUE_FOR_GENERIC_INSTANCE_VARIABLE = 43;
+	public static final int VAR_DECLARATION__VALIDATE_VALUE_FOR_GENERIC_INSTANCE_VARIABLE = 45;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Value Overridden By Sub App Input' of 'Var Declaration'.
@@ -531,7 +547,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_VALUE_OVERRIDDEN_BY_SUB_APP_INPUT = 44;
+	public static final int VAR_DECLARATION__VALIDATE_VALUE_OVERRIDDEN_BY_SUB_APP_INPUT = 46;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Out Source Type Is Well Defined' of 'Var Declaration'.
@@ -539,7 +555,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_SOURCE_TYPE_IS_WELL_DEFINED = 45;
+	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_SOURCE_TYPE_IS_WELL_DEFINED = 47;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Out Is Withed' of 'Var Declaration'.
@@ -547,7 +563,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_IS_WITHED = 46;
+	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_IS_WITHED = 48;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Out Subapp Interface' of 'Var Declaration'.
@@ -555,7 +571,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_SUBAPP_INTERFACE = 47;
+	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_SUBAPP_INTERFACE = 49;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Var In Out Subapp Network' of 'Var Declaration'.
@@ -563,7 +579,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_SUBAPP_NETWORK = 48;
+	public static final int VAR_DECLARATION__VALIDATE_VAR_IN_OUT_SUBAPP_NETWORK = 50;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Destination Type Mismatch' of 'Var Declaration'.
@@ -571,7 +587,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_DESTINATION_TYPE_MISMATCH = 49;
+	public static final int VAR_DECLARATION__VALIDATE_DESTINATION_TYPE_MISMATCH = 51;
 
 	/**
 	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Hidden Pin Connected' of 'Var Declaration'.
@@ -579,7 +595,15 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final int VAR_DECLARATION__VALIDATE_HIDDEN_PIN_CONNECTED = 50;
+	public static final int VAR_DECLARATION__VALIDATE_HIDDEN_PIN_CONNECTED = 52;
+
+	/**
+	 * The {@link org.eclipse.emf.common.util.Diagnostic#getCode() code} for constraint 'Validate Location' of 'Override Attribute'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final int OVERRIDE_ATTRIBUTE__VALIDATE_LOCATION = 53;
 
 	/**
 	 * A constant with a fixed name that can be used as the base value for additional hand written constants.
@@ -587,7 +611,7 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final int GENERATED_DIAGNOSTIC_CODE_COUNT = 50;
+	private static final int GENERATED_DIAGNOSTIC_CODE_COUNT = 53;
 
 	/**
 	 * A constant with a fixed name that can be used as the base value for additional hand written constants in a derived class.
@@ -778,8 +802,6 @@ public class LibraryElementValidator extends EObjectValidator {
 				return validateLibraryElement((LibraryElement)value, diagnostics, context);
 			case LibraryElementPackage.LINK:
 				return validateLink((Link)value, diagnostics, context);
-			case LibraryElementPackage.LOCAL_VARIABLE:
-				return validateLocalVariable((LocalVariable)value, diagnostics, context);
 			case LibraryElementPackage.MAPPING:
 				return validateMapping((Mapping)value, diagnostics, context);
 			case LibraryElementPackage.MAPPING_TARGET:
@@ -870,6 +892,8 @@ public class LibraryElementValidator extends EObjectValidator {
 				return validateVersionInfo((VersionInfo)value, diagnostics, context);
 			case LibraryElementPackage.WITH:
 				return validateWith((With)value, diagnostics, context);
+			case LibraryElementPackage.OVERRIDE_ATTRIBUTE:
+				return validateOverrideAttribute((OverrideAttribute)value, diagnostics, context);
 			case LibraryElementPackage.LANGUAGE:
 				return validateLanguage((Language)value, diagnostics, context);
 			case LibraryElementPackage.IFILE:
@@ -945,7 +969,29 @@ public class LibraryElementValidator extends EObjectValidator {
 		if (result || diagnostics != null) result &= validateIInterfaceElement_validateName(adapterDeclaration, diagnostics, context);
 		if (result || diagnostics != null) result &= validateITypedElement_validateType(adapterDeclaration, diagnostics, context);
 		if (result || diagnostics != null) result &= validateIInterfaceElement_validateUnused(adapterDeclaration, diagnostics, context);
+		if (result || diagnostics != null) result &= validateAdapterDeclaration_validateMultipleInputConnections(adapterDeclaration, diagnostics, context);
+		if (result || diagnostics != null) result &= validateAdapterDeclaration_validateMultipleOutputConnections(adapterDeclaration, diagnostics, context);
 		return result;
+	}
+
+	/**
+	 * Validates the validateMultipleInputConnections constraint of '<em>Adapter Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean validateAdapterDeclaration_validateMultipleInputConnections(AdapterDeclaration adapterDeclaration, DiagnosticChain diagnostics, Map<Object, Object> context) {
+		return adapterDeclaration.validateMultipleInputConnections(diagnostics, context);
+	}
+
+	/**
+	 * Validates the validateMultipleOutputConnections constraint of '<em>Adapter Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean validateAdapterDeclaration_validateMultipleOutputConnections(AdapterDeclaration adapterDeclaration, DiagnosticChain diagnostics, Map<Object, Object> context) {
+		return adapterDeclaration.validateMultipleOutputConnections(diagnostics, context);
 	}
 
 	/**
@@ -2604,39 +2650,6 @@ public class LibraryElementValidator extends EObjectValidator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean validateLocalVariable(LocalVariable localVariable, DiagnosticChain diagnostics, Map<Object, Object> context) {
-		if (!validate_NoCircularContainment(localVariable, diagnostics, context)) return false;
-		boolean result = validate_EveryMultiplicityConforms(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validate_EveryDataValueConforms(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validate_EveryReferenceIsContained(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validate_EveryBidirectionalReferenceIsPaired(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validate_EveryProxyResolves(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validate_UniqueID(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validate_EveryKeyUnique(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validate_EveryMapEntryUnique(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateIInterfaceElement_validateName(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateITypedElement_validateType(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateIInterfaceElement_validateUnused(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateMultipleInputConnections(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateNoValueForGenericTypeVariable(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateIllegalVariableLengthArrayVariable(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateNoValueForVariableLengthArrayVariable(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateValueForGenericInstanceVariable(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateValueOverriddenBySubAppInput(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateVarInOutSourceTypeIsWellDefined(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateVarInOutIsWithed(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateVarInOutSubappInterface(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateVarInOutSubappNetwork(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateDestinationTypeMismatch(localVariable, diagnostics, context);
-		if (result || diagnostics != null) result &= validateVarDeclaration_validateHiddenPinConnected(localVariable, diagnostics, context);
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public boolean validateMapping(Mapping mapping, DiagnosticChain diagnostics, Map<Object, Object> context) {
 		return validate_EveryDefaultConstraint(mapping, diagnostics, context);
 	}
@@ -3538,6 +3551,38 @@ public class LibraryElementValidator extends EObjectValidator {
 	 */
 	public boolean validateWith(With with, DiagnosticChain diagnostics, Map<Object, Object> context) {
 		return validate_EveryDefaultConstraint(with, diagnostics, context);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean validateOverrideAttribute(OverrideAttribute overrideAttribute, DiagnosticChain diagnostics, Map<Object, Object> context) {
+		if (!validate_NoCircularContainment(overrideAttribute, diagnostics, context)) return false;
+		boolean result = validate_EveryMultiplicityConforms(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validate_EveryDataValueConforms(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validate_EveryReferenceIsContained(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validate_EveryBidirectionalReferenceIsPaired(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validate_EveryProxyResolves(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validate_UniqueID(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validate_EveryKeyUnique(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validate_EveryMapEntryUnique(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validateAttribute_validateName(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validateITypedElement_validateType(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validateAttribute_validateAttributeDeclaration(overrideAttribute, diagnostics, context);
+		if (result || diagnostics != null) result &= validateOverrideAttribute_validateLocation(overrideAttribute, diagnostics, context);
+		return result;
+	}
+
+	/**
+	 * Validates the validateLocation constraint of '<em>Override Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean validateOverrideAttribute_validateLocation(OverrideAttribute overrideAttribute, DiagnosticChain diagnostics, Map<Object, Object> context) {
+		return overrideAttribute.validateLocation(diagnostics, context);
 	}
 
 	/**

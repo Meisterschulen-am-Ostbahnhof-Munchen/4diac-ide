@@ -24,6 +24,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -49,7 +50,6 @@ import org.eclipse.fordiac.ide.model.typelibrary.TypeLibrary;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryManager;
 import org.eclipse.fordiac.ide.model.ui.editors.AbstractBreadCrumbEditor;
 import org.eclipse.fordiac.ide.systemmanagement.SystemManager;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -264,7 +264,7 @@ public class SystemLayoutHandler extends AbstractHandler {
 				handleSubappType(multiPageEditor, subappType);
 				editors.add(multiPageEditor);
 			}
-			case final CompositeFBType cFBType -> {
+			case final CompositeFBType _ -> {
 				handleCompositeType(multiPageEditor);
 				editors.add(multiPageEditor);
 			}
@@ -302,7 +302,7 @@ public class SystemLayoutHandler extends AbstractHandler {
 		try {
 			return IDE.openEditor(page, file);
 		} catch (final PartInitException e) {
-			FordiacLogHelper.logError("System Explorer Layout: failed to open editor", e); //$NON-NLS-1$
+			ILog.get().error("System Explorer Layout: failed to open editor", e); //$NON-NLS-1$
 			return null;
 		}
 	}

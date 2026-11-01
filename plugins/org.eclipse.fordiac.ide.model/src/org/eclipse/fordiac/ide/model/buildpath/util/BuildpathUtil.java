@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -41,7 +42,7 @@ import org.eclipse.fordiac.ide.model.buildpath.BuildpathFactory;
 import org.eclipse.fordiac.ide.model.buildpath.DocumentRoot;
 import org.eclipse.fordiac.ide.model.buildpath.Pattern;
 import org.eclipse.fordiac.ide.model.buildpath.SourceFolder;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
+import org.eclipse.fordiac.ide.model.util.XMLResourceOptions;
 
 public final class BuildpathUtil {
 
@@ -83,13 +84,15 @@ public final class BuildpathUtil {
 		if (project != null && project.isAccessible() && getBuildpathFile(project).exists()) {
 			try {
 				final ResourceSet resourceSet = new ResourceSetImpl();
+				resourceSet.getLoadOptions().putAll(XMLResourceOptions.DEFAULT_LOAD_OPTIONS);
+
 				final Resource resource = resourceSet.getResource(getBuildpathURI(project), true);
 				if (!resource.getContents().isEmpty()
 						&& resource.getContents().get(0) instanceof final DocumentRoot documentRoot) {
 					return documentRoot.getBuildpath();
 				}
 			} catch (final Exception e) {
-				FordiacLogHelper.logWarning(
+				ILog.get().warn(
 						"Exception loading buildpath file " + getBuildpathFile(project).getFullPath().toString(), e); //$NON-NLS-1$
 			}
 		}
