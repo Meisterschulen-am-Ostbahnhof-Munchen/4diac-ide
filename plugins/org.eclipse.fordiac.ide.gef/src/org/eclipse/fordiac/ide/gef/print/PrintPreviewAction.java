@@ -45,17 +45,20 @@ public class PrintPreviewAction extends Action {
 	 * @return true, if checks if is enabled */
 	@Override
 	public boolean isEnabled() {
-		if (null == viewer) {
-			viewer = getViewer();
-		}
-		return (null != viewer);
+		return (null != getViewerToUse());
+	}
+
+	private GraphicalViewer getViewerToUse() {
+		return (null != viewer) ? viewer : getViewer();
 	}
 
 	private static GraphicalViewer getViewer() {
 		final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		final IEditorPart editor = window.getActivePage().getActiveEditor();
-		if (null != editor) {
-			return editor.getAdapter(GraphicalViewer.class);
+		if (null != window && null != window.getActivePage()) {
+			final IEditorPart editor = window.getActivePage().getActiveEditor();
+			if (null != editor) {
+				return editor.getAdapter(GraphicalViewer.class);
+			}
 		}
 		return null;
 	}
@@ -63,9 +66,10 @@ public class PrintPreviewAction extends Action {
 	/** opens the IEC61499PrintDialog. */
 	@Override
 	public void run() {
-		if (null != viewer) {
-			final Shell shell = viewer.getControl().getShell();
-			final PrintPreview preview = new PrintPreview(shell, viewer, Messages.PrintPreviewAction_LABEL_PrintPreview);
+		final GraphicalViewer viewerToUse = getViewerToUse();
+		if (null != viewerToUse) {
+			final Shell shell = viewerToUse.getControl().getShell();
+			final PrintPreview preview = new PrintPreview(shell, viewerToUse, Messages.PrintPreviewAction_LABEL_PrintPreview);
 			preview.setBlockOnOpen(true);
 			preview.open();
 		}
