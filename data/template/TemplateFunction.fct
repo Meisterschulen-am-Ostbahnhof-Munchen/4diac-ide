@@ -33,7 +33,7 @@
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
  -->
-<Function Name="Function" Comment="Function with empty body">
+<Function Name="TemplateFunction" Comment="Function with empty body">
 	<Identification Standard="61499-1">
 	</Identification>
 	<VersionInfo Version="1.0" Author="mjobst" Date="2023-06-29">
