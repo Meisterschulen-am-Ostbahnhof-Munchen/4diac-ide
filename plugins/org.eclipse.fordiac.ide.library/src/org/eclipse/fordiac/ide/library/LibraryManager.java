@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024, 2026 Primetals Technologies Austria GmbH and others
+ * Copyright (c) 2024 Primetals Technologies Austria GmbH and others, Osoft e.U.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +10,8 @@
  * Contributors:
  *   Patrick Aigner - initial API and implementation and/or initial documentation
  *   Alexander Fedorov (ArSysOp) - fix "Uncontrolled data used in path expression"
+ *   Michael Oberlehner - use configured library package downloader providers
+ *   Kaavya Manimathavan - remove stale library cache entries on polling file watchers
  *******************************************************************************/
 package org.eclipse.fordiac.ide.library;
 
@@ -55,6 +57,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -67,7 +70,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.equinox.p2.operations.IProfileChangeJob;
 import org.eclipse.fordiac.ide.library.download.DownloadResult;
-import org.eclipse.fordiac.ide.library.download.IArchiveDownloader;
+import org.eclipse.fordiac.ide.library.download.ILibraryPackageDownloader;
+import org.eclipse.fordiac.ide.library.download.LibraryPackageDownloaderProvider;
 import org.eclipse.fordiac.ide.library.model.library.Manifest;
 import org.eclipse.fordiac.ide.library.model.library.Required;
 import org.eclipse.fordiac.ide.library.model.util.ManifestHelper;
@@ -79,7 +83,6 @@ import org.eclipse.fordiac.ide.model.errormarker.FordiacMarkerHelper;
 import org.eclipse.fordiac.ide.model.preferences.PreferenceProvider;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryManager;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryTags;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.osgi.framework.Version;
 import org.osgi.framework.VersionRange;
 
@@ -93,7 +96,7 @@ public enum LibraryManager {
 	public static final String PACKAGE_DOWNLOAD_DIRECTORY = ".download"; //$NON-NLS-1$
 	public static final String EXTRACTED_LIB_DIRECTORY = ".lib"; //$NON-NLS-1$
 	public static final String MANIFEST = "MANIFEST.MF"; //$NON-NLS-1$
-	public static final String DOWNLOADER_EXTENSION = "org.eclipse.fordiac.ide.library.ArchiveDownloaderExtension"; //$NON-NLS-1$
+	public static final String DOWNLOADER_EXTENSION = "org.eclipse.fordiac.ide.library.LibraryPackageDownloader"; //$NON-NLS-1$
 
 	private final java.net.URI workspaceLibraryURI = java.net.URI.create("WORKSPACE_LOC/" + EXTRACTED_LIB_DIRECTORY); //$NON-NLS-1$
 
@@ -139,7 +142,7 @@ public enum LibraryManager {
 			try {
 				Files.createDirectory(libraryPath);
 			} catch (final IOException e) {
-				FordiacLogHelper.logError("Cannot create lib path!", e); //$NON-NLS-1$
+				ILog.get().error("Cannot create lib path!", e); //$NON-NLS-1$
 			}
 		}
 		initLibraryMap(libraries, libraryPath, workspaceLibraryURI);
@@ -148,7 +151,7 @@ public enum LibraryManager {
 			libraryPath.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
 					StandardWatchEventKinds.ENTRY_DELETE);
 		} catch (final IOException e) {
-			FordiacLogHelper.logError("Cannot register watch watch service!", e); //$NON-NLS-1$
+			ILog.get().error("Cannot register watch watch service!", e); //$NON-NLS-1$
 		}
 
 		LibraryPermission.setLibReadOnly(standardLibraryPath);
@@ -192,12 +195,13 @@ public enum LibraryManager {
 		progress.setWorkRemaining(events.size());
 		events.forEach(event -> {
 			try {
-				if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
-					addLibrary(libraries, libraryPath.resolve((Path) event.context()), workspaceLibraryURI);
-				} else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
-					removeLibrary(libraries, libraryPath.resolve((Path) event.context()));
+				if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE
+						|| event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+					refreshLibrary(libraryPath.resolve((Path) event.context()));
 				} else { // Overflow -> reinitialise libraries to ensure correct state
-					initLibraryMap(libraries, libraryPath, workspaceLibraryURI);
+					synchronized (libraries) {
+						initLibraryMap(libraries, libraryPath, workspaceLibraryURI);
+					}
 					return;
 				}
 				progress.worked(1);
@@ -243,7 +247,7 @@ public enum LibraryManager {
 				final Manifest manifest = ManifestHelper.getManifest(it.next());
 				if (manifest != null && ManifestHelper.isLibrary(manifest) && manifest.getProduct() != null
 						&& manifest.getProduct().getSymbolicName() != null) {
-					map.computeIfAbsent(manifest.getProduct().getSymbolicName(), s -> new ArrayList<>())
+					map.computeIfAbsent(manifest.getProduct().getSymbolicName(), _ -> new ArrayList<>())
 							.add(new LibraryRecord(manifest.getProduct().getSymbolicName(),
 									manifest.getProduct().getName(),
 									manifest.getProduct().getVersionInfo().getVersion(),
@@ -255,25 +259,18 @@ public enum LibraryManager {
 	}
 
 	/**
-	 * Remove {@link LibraryRecord} from the given map based on the {@link Path}
+	 * Refresh the cached library at the given path from its current file system state.
 	 *
-	 * @param map  target map
 	 * @param path path of the library folder
+	 * @throws IOException if an I/O error occurs
 	 */
-	private static void removeLibrary(final Map<String, List<LibraryRecord>> map, final Path path) {
-		String folderName = path.getFileName().toString();
-		final int pos = folderName.lastIndexOf('-');
-		if (pos > 0) {
-			folderName = folderName.substring(0, pos);
-		}
-		final List<LibraryRecord> records = map.get(folderName);
-		if (records != null) {
-			records.removeIf(r -> r.path().equals(path));
-			if (records.isEmpty()) {
-				map.remove(folderName);
+	private void refreshLibrary(final Path path) throws IOException {
+		synchronized (libraries) {
+			libraries.values().forEach(records -> records.removeIf(record -> record.path().equals(path)));
+			libraries.values().removeIf(List::isEmpty);
+			if (Files.isDirectory(path)) {
+				addLibrary(libraries, path, workspaceLibraryURI);
 			}
-		} else {
-			map.values().forEach(rl -> rl.removeIf(r -> r.path().equals(path)));
 		}
 	}
 
@@ -305,16 +302,18 @@ public enum LibraryManager {
 			throw new FileNotFoundException("Archive file does not exist: " + archive); //$NON-NLS-1$
 		}
 
-		FordiacLogHelper.logInfo("Extracting library at " + archive); //$NON-NLS-1$
+		ILog.get().info("Extracting library at " + archive); //$NON-NLS-1$
 		final byte[] buffer = new byte[1024];
 		String folderName;
+		Path extractedFolder = null;
 		try (InputStream inputStream = Files.newInputStream(archive);
 				ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
 			ZipEntry entry = zipInputStream.getNextEntry();
 			folderName = ""; //$NON-NLS-1$
 			if (entry != null) {
 				folderName = entry.getName();
-				deleteLibFolder(newPath(libraryPath, entry));
+				extractedFolder = newPath(libraryPath, entry);
+				deleteLibFolder(extractedFolder);
 			}
 			while (entry != null) {
 				final Path newFile = newPath(libraryPath, entry);
@@ -339,6 +338,10 @@ public enum LibraryManager {
 			}
 		}
 		checkLibChanges(SubMonitor.convert(null));
+		if (extractedFolder != null) {
+			// File system notifications may arrive after the dependency is resolved.
+			refreshLibrary(extractedFolder);
+		}
 
 		// strip potential trailing slash
 		if (folderName.endsWith("/")) { //$NON-NLS-1$
@@ -410,7 +413,7 @@ public enum LibraryManager {
 			final boolean resolve) {
 		boolean imported = false;
 
-		FordiacLogHelper.logInfo("Importing library at " + uri + " into project " + project.getName() + " (update=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		ILog.get().info("Importing library at " + uri + " into project " + project.getName() + " (update=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ update + ", resolve=" + resolve + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		checkLibChanges(SubMonitor.convert(null));
@@ -448,7 +451,7 @@ public enum LibraryManager {
 			}
 			imported = true;
 		} catch (final CoreException | IOException e) {
-			FordiacLogHelper.logError(MessageFormat.format(Messages.ImportFailedOnLinkCreation, e.getMessage()), e);
+			ILog.get().error(MessageFormat.format(Messages.ImportFailedOnLinkCreation, e.getMessage()), e);
 		}
 
 		return imported;
@@ -514,15 +517,25 @@ public enum LibraryManager {
 	 */
 	public Map<String, List<LibraryRecord>> getExtractedLibraries() {
 		checkLibChanges(SubMonitor.convert(null));
-		return new HashMap<>(libraries);
+		synchronized (libraries) {
+			// The polling WatchService (e.g. on macOS) can miss folders that are created and deleted
+			// between two scans, so drop cached libraries whose folder no longer exists.
+			libraries.values().forEach(records -> records.removeIf(r -> !Files.isDirectory(r.path())));
+			libraries.values().removeIf(List::isEmpty);
+			final Map<String, List<LibraryRecord>> snapshot = new HashMap<>();
+			libraries.forEach((name, records) -> snapshot.put(name, new ArrayList<>(records)));
+			return snapshot;
+		}
 	}
 
 	/**
-	 * Uses registered {@link IArchiveDownloader} to download specified library.
-	 * Will download the latest version if versionRange is {@code null} or empty.
+	 * Uses the active {@link ILibraryPackageDownloader downloaders} of all
+	 * library sources (see {@link LibraryPackageDownloaderProvider}) to download specified
+	 * library. Will download the latest version if versionRange is {@code null} or
+	 * empty.
 	 *
 	 * <p>
-	 * See {@link IArchiveDownloader#downloadLibrary} for more info
+	 * See {@link ILibraryPackageDownloader#downloadLibrary} for more info
 	 *
 	 * @param symbolicName symbolic name of library
 	 * @param versionRange version range of library
@@ -541,26 +554,24 @@ public enum LibraryManager {
 			final Version preferred, final IProject project, final boolean autoImport, final boolean resolve,
 			final SubMonitor progress) throws OperationCanceledException {
 		progress.setTaskName(MessageFormat.format(Messages.LibraryManager_LibraryDownload, symbolicName));
-		FordiacLogHelper.logInfo("Attempting to download library " + symbolicName + " with version " + versionRange //$NON-NLS-1$ //$NON-NLS-2$
+		ILog.get().info("Attempting to download library " + symbolicName + " with version " + versionRange //$NON-NLS-1$ //$NON-NLS-2$
 				+ " preferring " + preferred + " Project: " + project.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 
-		List<IArchiveDownloader> downloaders = TypeLibraryManager.listExtensions(DOWNLOADER_EXTENSION,
-				IArchiveDownloader.class);
-
-		if (downloaders.size() == 1 && downloaders.get(0).hasMultipleEndpoints()) {
-			downloaders = downloaders.get(0).convertEndpointsToDownloader();
+		final var sources = new LibraryPackageDownloaderProvider().getActiveDownloaders();
+		final List<ILibraryPackageDownloader> downloaders = sources.downloaders();
+		if (!sources.status().isOK()) {
+			ILog.get().log(sources.status());
 		}
 
 		DownloadResult<Path> dlResult;
 		final StringBuilder errors = new StringBuilder();
+		for (final IStatus status : sources.status().getChildren()) {
+			errors.append(" | ").append(status.getMessage()); //$NON-NLS-1$
+		}
 		final VersionRange range = (versionRange == null || versionRange.isEmpty()) ? ALL_RANGE : versionRange;
 		final Version pref = (preferred != null && range.includes(preferred)) ? preferred : null;
 		progress.setWorkRemaining(downloaders.size());
 		for (final var downloader : downloaders) {
-			if (!downloader.isActive()) {
-				progress.worked(1);
-				continue;
-			}
 			try {
 				dlResult = downloader.downloadLibrary(symbolicName, range, pref, progress.split(1));
 				if (dlResult.status() == DownloadResult.Status.OK) {
@@ -578,7 +589,7 @@ public enum LibraryManager {
 					errors.append(dlResult.message());
 				}
 			} catch (final IOException e) {
-				FordiacLogHelper.logError(e.getMessage(), e);
+				ILog.get().error(e.getMessage(), e);
 			}
 		}
 		return new DownloadResult<>(DownloadResult.Status.ERROR, errors.toString());
@@ -666,8 +677,12 @@ public enum LibraryManager {
 		// import valid nodes
 		importDependencyNodes(project, libManagerData, projectManifest, markerList, progress.split(15));
 
-		// remove still linked libraries
-		cleanupLinks(libManagerData.linked(), progress.split(2));
+		// Preserve existing links when the dependency graph is incomplete.
+		if (queue.isEmpty()) {
+			cleanupLinks(libManagerData.linked(), progress.split(2));
+		} else {
+			progress.worked(2);
+		}
 
 		// check if imported library links are broken
 		checkLinkedLibraries(project, progress.split(1));
@@ -788,7 +803,7 @@ public enum LibraryManager {
 
 			// updated dependencies
 			rnode.getDependencies().forEach((symb, val) -> {
-				final var dn = data.dependencyNodes().computeIfAbsent(symb, s -> new DependencyNode(symb));
+				final var dn = data.dependencyNodes().computeIfAbsent(symb, _ -> new DependencyNode(symb));
 				dn.putCause(symbolicName, val);
 				if (dn.isChanged()) {
 					queue.add(symb);
@@ -807,6 +822,12 @@ public enum LibraryManager {
 			if (dnode.isValid()) {
 				final var rnode = data.resolveNodes().get(dnode.getSymbolicName());
 
+				if (rnode == null) {
+					ILog.get().warn(MessageFormat.format(Messages.LibraryManager_UnresolvedDependency,
+							dnode.getSymbolicName(), project.getName()));
+					continue;
+				}
+
 				if (rnode.isValid()) {
 					if (rnode.requireImport(data.linked())) {
 						importLibrary(project, rnode.getUri(), false, false);
@@ -815,7 +836,9 @@ public enum LibraryManager {
 						data.linked().remove(rnode.getSymbolicName());
 					}
 				} else {
-					markerList.add(LibraryMarkerFactory.createDependencyMarker(projectManifest, rnode, dnode));
+					final var marker = LibraryMarkerFactory.createDependencyMarker(projectManifest, rnode, dnode);
+					markerList.add(marker);
+					ILog.get().error(marker.getMessage());
 				}
 			} else if (dnode.isRangeEmpty()) {
 				markerList.add(LibraryMarkerFactory.createDependencyMarker(projectManifest, dnode));
@@ -914,7 +937,7 @@ public enum LibraryManager {
 				return new ResolveNode(rec);
 			}
 		} else {
-			FordiacLogHelper.logWarning(dlResult.message());
+			ILog.get().warn(dlResult.message());
 		}
 
 		if (usePref) {
@@ -948,9 +971,16 @@ public enum LibraryManager {
 			final Manifest manifest = ManifestHelper.getContainerManifest(refProject);
 			final String symbolicName = ManifestHelper.getSymbolicName(manifest, refProject.getName());
 			final Version version = ManifestHelper.getVersion(manifest, Version.emptyVersion);
-			referenced.computeIfAbsent(symbolicName, name -> new ArrayList<>()).add(version);
+			referenced.computeIfAbsent(symbolicName, _ -> new ArrayList<>()).add(version);
 		}
 
+	}
+
+	private static List<LibraryRecord> getLibraryRecords(final Map<String, List<LibraryRecord>> libs,
+			final String symbolicName) {
+		synchronized (libs) {
+			return List.copyOf(libs.getOrDefault(symbolicName, Collections.emptyList()));
+		}
 	}
 
 	/**
@@ -963,7 +993,7 @@ public enum LibraryManager {
 	 */
 	private static LibraryRecord getLibraryRecord(final Map<String, List<LibraryRecord>> libs,
 			final String symbolicName, final Version version) {
-		return libs.getOrDefault(symbolicName, Collections.emptyList()).stream()
+		return getLibraryRecords(libs, symbolicName).stream()
 				.filter(l -> l.version().equals(version)).findFirst().orElse(null);
 	}
 
@@ -977,7 +1007,7 @@ public enum LibraryManager {
 	 */
 	private static LibraryRecord getLibraryRecord(final Map<String, List<LibraryRecord>> libs,
 			final String symbolicName, final VersionRange range) {
-		return libs.getOrDefault(symbolicName, Collections.emptyList()).stream()
+		return getLibraryRecords(libs, symbolicName).stream()
 				.filter(l -> range.includes(l.version())).sorted((o1, o2) -> o2.version().compareTo(o1.version()))
 				.findFirst().orElse(null);
 	}
@@ -992,7 +1022,7 @@ public enum LibraryManager {
 	 */
 	private static LibraryRecord getLibraryRecord(final Map<String, List<LibraryRecord>> libs,
 			final String symbolicName, final java.net.URI uri) {
-		return libs.getOrDefault(symbolicName, Collections.emptyList()).stream().filter(l -> l.uri().equals(uri))
+		return getLibraryRecords(libs, symbolicName).stream().filter(l -> l.uri().equals(uri))
 				.sorted((o1, o2) -> o2.version().compareTo(o1.version())).findFirst().orElse(null);
 	}
 

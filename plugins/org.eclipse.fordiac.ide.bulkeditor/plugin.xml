@@ -8,7 +8,15 @@
             class="org.eclipse.fordiac.ide.bulkeditor.editors.BulkEditor"
             icon="fordiacimage://ICON_BULK_EDITOR"
             id="org.eclipse.fordiac.ide.bulkeditor.BulkEditor"
-            name="Bulk Editor">
+            name="%BulkEditor">
+      </editor>
+      <editor
+            default="true"
+            extensions="query"
+            icon="fordiacimage://ICON_BULK_EDITOR"
+            id="org.eclipse.fordiac.ide.bulkeditor.QueryFileLauncher"
+            launcher="org.eclipse.fordiac.ide.bulkeditor.handler.QueryFileLauncher"
+            name="%BulkEditor">
       </editor>
 	</extension>
 	
@@ -55,11 +63,11 @@
 	
 	<extension point="org.eclipse.ui.commands">
 	    <command
-	    	name="OpenBulkEditorCommand"
+	    	name="%command.openBulkEditor.name"
 	        id="org.eclipse.fordiac.ide.bulkeditor.editors.openEditor"
 	        defaultHandler="org.eclipse.fordiac.ide.bulkeditor.handler.OpenBulkEditorHandler"/>
 	    <command
-	    	name="FindElementCommand"
+	    	name="%command.findElement.name"
 	        id="org.eclipse.fordiac.ide.bulkeditor.gotoElementCommand"/>
 	</extension>
 	
@@ -88,7 +96,7 @@
   	
   	<extension point="org.eclipse.ui.themes">
   	<fontDefinition
-                label="Diagram Font"
+                label="%font.queryHeader.label"
                 categoryId="org.eclipse.fordiac.ide.themeCategory"
                 id="org.eclipse.fordiac.ide.bulkeditor.query.headerFont">
             <fontValue
@@ -117,6 +125,13 @@
 			id="org.eclipse.fordiac.ide.bulkeditor.query.headerBackgroundColor"
 			label="Query viewer node header background color"
 			value="70, 130, 180"
+			isEditable="false">
+		</colorDefinition>
+		<colorDefinition
+			categoryId="org.eclipse.fordiac.ide.themeCategory"
+			id="org.eclipse.fordiac.ide.bulkeditor.query.negatedHeaderBackgroundColor"
+			label="Query viewer node negated header background color"
+			value="200, 40, 40"
 			isEditable="false">
 		</colorDefinition>
 		<colorDefinition
@@ -171,5 +186,13 @@
 			</themeid>
 		</stylesheet>
 	</extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated query -->
+      <package
+            uri="org.eclipse.fordiac.ide.bulkeditor.query"
+            class="org.eclipse.fordiac.ide.bulkeditor.query.model.QueryPackage"
+            genModel="model/query.genmodel"/>
+   </extension>
 		
 </plugin>

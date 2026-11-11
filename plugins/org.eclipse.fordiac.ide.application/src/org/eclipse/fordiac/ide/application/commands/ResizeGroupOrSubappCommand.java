@@ -29,6 +29,7 @@ import org.eclipse.fordiac.ide.application.figures.SubAppForFbNetworkFigure;
 import org.eclipse.fordiac.ide.application.policies.ContainerContentLayoutPolicy;
 import org.eclipse.fordiac.ide.application.policies.FBNetworkXYLayoutEditPolicy;
 import org.eclipse.fordiac.ide.model.ConnectionLayoutTagger;
+import org.eclipse.fordiac.ide.model.CoordinateConverter;
 import org.eclipse.fordiac.ide.model.commands.change.AbstractChangeContainerBoundsCommand;
 import org.eclipse.fordiac.ide.model.libraryElement.BlockFBNetworkElement;
 import org.eclipse.fordiac.ide.model.libraryElement.FBNetworkElement;
@@ -74,22 +75,12 @@ public class ResizeGroupOrSubappCommand extends Command implements ConnectionLay
 	}
 
 	@Override
-	public boolean canUndo() {
-		return !changeContainerBoundsCommandList.isEmpty();
-	}
-
-	@Override
 	public void redo() {
 		for (final AbstractChangeContainerBoundsCommand changeBoundscmd : changeContainerBoundsCommandList) {
 			if (changeBoundscmd != null && changeBoundscmd.canRedo()) {
 				changeBoundscmd.redo();
 			}
 		}
-	}
-
-	@Override
-	public boolean canRedo() {
-		return !changeContainerBoundsCommandList.isEmpty();
 	}
 
 	private boolean isUnlockedGroup() {
@@ -132,9 +123,8 @@ public class ResizeGroupOrSubappCommand extends Command implements ConnectionLay
 				fbBounds.union(containerBounds);
 				final FBNetworkElement container = getContainer(containerEP);
 				if (container != null) {
-					return createChangeBoundsCommand(container,
-							((GraphicalEditPart) containerEP.getParent()).getFigure().getBounds(), containerBounds,
-							fbBounds);
+					final Rectangle curBounds = ((GraphicalEditPart) containerEP.getParent()).getFigure().getBounds();
+					return createChangeBoundsCommand(container, curBounds, containerBounds, fbBounds);
 				}
 			}
 		}
@@ -164,6 +154,7 @@ public class ResizeGroupOrSubappCommand extends Command implements ConnectionLay
 	public static AbstractChangeContainerBoundsCommand createChangeBoundsCommand(final FBNetworkElement container,
 			final Rectangle curBounds, final Rectangle contentContainerBounds, final Rectangle contentBounds) {
 		final Rectangle newBounds = curBounds.getCopy();
+		newBounds.setLocation(CoordinateConverter.INSTANCE.toScreenPoint(container.getPosition()));
 		newBounds.x += contentBounds.x - contentContainerBounds.x;
 		newBounds.y += contentBounds.y - contentContainerBounds.y;
 		newBounds.width += contentBounds.width - contentContainerBounds.width;

@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -32,7 +33,6 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.fordiac.ide.debug.LaunchConfigurationAttributes;
 import org.eclipse.fordiac.ide.gef.widgets.VariableWidget;
 import org.eclipse.fordiac.ide.model.eval.variable.Variable;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -86,12 +86,12 @@ public abstract class MainLaunchConfigurationTab extends AbstractLaunchConfigura
 		resourceText = new Text(comp, SWT.BORDER);
 		resourceText.setEnabled(false);
 		resourceText.setMessage("Location"); //$NON-NLS-1$
-		resourceText.addModifyListener(e -> scheduleUpdateJob());
+		resourceText.addModifyListener(_ -> scheduleUpdateJob());
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(resourceText);
 
 		final Button resourceButton = new Button(comp, SWT.BORDER);
 		resourceButton.setText("Browse..."); //$NON-NLS-1$
-		resourceButton.addSelectionListener(widgetSelectedAdapter(e -> handleResourceButtonSelected()));
+		resourceButton.addSelectionListener(widgetSelectedAdapter(_ -> handleResourceButtonSelected()));
 		GridDataFactory.swtDefaults().applyTo(resourceButton);
 		return group;
 	}
@@ -107,7 +107,7 @@ public abstract class MainLaunchConfigurationTab extends AbstractLaunchConfigura
 
 		stopOnFirstLineCheckbox = new Button(comp, SWT.CHECK);
 		stopOnFirstLineCheckbox.setText("Stop on first line"); //$NON-NLS-1$
-		stopOnFirstLineCheckbox.addSelectionListener(widgetSelectedAdapter(e -> updateLaunchConfigurationDialog()));
+		stopOnFirstLineCheckbox.addSelectionListener(widgetSelectedAdapter(_ -> updateLaunchConfigurationDialog()));
 		GridDataFactory.fillDefaults().applyTo(stopOnFirstLineCheckbox);
 		return group;
 	}
@@ -118,8 +118,7 @@ public abstract class MainLaunchConfigurationTab extends AbstractLaunchConfigura
 		group.setText("Arguments"); //$NON-NLS-1$
 
 		argumentsWidget = new VariableWidget();
-		argumentsWidget
-				.addVariableModificationListener((variable, oldValue, newValue) -> updateLaunchConfigurationDialog());
+		argumentsWidget.addVariableModificationListener((_, _, _) -> updateLaunchConfigurationDialog());
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(argumentsWidget.createWidget(group));
 
 		return group;
@@ -169,7 +168,7 @@ public abstract class MainLaunchConfigurationTab extends AbstractLaunchConfigura
 			resourceText.setText(resourceAttribute);
 			stopOnFirstLineCheckbox.setSelection(LaunchConfigurationAttributes.isStopOnFirstLine(configuration));
 		} catch (final CoreException e) {
-			FordiacLogHelper.logWarning(e.getMessage(), e);
+			ILog.get().warn(e.getMessage(), e);
 		}
 	}
 
@@ -212,7 +211,7 @@ public abstract class MainLaunchConfigurationTab extends AbstractLaunchConfigura
 							try {
 								variable.setValue(arg.getValue().toString());
 							} catch (final Exception e) {
-								FordiacLogHelper.logWarning(e.getMessage(), e);
+								ILog.get().warn(e.getMessage(), e);
 							}
 						}));
 			}

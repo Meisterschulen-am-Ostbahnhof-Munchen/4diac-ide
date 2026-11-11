@@ -18,8 +18,10 @@ package org.eclipse.fordiac.ide.model.data.impl;
 
 import java.util.Collection;
 
+import java.util.Map;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -108,6 +110,16 @@ public class StructuredTypeImpl extends AnyDerivedTypeImpl implements Structured
 	@Override
 	public VarDeclaration getMemberVar(final String name) {
 		return getMemberVariables().stream().filter(mv -> mv.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean validateNoCircularReferences(final DiagnosticChain diagnostics, final Map<Object, Object> context) {
+		return org.eclipse.fordiac.ide.model.data.impl.StructuredTypeAnnotations.validateNoCircularReferences(this, diagnostics, context);
 	}
 
 	/**

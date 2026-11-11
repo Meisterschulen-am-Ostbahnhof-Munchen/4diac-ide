@@ -567,15 +567,6 @@ public interface LibraryElementFactory extends EFactory {
 	Link createLink();
 
 	/**
-	 * Returns a new object of class '<em>Local Variable</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Local Variable</em>'.
-	 * @generated
-	 */
-	LocalVariable createLocalVariable();
-
-	/**
 	 * Returns a new object of class '<em>Mapping</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -619,6 +610,15 @@ public interface LibraryElementFactory extends EFactory {
 	 * @generated
 	 */
 	OtherAlgorithm createOtherAlgorithm();
+
+	/**
+	 * Returns a new object of class '<em>Other Comment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Other Comment</em>'.
+	 * @generated
+	 */
+	OtherComment createOtherComment();
 
 	/**
 	 * Returns a new object of class '<em>Other Method</em>'.
@@ -801,6 +801,15 @@ public interface LibraryElementFactory extends EFactory {
 	STAlgorithm createSTAlgorithm();
 
 	/**
+	 * Returns a new object of class '<em>ST Comment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>ST Comment</em>'.
+	 * @generated
+	 */
+	STComment createSTComment();
+
+	/**
 	 * Returns a new object of class '<em>ST Function</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -925,6 +934,15 @@ public interface LibraryElementFactory extends EFactory {
 	 * @generated
 	 */
 	VarConfigInstance createVarConfigInstance();
+
+	/**
+	 * Returns a new object of class '<em>Override Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Override Attribute</em>'.
+	 * @generated
+	 */
+	OverrideAttribute createOverrideAttribute();
 
 	/**
 	 * Returns the package supported by this factory.

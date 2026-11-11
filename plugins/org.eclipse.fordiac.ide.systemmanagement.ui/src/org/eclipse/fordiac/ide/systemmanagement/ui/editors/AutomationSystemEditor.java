@@ -29,6 +29,7 @@ import org.eclipse.core.commands.operations.UndoContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -41,13 +42,13 @@ import org.eclipse.fordiac.ide.gef.DiagramEditorWithFlyoutPalette;
 import org.eclipse.fordiac.ide.gef.DiagramOutlinePage;
 import org.eclipse.fordiac.ide.gef.commands.OperationHistoryCommandStack;
 import org.eclipse.fordiac.ide.model.commands.QualNameChangeListenerManager;
-import org.eclipse.fordiac.ide.model.edit.ITypeEntryEditor;
 import org.eclipse.fordiac.ide.model.helpers.FBNetworkHelper;
 import org.eclipse.fordiac.ide.model.libraryElement.Application;
 import org.eclipse.fordiac.ide.model.libraryElement.AutomationSystem;
 import org.eclipse.fordiac.ide.model.libraryElement.CFBInstance;
 import org.eclipse.fordiac.ide.model.libraryElement.Device;
 import org.eclipse.fordiac.ide.model.libraryElement.ErrorLibraryElement;
+import org.eclipse.fordiac.ide.model.libraryElement.INamedElement;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
 import org.eclipse.fordiac.ide.model.libraryElement.Resource;
 import org.eclipse.fordiac.ide.model.libraryElement.SystemConfiguration;
@@ -74,7 +75,6 @@ import org.eclipse.fordiac.ide.systemmanagement.ui.providers.AutomationSystemPro
 import org.eclipse.fordiac.ide.systemmanagement.ui.systemexplorer.StyledSystemLabelProvider;
 import org.eclipse.fordiac.ide.ui.editors.EditorUtils;
 import org.eclipse.fordiac.ide.ui.widget.SelectionTabbedPropertySheetPage;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -97,7 +97,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
-public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements ITypeEntryEditor {
+public class AutomationSystemEditor extends AbstractBreadCrumbEditor {
 
 	private AutomationSystem system;
 	private final OperationHistoryCommandStack commandStack = new OperationHistoryCommandStack();
@@ -170,7 +170,7 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 		if (fileExists) {
 			final Button textEditorButton = new Button(composite, SWT.NONE);
 			textEditorButton.setText(Messages.AutomationSystemEditor_OpenTextEditor);
-			textEditorButton.addListener(SWT.Selection, e -> EditorUtils.openTextEditor(getEditorInput()));
+			textEditorButton.addListener(SWT.Selection, _ -> EditorUtils.openTextEditor(getEditorInput()));
 		}
 		parent.layout(true, true);
 	}
@@ -194,7 +194,7 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 			final int pagenum = addPage(new SystemEditor(), getEditorInput());
 			getModelToEditorNumMapping().put(system, Integer.valueOf(pagenum));
 		} catch (final PartInitException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 		}
 	}
 
@@ -208,23 +208,22 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 	}
 
 	@Override
-	protected EditorPart createEditorPart(final Object model) {
+	protected EditorPart createEditorPart(final EObject model) {
 		return switch (model) {
-		case final IFile file -> new SystemEditor();
-		case final CFBInstance cfb -> new CompositeInstanceViewer();
-		case final TypedSubApp subApp -> new SubappInstanceViewer();
+		case final CFBInstance _ -> new CompositeInstanceViewer();
+		case final TypedSubApp _ -> new SubappInstanceViewer();
 		case final UntypedSubApp subApp when subApp.isContainedInTypedInstance() -> new SubappInstanceViewer();
-		case final UntypedSubApp subApp -> new SubAppNetworkEditor();
-		case final Application application -> new ApplicationEditor();
-		case final SystemConfiguration systemConfiguration -> new SystemConfigurationEditor();
-		case final Device device -> new SystemConfigurationEditor();
-		case final Resource resource -> new ResourceDiagramEditor();
+		case final UntypedSubApp _ -> new SubAppNetworkEditor();
+		case final Application _ -> new ApplicationEditor();
+		case final SystemConfiguration _ -> new SystemConfigurationEditor();
+		case final Device _ -> new SystemConfigurationEditor();
+		case final Resource _ -> new ResourceDiagramEditor();
 		case null, default -> null;
 		};
 	}
 
 	@Override
-	protected IEditorInput createEditorInput(final Object model) {
+	protected IEditorInput createEditorInput(final EObject model) {
 		return switch (model) {
 		case final Device device -> new SubEditorInput(getEditorInput(), device.getSystemConfiguration());
 		case null, default -> super.createEditorInput(model);
@@ -245,9 +244,9 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 			try {
 				operation.run(monitor);
 			} catch (final InvocationTargetException e) {
-				FordiacLogHelper.logError(e.getMessage(), e);
+				ILog.get().error(e.getMessage(), e);
 			} catch (final InterruptedException e) {
-				FordiacLogHelper.logError(e.getMessage(), e);
+				ILog.get().error(e.getMessage(), e);
 				Thread.currentThread().interrupt();
 			}
 			getCommandStack().markSaveLocation();
@@ -265,7 +264,7 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 	}
 
 	@Override
-	protected Object getInitialModel(final String itemPath) {
+	protected EObject getInitialModel(final String itemPath) {
 		if (null != itemPath) {
 			final String[] nameList = itemPath.split("\\."); //$NON-NLS-1$
 			if (nameList.length > 1) {
@@ -315,9 +314,9 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 		try {
 			getSite().getWorkbenchWindow().run(true, true, operation);
 		} catch (final InvocationTargetException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 		} catch (final InterruptedException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -375,6 +374,11 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 		LibraryElementProvider.INSTANCE.removeLibraryElementStateListener(elementStateListener);
 	}
 
+	@Override
+	protected INamedElement getModelRoot() {
+		return system;
+	}
+
 	private SystemEntry getTypeEntry() {
 		if (system != null) {
 			return (SystemEntry) system.getTypeEntry();
@@ -388,7 +392,7 @@ public class AutomationSystemEditor extends AbstractBreadCrumbEditor implements 
 	}
 
 	@Override
-	public void setInput(final IEditorInput input) {
+	protected void setInput(final IEditorInput input) {
 		try {
 			LibraryElementProvider.INSTANCE.disconnect(getEditorInput());
 			LibraryElementProvider.INSTANCE.connect(input);

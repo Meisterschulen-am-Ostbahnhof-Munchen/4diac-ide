@@ -30,13 +30,13 @@ import org.eclipse.core.commands.operations.UndoContext;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.fordiac.ide.application.editors.FBNetworkEditor;
 import org.eclipse.fordiac.ide.gef.commands.OperationHistoryCommandStack;
-import org.eclipse.fordiac.ide.model.edit.ITypeEntryEditor;
 import org.eclipse.fordiac.ide.model.libraryElement.Algorithm;
 import org.eclipse.fordiac.ide.model.libraryElement.ErrorLibraryElement;
 import org.eclipse.fordiac.ide.model.libraryElement.FBNetworkElement;
@@ -51,10 +51,9 @@ import org.eclipse.fordiac.ide.model.ui.editors.LibraryElementActivationListener
 import org.eclipse.fordiac.ide.model.ui.editors.LibraryElementProvider;
 import org.eclipse.fordiac.ide.model.ui.editors.LibraryElementStateListener;
 import org.eclipse.fordiac.ide.typeeditor.internal.TypeEditorPageFactory;
-import org.eclipse.fordiac.ide.ui.editors.AbstractCloseAbleFormEditor;
 import org.eclipse.fordiac.ide.ui.editors.EditorUtils;
+import org.eclipse.fordiac.ide.ui.editors.FordiacFormEditor;
 import org.eclipse.fordiac.ide.ui.widget.SelectionTabbedPropertySheetPage;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -87,8 +86,8 @@ import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
-public abstract class AbstractTypeEditor extends AbstractCloseAbleFormEditor
-		implements IGotoMarker, ITabbedPropertySheetPageContributor, ITypeEntryEditor, ISelectionListener {
+public abstract class AbstractTypeEditor extends FordiacFormEditor
+		implements IGotoMarker, ITabbedPropertySheetPageContributor, ISelectionListener {
 
 	private static TypeEditorPageFactory typeEditorPageFactory = new TypeEditorPageFactory();
 
@@ -108,7 +107,7 @@ public abstract class AbstractTypeEditor extends AbstractCloseAbleFormEditor
 				setPageText(index, typeEditorPage.getTitle());
 				setPageImage(index, typeEditorPage.getTitleImage());
 			} catch (final PartInitException e) {
-				FordiacLogHelper.logError(e.getMessage(), e);
+				ILog.get().error(e.getMessage(), e);
 			}
 		}
 	}
@@ -208,9 +207,9 @@ public abstract class AbstractTypeEditor extends AbstractCloseAbleFormEditor
 		try {
 			operation.run(monitor);
 		} catch (final InvocationTargetException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 		} catch (final InterruptedException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -350,7 +349,7 @@ public abstract class AbstractTypeEditor extends AbstractCloseAbleFormEditor
 	}
 
 	@Override
-	public void setInput(final IEditorInput input) {
+	protected void setInput(final IEditorInput input) {
 		try {
 			LibraryElementProvider.INSTANCE.disconnect(getEditorInput());
 			LibraryElementProvider.INSTANCE.connect(input);
@@ -387,7 +386,7 @@ public abstract class AbstractTypeEditor extends AbstractCloseAbleFormEditor
 		if (fileExists) {
 			final Button textEditorButton = new Button(composite, SWT.NONE);
 			textEditorButton.setText(Messages.TypeEditor_OpenTextEditor);
-			textEditorButton.addListener(SWT.Selection, e -> EditorUtils.openTextEditor(getEditorInput()));
+			textEditorButton.addListener(SWT.Selection, _ -> EditorUtils.openTextEditor(getEditorInput()));
 		}
 	}
 

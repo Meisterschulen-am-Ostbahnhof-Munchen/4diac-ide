@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2024 Johannes Kepler University Linz
+ * Copyright (c) 2021 Johannes Kepler University Linz
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -13,45 +13,65 @@
  *               - moved to the platform get log to have a logger also when there
  *                 is no workbench
  *   Martin Jobst - change logError argument to Throwable
+ *   Alexander Fedorov - simplify implementation
  *******************************************************************************/
 package org.eclipse.fordiac.ide.util;
 
 import java.lang.StackWalker.Option;
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 
+import org.eclipse.core.runtime.ILog;
+
+/**
+ * @deprecated use {@link ILog} directly
+ */
+@Deprecated(forRemoval = true)
 public final class FordiacLogHelper {
 
 	private static final StackWalker STACK_WALKER = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
 
+	/**
+	 * @see ILog
+	 * @deprecated replace with `ILog.get().error(...)`
+	 */
+	@Deprecated(forRemoval = true)
 	public static void logError(final String msg, final Throwable t) {
-		getLogger(STACK_WALKER.getCallerClass()).error(msg, t);
+		ILog.of(STACK_WALKER.getCallerClass()).error(msg, t);
 	}
 
+	/**
+	 * @see ILog
+	 * @deprecated replace with `ILog.get().error(...)`
+	 */
+	@Deprecated
 	public static void logError(final String msg) {
-		getLogger(STACK_WALKER.getCallerClass()).error(msg);
+		ILog.of(STACK_WALKER.getCallerClass()).error(msg);
 	}
 
+	/**
+	 * @see ILog
+	 * @deprecated replace with `ILog.get().warn(...)`
+	 */
+	@Deprecated
 	public static void logWarning(final String msg, final Exception e) {
-		getLogger(STACK_WALKER.getCallerClass()).warn(msg, e);
+		ILog.of(STACK_WALKER.getCallerClass()).warn(msg, e);
 	}
 
+	/**
+	 * @see ILog
+	 * @deprecated replace with `ILog.get().warn(...)`
+	 */
+	@Deprecated
 	public static void logWarning(final String msg) {
-		getLogger(STACK_WALKER.getCallerClass()).warn(msg);
+		ILog.of(STACK_WALKER.getCallerClass()).warn(msg);
 	}
 
+	/**
+	 * @see ILog
+	 * @deprecated replace with `ILog.get().info(...)`
+	 */
+	@Deprecated
 	public static void logInfo(final String msg) {
-		getLogger(STACK_WALKER.getCallerClass()).info(msg);
-	}
-
-	private static ILog getLogger(final Class<?> classFromBundle) {
-		return Platform.getLog(getBundle(classFromBundle));
-	}
-
-	private static Bundle getBundle(final Class<?> classFromBundle) {
-		return FrameworkUtil.getBundle(classFromBundle);
+		ILog.of(STACK_WALKER.getCallerClass()).info(msg);
 	}
 
 	private FordiacLogHelper() {

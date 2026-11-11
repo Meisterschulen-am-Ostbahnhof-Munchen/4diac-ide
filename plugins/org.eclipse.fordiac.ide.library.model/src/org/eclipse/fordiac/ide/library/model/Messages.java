@@ -20,7 +20,14 @@ import org.eclipse.osgi.util.NLS;
 public final class Messages extends NLS {
 	private static final String BUNDLE_NAME = "plugin"; //$NON-NLS-1$
 
+	public static String ManifestHelper_CannotCreateManifest;
 	public static String VersionValidaton_DeclarationError;
+	public static String VersionValidation_MissingDeclaration;
+	public static String VersionValidation_UnknownProduct;
+	public static String ExportAnnotations_DuplicateLibrary;
+	public static String DependenciesAnnotations_DuplicateSymName;
+	public static String LibraryElementAnnotations_InvalidPattern;
+	public static String VersionInfoAnnotations_InvalidDate;
 
 	static {
 		// initialize resource bundle

@@ -108,8 +108,8 @@ public class GitLabEndpointsPreferencePage extends PreferencePage implements IWo
 			}
 		});
 
-		viewer.addSelectionChangedListener(e -> updateButtons());
-		viewer.getTable().addListener(SWT.MouseDoubleClick, ev -> onEdit());
+		viewer.addSelectionChangedListener(_ -> updateButtons());
+		viewer.getTable().addListener(SWT.MouseDoubleClick, _ -> onEdit());
 	}
 
 	private void createButtons(final Composite parent) {
@@ -120,27 +120,27 @@ public class GitLabEndpointsPreferencePage extends PreferencePage implements IWo
 		final Button addButton = new Button(buttons, SWT.PUSH);
 		addButton.setText(Messages.GitLabEndpointsPreferencePage_add);
 		addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-		addButton.addListener(SWT.Selection, ev -> onAdd());
+		addButton.addListener(SWT.Selection, _ -> onAdd());
 
 		editButton = new Button(buttons, SWT.PUSH);
 		editButton.setText(Messages.GitLabEndpointsPreferencePage_edit);
 		editButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-		editButton.addListener(SWT.Selection, ev -> onEdit());
+		editButton.addListener(SWT.Selection, _ -> onEdit());
 
 		renameButton = new Button(buttons, SWT.PUSH);
 		renameButton.setText(Messages.GitLabEndpointsPreferencePage_rename);
 		renameButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-		renameButton.addListener(SWT.Selection, ev -> onRename());
+		renameButton.addListener(SWT.Selection, _ -> onRename());
 
 		removeButton = new Button(buttons, SWT.PUSH);
 		removeButton.setText(Messages.GitLabEndpointsPreferencePage_remove);
 		removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-		removeButton.addListener(SWT.Selection, ev -> onRemove());
+		removeButton.addListener(SWT.Selection, _ -> onRemove());
 
 		final Button testButton = new Button(buttons, SWT.PUSH);
 		testButton.setText(Messages.GitLabEndpointsPreferencePage_test_con);
 		testButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-		testButton.addListener(SWT.Selection, ev -> onTest());
+		testButton.addListener(SWT.Selection, _ -> onTest());
 	}
 
 	private void onAdd() {
@@ -226,8 +226,8 @@ public class GitLabEndpointsPreferencePage extends PreferencePage implements IWo
 
 	protected void testConnection(final GitLabEndpoint selected) {
 		try {
-			final GitLabDownloader dl = new GitLabDownloader(selected.token(), selected.url());
-			final var res = dl.fetchProjectsAndPackages();
+			final GitLabDownloader gitlabDownloader = new GitLabDownloader(selected);
+			final var res = gitlabDownloader.fetchProjectsAndPackages();
 			if (res != null && res.status() == Status.OK) {
 				MessageDialog.openInformation(getShell(), Messages.GitLabEndpointsPreferencePage_test_con,
 						Messages.GitLabEndpointsPreferencePage_connnection_sucessful);

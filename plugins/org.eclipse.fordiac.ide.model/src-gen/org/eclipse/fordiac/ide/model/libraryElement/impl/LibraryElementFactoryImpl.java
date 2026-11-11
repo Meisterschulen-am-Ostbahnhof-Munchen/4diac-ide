@@ -93,14 +93,15 @@ import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElementFactory;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElementPackage;
 import org.eclipse.fordiac.ide.model.libraryElement.Link;
-import org.eclipse.fordiac.ide.model.libraryElement.LocalVariable;
 import org.eclipse.fordiac.ide.model.libraryElement.Mapping;
 import org.eclipse.fordiac.ide.model.libraryElement.MappingTarget;
 import org.eclipse.fordiac.ide.model.libraryElement.Multiplexer;
 import org.eclipse.fordiac.ide.model.libraryElement.OriginalSource;
 import org.eclipse.fordiac.ide.model.libraryElement.OtherAlgorithm;
+import org.eclipse.fordiac.ide.model.libraryElement.OtherComment;
 import org.eclipse.fordiac.ide.model.libraryElement.OtherMethod;
 import org.eclipse.fordiac.ide.model.libraryElement.OutputPrimitive;
+import org.eclipse.fordiac.ide.model.libraryElement.OverrideAttribute;
 import org.eclipse.fordiac.ide.model.libraryElement.Position;
 import org.eclipse.fordiac.ide.model.libraryElement.PositionableElement;
 import org.eclipse.fordiac.ide.model.libraryElement.Primitive;
@@ -109,6 +110,7 @@ import org.eclipse.fordiac.ide.model.libraryElement.ResourceType;
 import org.eclipse.fordiac.ide.model.libraryElement.ResourceTypeFB;
 import org.eclipse.fordiac.ide.model.libraryElement.ResourceTypeName;
 import org.eclipse.fordiac.ide.model.libraryElement.STAlgorithm;
+import org.eclipse.fordiac.ide.model.libraryElement.STComment;
 import org.eclipse.fordiac.ide.model.libraryElement.STFunction;
 import org.eclipse.fordiac.ide.model.libraryElement.STFunctionBody;
 import org.eclipse.fordiac.ide.model.libraryElement.STMethod;
@@ -241,12 +243,12 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 			case LibraryElementPackage.INTERFACE_LIST: return createInterfaceList();
 			case LibraryElementPackage.LIBRARY_ELEMENT: return createLibraryElement();
 			case LibraryElementPackage.LINK: return createLink();
-			case LibraryElementPackage.LOCAL_VARIABLE: return createLocalVariable();
 			case LibraryElementPackage.MAPPING: return createMapping();
 			case LibraryElementPackage.MAPPING_TARGET: return createMappingTarget();
 			case LibraryElementPackage.MULTIPLEXER: return createMultiplexer();
 			case LibraryElementPackage.ORIGINAL_SOURCE: return createOriginalSource();
 			case LibraryElementPackage.OTHER_ALGORITHM: return createOtherAlgorithm();
+			case LibraryElementPackage.OTHER_COMMENT: return createOtherComment();
 			case LibraryElementPackage.OTHER_METHOD: return createOtherMethod();
 			case LibraryElementPackage.OUTPUT_PRIMITIVE: return createOutputPrimitive();
 			case LibraryElementPackage.POSITION: return createPosition();
@@ -267,6 +269,7 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 			case LibraryElementPackage.SIMPLE_EC_STATE: return createSimpleECState();
 			case LibraryElementPackage.SIMPLE_FB_TYPE: return createSimpleFBType();
 			case LibraryElementPackage.ST_ALGORITHM: return createSTAlgorithm();
+			case LibraryElementPackage.ST_COMMENT: return createSTComment();
 			case LibraryElementPackage.ST_FUNCTION: return createSTFunction();
 			case LibraryElementPackage.ST_FUNCTION_BODY: return createSTFunctionBody();
 			case LibraryElementPackage.ST_METHOD: return createSTMethod();
@@ -281,6 +284,7 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 			case LibraryElementPackage.VAR_DECLARATION: return createVarDeclaration();
 			case LibraryElementPackage.VERSION_INFO: return createVersionInfo();
 			case LibraryElementPackage.WITH: return createWith();
+			case LibraryElementPackage.OVERRIDE_ATTRIBUTE: return createOverrideAttribute();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -1011,17 +1015,6 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 	 * @generated
 	 */
 	@Override
-	public LocalVariable createLocalVariable() {
-		LocalVariableImpl localVariable = new LocalVariableImpl();
-		return localVariable;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Mapping createMapping() {
 		MappingImpl mapping = new MappingImpl();
 		return mapping;
@@ -1069,6 +1062,17 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 	public OtherAlgorithm createOtherAlgorithm() {
 		OtherAlgorithmImpl otherAlgorithm = new OtherAlgorithmImpl();
 		return otherAlgorithm;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public OtherComment createOtherComment() {
+		OtherCommentImpl otherComment = new OtherCommentImpl();
+		return otherComment;
 	}
 
 	/**
@@ -1297,6 +1301,17 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 	 * @generated
 	 */
 	@Override
+	public STComment createSTComment() {
+		STCommentImpl stComment = new STCommentImpl();
+		return stComment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public STFunction createSTFunction() {
 		STFunctionImpl stFunction = new STFunctionImpl();
 		return stFunction;
@@ -1443,6 +1458,17 @@ public class LibraryElementFactoryImpl extends EFactoryImpl implements LibraryEl
 	public VarConfigInstance createVarConfigInstance() {
 		VarConfigInstanceImpl varConfigInstance = new VarConfigInstanceImpl();
 		return varConfigInstance;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public OverrideAttribute createOverrideAttribute() {
+		OverrideAttributeImpl overrideAttribute = new OverrideAttributeImpl();
+		return overrideAttribute;
 	}
 
 	/**

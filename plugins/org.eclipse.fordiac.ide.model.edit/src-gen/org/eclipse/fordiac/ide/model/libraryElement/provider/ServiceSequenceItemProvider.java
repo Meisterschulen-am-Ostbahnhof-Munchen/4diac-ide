@@ -621,11 +621,6 @@ public class ServiceSequenceItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
-				 LibraryElementFactory.eINSTANCE.createLocalVariable()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
 				 LibraryElementFactory.eINSTANCE.createMapping()));
 
 		newChildDescriptors.add
@@ -642,6 +637,11 @@ public class ServiceSequenceItemProvider
 			(createChildParameter
 				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
 				 LibraryElementFactory.eINSTANCE.createOtherAlgorithm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
+				 LibraryElementFactory.eINSTANCE.createOtherComment()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -726,6 +726,11 @@ public class ServiceSequenceItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
+				 LibraryElementFactory.eINSTANCE.createSTComment()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
 				 LibraryElementFactory.eINSTANCE.createSTFunction()));
 
 		newChildDescriptors.add
@@ -772,6 +777,11 @@ public class ServiceSequenceItemProvider
 			(createChildParameter
 				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
 				 LibraryElementFactory.eINSTANCE.createWith()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(LibraryElementPackage.Literals.SERVICE_SEQUENCE__EVENT_MANAGER,
+				 LibraryElementFactory.eINSTANCE.createOverrideAttribute()));
 
 		newChildDescriptors.add
 			(createChildParameter

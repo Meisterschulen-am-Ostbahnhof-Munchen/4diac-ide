@@ -26,9 +26,9 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.fordiac.ide.Activator;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
@@ -41,6 +41,9 @@ public class GitIssueCreator {
 	}
 
 	private static record GitHubResponse(String html_url) {
+	}
+
+	private static record GitLabRequest(String title, String description, String labels) {
 	}
 
 	private static record GitLabResponse(String web_url) {
@@ -124,17 +127,18 @@ public class GitIssueCreator {
 		final String accessToken = PreferenceConstants.getReportGitLabToken(preferenceQualifier);
 		final String labels = String.join(",", info.labels()); //$NON-NLS-1$
 
-		final String uri = "%s/api/v4/projects/%s/issues?title=%s&description=%s&labels=%s"; //$NON-NLS-1$
-		final String reportingURI = uri.formatted(baseURI, URLEncoder.encode(projectPath, StandardCharsets.UTF_8),
-				URLEncoder.encode(info.title(), StandardCharsets.UTF_8),
-				URLEncoder.encode(info.body(), StandardCharsets.UTF_8),
-				URLEncoder.encode(labels, StandardCharsets.UTF_8));
+		final String uri = "%s/api/v4/projects/%s/issues"; //$NON-NLS-1$
+		final String reportingURI = uri.formatted(baseURI, URLEncoder.encode(projectPath, StandardCharsets.UTF_8));
 		final Gson gson = new Gson();
+		// send the issue data in the request body, as long descriptions exceed the URL
+		// length limit of servers
+		final String jsonBody = gson.toJson(new GitLabRequest(info.title(), info.body(), labels));
 
 		try {
 			final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(reportingURI))
 					.header("PRIVATE-TOKEN", accessToken) //$NON-NLS-1$
-					.POST(HttpRequest.BodyPublishers.noBody()).build();
+					.header("Content-Type", "application/json") //$NON-NLS-1$ //$NON-NLS-2$
+					.POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
 			final Optional<String> body = makeRequest(request);
 			return Optional.ofNullable(gson.fromJson(body.get(), GitLabResponse.class).web_url());
 		} catch (final IllegalArgumentException | NoSuchElementException e) {
@@ -174,9 +178,9 @@ public class GitIssueCreator {
 				return Optional.of(response.body());
 			}
 		} catch (final IOException e) {
-			FordiacLogHelper.logWarning(e.getMessage(), e);
+			ILog.get().warn(e.getMessage(), e);
 		} catch (final InterruptedException e) {
-			FordiacLogHelper.logWarning(e.getMessage(), e);
+			ILog.get().warn(e.getMessage(), e);
 			Thread.currentThread().interrupt();
 		}
 		return Optional.empty();
@@ -199,4 +203,3 @@ public class GitIssueCreator {
 		return url.substring(0, idx).concat(epilogue);
 	}
 }
-

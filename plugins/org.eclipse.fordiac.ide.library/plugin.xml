@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="ArchiveDownloaderExtension" name="Extension point for Archive Downloader" schema="schema/ArchiveDownloaderExtension.exsd"/>
+   <extension-point id="LibraryPackageDownloader" name="%extensionPoint.libraryPackageDownloader.name" schema="schema/LibraryPackageDownloader.exsd"/>
    <extension
          id="builder"
-         name="4diac Library Builder"
+          name="%builder.name"
          point="org.eclipse.core.resources.builders">
       <builder
             hasNature="true">
@@ -23,7 +23,7 @@
       <deleteParticipant
             class="org.eclipse.fordiac.ide.library.refactoring.DeleteLibraryRefactoringParticipant"
             id="org.eclipse.fordiac.ide.library.deleteLibrary"
-            name="Delete Library Folder Handler">
+            name="%deleteLibrary.name">
          <enablement>
             <and>
                <instanceof

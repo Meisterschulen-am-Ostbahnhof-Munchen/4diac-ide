@@ -18,6 +18,7 @@
  *   Daniel Lindhuber - added source comment
  *   Alois Zoitl - added update handling on source comment
  *   Fabio Gandolfi - added resizing of pin labels by property settings
+ *   Michael Oberlehner - add injectable connection drag tool factory
  *******************************************************************************/
 package org.eclipse.fordiac.ide.gef.editparts;
 
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MouseEvent;
@@ -54,6 +56,7 @@ import org.eclipse.fordiac.ide.gef.policies.DataInterfaceLayoutEditPolicy;
 import org.eclipse.fordiac.ide.gef.policies.InterfaceElementSelectionPolicy;
 import org.eclipse.fordiac.ide.gef.policies.ValueEditPartChangeEditPolicy;
 import org.eclipse.fordiac.ide.gef.preferences.GefPreferenceConstants;
+import org.eclipse.fordiac.ide.gef.tools.FordiacConnectionDragCreationTool;
 import org.eclipse.fordiac.ide.model.FordiacKeywords;
 import org.eclipse.fordiac.ide.model.libraryElement.AdapterDeclaration;
 import org.eclipse.fordiac.ide.model.libraryElement.Attribute;
@@ -72,7 +75,6 @@ import org.eclipse.fordiac.ide.model.ui.annotation.GraphicalAnnotationModelEvent
 import org.eclipse.fordiac.ide.model.ui.editors.AdvancedScrollingGraphicalViewer;
 import org.eclipse.fordiac.ide.model.ui.editors.HandlerHelper;
 import org.eclipse.fordiac.ide.ui.preferences.PreferenceStoreProvider;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
@@ -82,6 +84,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
+import org.eclipse.gef.tools.ConnectionDragCreationTool;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -123,7 +126,11 @@ public abstract class InterfaceEditPart extends AbstractConnectableEditPart
 
 	@Override
 	public DragTracker getDragTracker(final Request request) {
-		return new ConnCreateDirectEditDragTrackerProxy(this);
+		return new ConnCreateDirectEditDragTrackerProxy(this, createConnectionDragCreationTool());
+	}
+
+	protected ConnectionDragCreationTool createConnectionDragCreationTool() {
+		return new FordiacConnectionDragCreationTool();
 	}
 
 	public int getMouseState() {
@@ -246,7 +253,7 @@ public abstract class InterfaceEditPart extends AbstractConnectableEditPart
 						resource.findMarkers(UtilityMarkerHelper.CONNECTION_SRC_MARKER_ID, true, IResource.DEPTH_ZERO))
 						.findAny().isPresent();
 			} catch (final CoreException e) {
-				FordiacLogHelper.logWarning("Cannot fetch marker", e); //$NON-NLS-1$
+				ILog.get().warn("Cannot fetch marker", e); //$NON-NLS-1$
 			}
 			return false;
 		}
@@ -264,7 +271,7 @@ public abstract class InterfaceEditPart extends AbstractConnectableEditPart
 					HandlerHelper.getHandlerService().executeCommand(COMMAND_ID, event);
 				}
 			} catch (final Exception e) {
-				FordiacLogHelper.logError("commands.markConnectionSource not found", e); //$NON-NLS-1$
+				ILog.get().error("commands.markConnectionSource not found", e); //$NON-NLS-1$
 			}
 		}
 
@@ -345,7 +352,7 @@ public abstract class InterfaceEditPart extends AbstractConnectableEditPart
 			}
 
 			if (labelText.length() > maxWidth) {
-				if (getModel().eContainer() instanceof VarDeclaration) {
+				if (getModel().isMemberAccessPin()) {
 					// is member access label truncate on front
 					return getTruncationString()
 							+ labelText.substring(labelText.length() - maxWidth + 1, labelText.length());

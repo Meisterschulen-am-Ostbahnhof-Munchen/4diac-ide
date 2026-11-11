@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -46,7 +47,6 @@ import org.eclipse.fordiac.ide.library.ui.Messages;
 import org.eclipse.fordiac.ide.library.ui.wizards.ManageLibraryWizard;
 import org.eclipse.fordiac.ide.library.ui.wizards.UnifiedLibraryImportWizard;
 import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryTags;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
@@ -195,18 +195,18 @@ class ManifestEditorDependencyPage extends FormPage {
 		final Button refreshButton = new Button(buttonBar, SWT.PUSH);
 		refreshButton.setText(Messages.ManifestEditor_RefreshLibraries);
 		refreshButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		refreshButton.addListener(SWT.Selection, event -> refreshLibraries(form));
+		refreshButton.addListener(SWT.Selection, _ -> refreshLibraries(form));
 
 		final Button manageLibrariesButton = new Button(buttonBar, SWT.PUSH);
 		manageLibrariesButton.setText(Messages.ManageLibraryWizard_Label);
 		manageLibrariesButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		manageLibrariesButton.addListener(SWT.Selection, event -> ManageLibraryWizard
+		manageLibrariesButton.addListener(SWT.Selection, _ -> ManageLibraryWizard
 				.openDialog(getManifestEditor().getProject(), getEditor().getSite().getShell()));
 
 		final Button importLibrariesButton = new Button(buttonBar, SWT.PUSH);
 		importLibrariesButton.setText(Messages.ManifestEditor_ImportLibraries);
 		importLibrariesButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		importLibrariesButton.addListener(SWT.Selection, event -> UnifiedLibraryImportWizard
+		importLibrariesButton.addListener(SWT.Selection, _ -> UnifiedLibraryImportWizard
 				.openDialog(getManifestEditor().getProject(), getEditor().getSite().getShell()));
 	}
 
@@ -236,7 +236,7 @@ class ManifestEditorDependencyPage extends FormPage {
 			LinkedLibrary.getAll(project, null)
 					.forEach(lib -> linkedLibVersions.putIfAbsent(lib.getSymbolicName(), lib.getVersion().toString()));
 		} catch (final CoreException e) {
-			FordiacLogHelper.logError(e.getMessage(), e);
+			ILog.get().error(e.getMessage(), e);
 		}
 
 	}
@@ -349,14 +349,8 @@ class ManifestEditorDependencyPage extends FormPage {
 						return;
 					}
 
-					if (status.isOK()) {
-						form.getForm().setMessage("", IMessageProvider.NONE); //$NON-NLS-1$
-					} else {
-						final String combinedMessage = status.isMultiStatus() ? Arrays.stream(status.getChildren())
-								.map(IStatus::getMessage).collect(Collectors.joining(System.lineSeparator()))
-								: status.getMessage();
-						form.getForm().setMessage(combinedMessage, IMessageProvider.ERROR);
-					}
+					final String message = status.isOK() ? null : getMessage(status);
+					form.getForm().setMessage(message, toMessageProviderSeverity(status));
 
 					treeViewer.refresh();
 				});
@@ -366,6 +360,24 @@ class ManifestEditorDependencyPage extends FormPage {
 
 		job.setUser(false);
 		job.schedule();
+	}
+
+	private static String getMessage(final IStatus status) {
+		if (status.isMultiStatus()) {
+			final int severity = status.getSeverity();
+			return Arrays.stream(status.getChildren()).filter(child -> child.matches(severity)).map(IStatus::getMessage)
+					.collect(Collectors.joining(System.lineSeparator()));
+		}
+		return status.getMessage();
+	}
+
+	private static int toMessageProviderSeverity(final IStatus status) {
+		return switch (status.getSeverity()) {
+		case IStatus.ERROR -> IMessageProvider.ERROR;
+		case IStatus.WARNING -> IMessageProvider.WARNING;
+		case IStatus.INFO -> IMessageProvider.INFORMATION;
+		default -> IMessageProvider.NONE;
+		};
 	}
 
 	private static CellLabelProvider createLabelProvider(final Function<Required, String> textProvider,

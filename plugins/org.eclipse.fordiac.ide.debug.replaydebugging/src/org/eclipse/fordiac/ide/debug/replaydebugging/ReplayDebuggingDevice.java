@@ -24,13 +24,16 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.fordiac.ide.debug.replaydebugging.core.DataPointChange;
+import org.eclipse.fordiac.ide.debug.replaydebugging.core.DatapointsState;
 import org.eclipse.fordiac.ide.debug.replaydebugging.core.EventChange;
 import org.eclipse.fordiac.ide.debug.replaydebugging.core.ReplayNavigator;
 import org.eclipse.fordiac.ide.debug.replaydebugging.replayer.IDeviceReplayer;
+import org.eclipse.fordiac.ide.debug.replaydebugging.replayer.interpreter.ResourceState;
 import org.eclipse.fordiac.ide.debug.replaydebugging.response.DeviceResponse;
 import org.eclipse.fordiac.ide.debug.replaydebugging.watch.WatchFactoryReplay;
 import org.eclipse.fordiac.ide.deployment.debug.DeploymentDebugDevice;
@@ -42,11 +45,12 @@ import org.eclipse.fordiac.ide.deployment.debug.watch.DeploymentDebugWatchData;
 import org.eclipse.fordiac.ide.deployment.debug.watch.IVarDeclarationWatch;
 import org.eclipse.fordiac.ide.deployment.debug.watch.IWatch;
 import org.eclipse.fordiac.ide.deployment.exceptions.DeploymentException;
+import org.eclipse.fordiac.ide.fb.interpreter.api.RuntimeFactory;
+import org.eclipse.fordiac.ide.fb.interpreter.mm.NetworkRuntimeInspector;
 import org.eclipse.fordiac.ide.model.eval.EvaluatorCache;
 import org.eclipse.fordiac.ide.model.libraryElement.Device;
 import org.eclipse.fordiac.ide.model.libraryElement.INamedElement;
 import org.eclipse.fordiac.ide.model.libraryElement.Resource;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
 
 /**
  * @brief A debug device for replay debugging. It handles the watches of the
@@ -128,7 +132,7 @@ public class ReplayDebuggingDevice extends DeploymentDebugDevice implements Repl
 					new ReplayNavigator.Identifier(device.getAutomationSystem().getName(), device.getName(),
 							resource.getName()),
 					resourceReplayer, this);
-			replayDebuggingResource.load();
+			replayDebuggingResource.load(getDefaultState(resource));
 			replayDebuggingResources.put(resource.getName(), replayDebuggingResource);
 
 		}
@@ -141,7 +145,7 @@ public class ReplayDebuggingDevice extends DeploymentDebugDevice implements Repl
 		// make sure the device management executor obtains this instance
 		try {
 			getDeviceManagementExecutorService().connect();
-			try (EvaluatorCache cache = EvaluatorCache.open()) {
+			try (EvaluatorCache _ = EvaluatorCache.open()) {
 				Stream.of(DebugPlugin.getDefault().getBreakpointManager().getBreakpoints())
 						.forEachOrdered(this::breakpointAdded);
 			}
@@ -149,6 +153,22 @@ public class ReplayDebuggingDevice extends DeploymentDebugDevice implements Repl
 			throw new DebugException(Status
 					.error(MessageFormat.format(Messages.DeploymentDebugDevice_ConnectError, device.getName()), e));
 		}
+	}
+
+	/**
+	 * @brief Get the state of the network of the resource composed by the default
+	 *        values of all its datapoints
+	 * @param resource the resource to get the network from
+	 * @return the default state of the network of the resource
+	 */
+	private static DatapointsState getDefaultState(final Resource resource) {
+		final var networkRuntime = RuntimeFactory.createRecursiveFrom(resource.getFBNetwork(),
+				RuntimeFactory::getDefaultValueFromTypeOrNetworkElement);
+		final var networkRuntimeInspector = new NetworkRuntimeInspector(networkRuntime,
+				NetworkRuntimeInspector.getDefaultFirstLevelPrefix(resource.getDevice().getName(), resource.getName()),
+				NetworkRuntimeInspector.DEFAULT_NAME_SEPARATOR);
+
+		return new ResourceState(networkRuntimeInspector.getNetworkRuntimeState()).getCurrentState();
 	}
 
 	private IDeviceReplayer createReplayer() {
@@ -248,7 +268,7 @@ public class ReplayDebuggingDevice extends DeploymentDebugDevice implements Repl
 				getPrimaryDebugTarget().updateWatches(true);
 				watch.removeWatch();
 			} catch (final DebugException e) {
-				FordiacLogHelper.logWarning("Cannot remove watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
+				ILog.get().warn("Cannot remove watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -274,7 +294,7 @@ public class ReplayDebuggingDevice extends DeploymentDebugDevice implements Repl
 					variableWatch.clearForce();
 				}
 			} catch (final DebugException e) {
-				FordiacLogHelper.logWarning("Cannot update watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
+				ILog.get().warn("Cannot update watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -294,7 +314,7 @@ public class ReplayDebuggingDevice extends DeploymentDebugDevice implements Repl
 				}
 				updateWatches();
 			} catch (final CoreException e) {
-				FordiacLogHelper.logWarning("Cannot create watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
+				ILog.get().warn("Cannot create watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
 			}
 		}
 
@@ -317,7 +337,7 @@ public class ReplayDebuggingDevice extends DeploymentDebugDevice implements Repl
 				}
 				updateWatches();
 			} catch (final CoreException e) {
-				FordiacLogHelper.logWarning("Cannot create watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
+				ILog.get().warn("Cannot create watch for watchpoint: " + watchpoint, e); //$NON-NLS-1$
 			}
 		}
 	}

@@ -14,6 +14,7 @@
 package org.eclipse.fordiac.ide.library.model.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -27,20 +28,24 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.fordiac.ide.library.model.Messages;
+import org.eclipse.fordiac.ide.library.model.library.Library;
 import org.eclipse.fordiac.ide.library.model.library.LibraryFactory;
 import org.eclipse.fordiac.ide.library.model.library.Manifest;
 import org.eclipse.fordiac.ide.library.model.library.Product;
 import org.eclipse.fordiac.ide.library.model.library.Required;
 import org.eclipse.fordiac.ide.library.model.library.VersionInfo;
 import org.eclipse.fordiac.ide.library.model.library.util.LibraryResourceFactoryImpl;
-import org.eclipse.fordiac.ide.util.FordiacLogHelper;
+import org.eclipse.fordiac.ide.model.util.XMLResourceOptions;
 import org.osgi.framework.Version;
 
 public final class ManifestHelper {
@@ -99,7 +104,7 @@ public final class ManifestHelper {
 		if (container == null || !container.isDirectory()) {
 			return null;
 		}
-		final File[] files = container.listFiles((dir, name) -> MANIFEST_FILENAME.equals(name));
+		final File[] files = container.listFiles((_, name) -> MANIFEST_FILENAME.equals(name));
 		if (files.length == 0) {
 			return null;
 		}
@@ -258,7 +263,43 @@ public final class ManifestHelper {
 		try {
 			resource.save(null);
 		} catch (final IOException e) {
-			FordiacLogHelper.logWarning("Could not create project manifest", e); //$NON-NLS-1$
+			ILog.get().warn("Could not create project manifest", e); //$NON-NLS-1$
+		}
+		return manifest;
+	}
+
+	/**
+	 * Creates a new {@link Manifest} at the specified {@link Path}
+	 *
+	 * @param folder  specified folder path
+	 * @param library to create a manifest for
+	 * @return the created manifest
+	 */
+	public static Manifest createLibraryManifest(final java.nio.file.Path folder, final Library library,
+			final String version) throws IOException {
+		final Manifest manifest = createManifest(SCOPE_LIBRARY);
+		final java.nio.file.Path manifestFile = folder.resolve(MANIFEST_FILENAME);
+		final Product product = manifest.getProduct();
+
+		product.setName(library.getName());
+		product.setSymbolicName(library.getSymbolicName());
+		product.setComment(library.getComment());
+		product.getVersionInfo().setVersion(version);
+
+		final Resource resource = createResource(URI.createFileURI(manifestFile.toAbsolutePath().toString()));
+
+		final var dependencies = library.getDependencies();
+		if (dependencies != null) {
+			for (final Required req : dependencies.getRequired()) {
+				addDependency(manifest, EcoreUtil.copy(req));
+			}
+		}
+
+		resource.getContents().add(manifest);
+		try {
+			resource.save(null);
+		} catch (final IOException e) {
+			throw new IOException(Messages.ManifestHelper_CannotCreateManifest, e);
 		}
 		return manifest;
 	}
@@ -400,6 +441,7 @@ public final class ManifestHelper {
 		final XMLResource resource = (XMLResource) resourceFactory.createResource(uri);
 		resource.getDefaultSaveOptions().put(XMLResource.OPTION_ENCODING, UTF_8);
 		resource.getDefaultLoadOptions().put(XMLResource.OPTION_ENCODING, UTF_8);
+		resource.getDefaultLoadOptions().putAll(XMLResourceOptions.DEFAULT_LOAD_OPTIONS);
 		return resource;
 	}
 
@@ -413,8 +455,10 @@ public final class ManifestHelper {
 		final Resource resource = createResource(uri);
 		try {
 			resource.load(null);
+		} catch (final FileNotFoundException e) {
+			return null; // suppress logging of file not found exception
 		} catch (final IOException e) {
-			FordiacLogHelper.logWarning("Could not load manifest for URI " + uri, e); //$NON-NLS-1$
+			ILog.get().warn("Could not load manifest for URI " + uri, e); //$NON-NLS-1$
 			return null;
 		}
 		return (Manifest) resource.getContents().get(0);
