@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Primetals Technologies Austria GmbH
+ * Copyright (c) 2024 Primetals Technologies Austria GmbH, Osoft e.U.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +10,9 @@
  * Contributors:
  *   Patrick Aigner
  *     - initial API and implementation and/or initial documentation
+ *   Michael Oberlehner
+ *     - report manifests with an invalid dependency range
+ *     - messages of the common library package downloader
  *******************************************************************************/
 package org.eclipse.fordiac.ide.library;
 
@@ -50,6 +53,7 @@ public class Messages extends NLS {
 	public static String LibraryChange_Update_fullText;
 	public static String LibraryChange_Add_fullText;
 
+	public static String LibraryExporter_ErrorAssets;
 	public static String LibraryExporter_ExportingLibrary;
 	public static String LibraryExporter_ExportingTypes;
 	public static String LibraryExporter_ErrorFile;
@@ -81,10 +85,37 @@ public class Messages extends NLS {
 
 	public static String LibraryManager_UpdateLibraryPackage;
 
+	public static String LibraryPackageDownloader_EmptyFile;
+	public static String LibraryPackageDownloader_Forbidden;
+	public static String LibraryPackageDownloader_InvalidBaseUri;
+	public static String LibraryPackageDownloader_InvalidCredentials;
+	public static String LibraryPackageDownloader_InvalidEntry;
+	public static String LibraryPackageDownloader_InvalidFileName;
+	public static String LibraryPackageDownloader_InvalidLocation;
+	public static String LibraryPackageDownloader_InvalidRedirect;
+	public static String LibraryPackageDownloader_InvalidResponse;
+	public static String LibraryPackageDownloader_LibraryNotFound;
+	public static String LibraryPackageDownloader_ManifestNotFound;
+	public static String LibraryPackageDownloader_NotFound;
+	public static String LibraryPackageDownloader_ProxyAuthenticationRequired;
+	public static String LibraryPackageDownloader_ReadTimeout;
+	public static String LibraryPackageDownloader_RequestError;
+	public static String LibraryPackageDownloader_RequestFailed;
+	public static String LibraryPackageDownloader_ResponseTooLarge;
+	public static String LibraryPackageDownloader_ServerError;
+	public static String LibraryPackageDownloader_TooManyRedirects;
+	public static String LibraryPackageDownloader_TooManyRequests;
+	public static String LibraryPackageDownloader_TooManyRequestsRetryAfter;
+	public static String LibraryPackageDownloader_TransportError;
+	public static String LibraryPackageDownloader_Unauthorized;
+	public static String LibraryPackageDownloader_UnencryptedRedirect;
+	public static String LibraryPackageDownloader_VersionNotFound;
+
 	public static String LibraryPackageDownloaderProvider_DiscoveryStatus;
 	public static String LibraryPackageDownloaderProvider_SourceError;
 	public static String LibraryPackageDownloaderProvider_UnknownElement;
 
+	public static String OnlineLibraryProvider_InvalidDependencyRange;
 	public static String OnlineLibraryProvider_NoLibrarySource;
 
 	public static String DownloadNullResult;

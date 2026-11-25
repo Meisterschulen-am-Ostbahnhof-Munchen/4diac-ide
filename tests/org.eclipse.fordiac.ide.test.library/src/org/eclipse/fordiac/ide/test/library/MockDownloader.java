@@ -10,6 +10,7 @@
  * Contributors:
  *   Patrick Aigner - initial API and implementation and/or initial documentation
  *   Michael Oberlehner - fix version selection and provide fixture manifests
+ *   Michael Oberlehner - count the instances created by the extension registry
  *******************************************************************************/
 package org.eclipse.fordiac.ide.test.library;
 
@@ -27,11 +28,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
@@ -49,25 +53,58 @@ import org.osgi.framework.VersionRange;
  * Library package downloader serving the library archives in the {@code data}
  * folder of this test bundle.
  */
-public class MockDownloader implements ILibraryPackageDownloader {
+public class MockDownloader implements ILibraryPackageDownloader, IExecutableExtension {
 	// The extension registry creates a new downloader instance for every lookup,
 	// so the activation state has to be shared between all instances.
 	private static final AtomicBoolean ACTIVE = new AtomicBoolean(false);
+	// one instance per lookup of the library sources
+	private static final AtomicInteger REGISTRY_INSTANCES = new AtomicInteger();
 
 	private static final String BUNDLE_ID = "org.eclipse.fordiac.ide.test.library"; //$NON-NLS-1$
 	private static final String FORMAT_STRING = "data/%s-%s.zip"; //$NON-NLS-1$
 	private static final String MANIFEST_DIRECTORY_PREFIX = "fordiac-mock-manifests"; //$NON-NLS-1$
 
-	private static Path manifestDirectory;
-
-	private final VersionComparator versionComparator = new VersionComparator();
-
 	@SuppressWarnings("nls")
-	private final Map<String, List<String>> archiveMap = Map.ofEntries(
+	private static final Map<String, List<String>> ARCHIVES = Map.ofEntries(
 			Map.entry("test01", List.of("1.0.0", "1.1.0", "1.5.0", "2.0.0")),
 			Map.entry("test02", List.of("1.0.0", "1.1.0")), Map.entry("test03", List.of("1.0.0", "1.1.0")),
 			Map.entry("test04", List.of("1.0.0", "1.1.0")), Map.entry("test05", List.of("1.0.0")),
 			Map.entry("test06", List.of("1.0.0")), Map.entry("test07", List.of("1.0.0")));
+
+	private static Path manifestDirectory;
+
+	private final VersionComparator versionComparator = new VersionComparator();
+
+	private final Map<String, List<String>> archiveMap;
+
+	public MockDownloader() {
+		this(ARCHIVES);
+	}
+
+	/**
+	 * Creates a downloader serving only some of the test archives.
+	 *
+	 * @param archiveMap the served versions by symbolic name, all of them have to
+	 *                   exist in the {@code data} folder
+	 */
+	protected MockDownloader(final Map<String, List<String>> archiveMap) {
+		this.archiveMap = Map.copyOf(archiveMap);
+	}
+
+	@Override
+	public void setInitializationData(final IConfigurationElement config, final String propertyName, final Object data) {
+		REGISTRY_INSTANCES.incrementAndGet();
+	}
+
+	/**
+	 * Returns how often the extension registry created this downloader, i.e. how
+	 * often the library sources were looked up.
+	 *
+	 * @return the number of instances created so far
+	 */
+	public static int getRegistryInstances() {
+		return REGISTRY_INSTANCES.get();
+	}
 
 	@Override
 	public String getName() {

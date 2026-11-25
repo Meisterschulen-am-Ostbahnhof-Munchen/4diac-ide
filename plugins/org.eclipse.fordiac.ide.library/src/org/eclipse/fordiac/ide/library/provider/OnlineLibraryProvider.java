@@ -10,19 +10,21 @@
  * Contributors:
  *   Mario Kastner - initial API and implementation and/or initial documentation
  *   Michael Oberlehner - use the shared downloader lookup
+ *   Michael Oberlehner - keep the libraries of all sources in the catalogue
  *******************************************************************************/
 package org.eclipse.fordiac.ide.library.provider;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -35,6 +37,7 @@ import org.eclipse.fordiac.ide.library.download.DownloadResult;
 import org.eclipse.fordiac.ide.library.download.ILibraryPackageDownloader;
 import org.eclipse.fordiac.ide.library.download.LibraryPackageDownloaderProvider;
 import org.eclipse.fordiac.ide.library.model.library.Manifest;
+import org.eclipse.fordiac.ide.library.model.library.Required;
 import org.eclipse.fordiac.ide.library.model.util.ManifestHelper;
 import org.eclipse.fordiac.ide.library.model.util.VersionComparator;
 import org.osgi.framework.Version;
@@ -67,8 +70,10 @@ public class OnlineLibraryProvider extends AbstractLibraryProvider {
 
 			switch (downloadResult.status()) {
 			case OK -> {
-				refreshedLibs.putAll(
-						toLibraryDescriptors(downloadResult.result(), fetchDependencies, downloader, monitor, status));
+				// a version offered by several sources is listed once per source, in lookup order
+				toLibraryDescriptors(downloadResult.result(), fetchDependencies, downloader, monitor, status)
+						.forEach((symbolicName, descriptors) -> refreshedLibs
+								.computeIfAbsent(symbolicName, _ -> new ArrayList<>()).addAll(descriptors));
 				status.add(Status.info(downloader.getName() + ": OK")); //$NON-NLS-1$
 				sourceConfigured = true;
 			}
@@ -85,6 +90,7 @@ public class OnlineLibraryProvider extends AbstractLibraryProvider {
 		if (!sourceConfigured && status.isOK()) {
 			status.add(Status.info(Messages.OnlineLibraryProvider_NoLibrarySource));
 		}
+		refreshedLibs.replaceAll((_, descriptors) -> List.copyOf(descriptors));
 		availableLibs.set(Map.copyOf(refreshedLibs));
 
 		return status;
@@ -93,20 +99,38 @@ public class OnlineLibraryProvider extends AbstractLibraryProvider {
 	private static Map<String, List<LibraryDescriptor>> toLibraryDescriptors(final Map<String, List<String>> versions,
 			final boolean fetchDependencies, final ILibraryPackageDownloader downloader, final IProgressMonitor monitor,
 			final MultiStatus status) {
-		return versions.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(version -> {
-					final Version parsedVersion;
-					try {
-						parsedVersion = Version.valueOf(version);
-					} catch (final IllegalArgumentException e) {
-						return null;
-					}
-					final Map<String, VersionRange> dependencies = fetchDependencies
-							? getDependencies(downloader, entry.getKey(), parsedVersion, monitor, status)
-							: Map.of();
+		final Map<String, List<LibraryDescriptor>> descriptors = new HashMap<>();
+		for (final Map.Entry<String, List<String>> library : versions.entrySet()) {
+			final List<LibraryDescriptor> offered = new ArrayList<>();
+			for (final String version : library.getValue()) {
+				toLibraryDescriptor(library.getKey(), version, fetchDependencies, downloader, monitor, status)
+						.ifPresent(offered::add);
+			}
+			descriptors.put(library.getKey(), Collections.unmodifiableList(offered));
+		}
+		return descriptors;
+	}
 
-					return new LibraryDescriptor(entry.getKey(), parsedVersion, dependencies);
-				}).filter(Objects::nonNull).toList()));
+	/**
+	 * Describes one version offered by the downloader. Nothing is returned for a
+	 * version that cannot be parsed or whose manifest has an invalid dependency
+	 * range.
+	 */
+	private static Optional<LibraryDescriptor> toLibraryDescriptor(final String symbolicName, final String version,
+			final boolean fetchDependencies, final ILibraryPackageDownloader downloader, final IProgressMonitor monitor,
+			final MultiStatus status) {
+		final Version parsedVersion;
+		try {
+			parsedVersion = Version.valueOf(version);
+		} catch (final IllegalArgumentException e) {
+			return Optional.empty();
+		}
+		if (!fetchDependencies) {
+			return Optional.of(new LibraryDescriptor(symbolicName, parsedVersion, Map.of()));
+		}
+		// null if the manifest has an invalid dependency range, the error is already reported
+		return Optional.ofNullable(getDependencies(downloader, symbolicName, parsedVersion, monitor, status))
+				.map(dependencies -> new LibraryDescriptor(symbolicName, parsedVersion, dependencies));
 	}
 
 	private static Map<String, VersionRange> getDependencies(final ILibraryPackageDownloader downloader,
@@ -129,8 +153,15 @@ public class OnlineLibraryProvider extends AbstractLibraryProvider {
 
 		final Map<String, VersionRange> dependencies = new HashMap<>();
 		if (manifest != null && manifest.getDependencies() != null) {
-			manifest.getDependencies().getRequired().forEach(req -> dependencies.put(req.getSymbolicName(),
-					VersionComparator.parseVersionRange(req.getVersion())));
+			for (final Required req : manifest.getDependencies().getRequired()) {
+				try {
+					dependencies.put(req.getSymbolicName(), VersionComparator.parseVersionRange(req.getVersion()));
+				} catch (final IllegalArgumentException e) {
+					status.add(Status.error(MessageFormat.format(Messages.OnlineLibraryProvider_InvalidDependencyRange,
+							downloader.getName(), symbolicName, version, req.getSymbolicName(), req.getVersion())));
+					return null;
+				}
+			}
 		}
 
 		return dependencies;

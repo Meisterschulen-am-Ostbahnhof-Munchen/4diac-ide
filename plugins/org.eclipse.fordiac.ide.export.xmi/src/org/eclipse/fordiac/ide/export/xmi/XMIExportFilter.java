@@ -9,6 +9,7 @@
  *
  * Contributors:
  *   Martin Jobst - initial API and implementation and/or initial documentation
+ *   Kaavya Manimathavan - skip non-type files during XMI export
  *******************************************************************************/
 package org.eclipse.fordiac.ide.export.xmi;
 
@@ -18,10 +19,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Spliterators;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -37,8 +41,11 @@ import org.eclipse.fordiac.ide.model.data.AnyType;
 import org.eclipse.fordiac.ide.model.data.DirectlyDerivedType;
 import org.eclipse.fordiac.ide.model.eval.variable.VariableOperations;
 import org.eclipse.fordiac.ide.model.libraryElement.Attribute;
+import org.eclipse.fordiac.ide.model.libraryElement.FBNetwork;
 import org.eclipse.fordiac.ide.model.libraryElement.LibraryElement;
+import org.eclipse.fordiac.ide.model.libraryElement.TypedSubApp;
 import org.eclipse.fordiac.ide.model.libraryElement.VarDeclaration;
+import org.eclipse.fordiac.ide.model.typelibrary.TypeLibraryManager;
 import org.eclipse.fordiac.ide.structuredtextalgorithm.ui.resource.STAlgorithmResourceSetInitializer;
 import org.eclipse.fordiac.ide.structuredtextalgorithm.util.StructuredTextParseUtil;
 import org.eclipse.fordiac.ide.structuredtextcore.parsetree.reconstr.STCoreCommentAssociater;
@@ -84,6 +91,11 @@ public class XMIExportFilter extends ExportFilter {
 		if (typeFile == null || !typeFile.exists()) {
 			getErrors().add(Messages.XMIExportFilter_UnknownFile);
 			return;
+		}
+
+		if (element == null && TypeLibraryManager.INSTANCE.getTypeEntryForFile(typeFile) == null) {
+			getInfos().add(MessageFormat.format(Messages.XMIExportFilter_FileIgnored, typeFile.getFullPath()));
+			return; // Do not export files passed to the export that are not in the TypeLibrary
 		}
 
 		final URI sourceUri = URI.createPlatformResourceURI(typeFile.getFullPath().toString(), true);
@@ -141,14 +153,10 @@ public class XMIExportFilter extends ExportFilter {
 
 	protected XMIExportInitialValues createInitialValues(final Resource resource) {
 		final var result = XMIExportFactory.eINSTANCE.createXMIExportInitialValues();
-		StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(EcoreUtil.getAllProperContents(resource, true), 0), false)
-				.filter(VarDeclaration.class::isInstance).map(VarDeclaration.class::cast)
+		getResourceContents(resource).filter(VarDeclaration.class::isInstance).map(VarDeclaration.class::cast)
 				.filter(XMIExportFilter::hasInitialValue).map(this::createInitialValue).flatMap(Optional::stream)
 				.forEachOrdered(result.getInitialValues()::add);
-		StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(EcoreUtil.getAllProperContents(resource, true), 0), false)
-				.filter(DirectlyDerivedType.class::isInstance).map(DirectlyDerivedType.class::cast)
+		getResourceContents(resource).filter(DirectlyDerivedType.class::isInstance).map(DirectlyDerivedType.class::cast)
 				.filter(XMIExportFilter::hasInitialValue).map(this::createInitialValue).flatMap(Optional::stream)
 				.forEachOrdered(result.getInitialValues()::add);
 		return result;
@@ -223,9 +231,7 @@ public class XMIExportFilter extends ExportFilter {
 
 	protected XMIExportTypeDeclarations createTypeDeclarations(final Resource resource) {
 		final var result = XMIExportFactory.eINSTANCE.createXMIExportTypeDeclarations();
-		StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(EcoreUtil.getAllProperContents(resource, true), 0), false)
-				.filter(VarDeclaration.class::isInstance).map(VarDeclaration.class::cast)
+		getResourceContents(resource).filter(VarDeclaration.class::isInstance).map(VarDeclaration.class::cast)
 				.filter(VarDeclaration::isArray).map(this::createTypeDeclaration).flatMap(Optional::stream)
 				.forEachOrdered(result.getTypeDeclarations()::add);
 		return result;
@@ -259,9 +265,7 @@ public class XMIExportFilter extends ExportFilter {
 
 	protected XMIExportAttributeValues createAttributeValues(final Resource resource) {
 		final var result = XMIExportFactory.eINSTANCE.createXMIExportAttributeValues();
-		StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(EcoreUtil.getAllProperContents(resource, true), 0), false)
-				.filter(Attribute.class::isInstance).map(Attribute.class::cast)
+		getResourceContents(resource).filter(Attribute.class::isInstance).map(Attribute.class::cast)
 				.filter(XMIExportFilter::hasAttributeValue).map(this::createAttributeValue).flatMap(Optional::stream)
 				.forEachOrdered(result.getAttributeValues()::add);
 		return result;
@@ -302,10 +306,9 @@ public class XMIExportFilter extends ExportFilter {
 
 	protected XMIExportLiteralTypes createLiteralTypes(final Resource resource) {
 		final var result = XMIExportFactory.eINSTANCE.createXMIExportLiteralTypes();
-		StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(EcoreUtil.getAllProperContents(resource, true), 0), false)
-				.filter(STExpression.class::isInstance).map(STExpression.class::cast).filter(XMIExportFilter::isLiteral)
-				.map(this::createLiteralType).flatMap(Optional::stream).forEachOrdered(result.getLiteralTypes()::add);
+		getResourceContents(resource).filter(STExpression.class::isInstance).map(STExpression.class::cast)
+				.filter(XMIExportFilter::isLiteral).map(this::createLiteralType).flatMap(Optional::stream)
+				.forEachOrdered(result.getLiteralTypes()::add);
 		return result;
 	}
 
@@ -324,5 +327,47 @@ public class XMIExportFilter extends ExportFilter {
 
 	protected static boolean isLiteral(final STExpression expression) {
 		return LITERAL_CLASSES.contains(expression.eClass());
+	}
+
+	protected static Stream<EObject> getResourceContents(final Resource resource) {
+		return StreamSupport.stream(new ResourceContentsSpliterator(resource), false);
+	}
+
+	private static class ResourceContentsSpliterator implements Spliterator<EObject> {
+		private final TreeIterator<EObject> contents;
+
+		private ResourceContentsSpliterator(final Resource resource) {
+			contents = EcoreUtil.getAllProperContents(resource, true);
+		}
+
+		@Override
+		public boolean tryAdvance(final Consumer<? super EObject> action) {
+			while (contents.hasNext()) {
+				final EObject element = contents.next();
+				switch (element) {
+				case final FBNetwork network when network.eContainer() instanceof TypedSubApp -> contents.prune();
+				default -> {
+					action.accept(element);
+					return true;
+				}
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public Spliterator<EObject> trySplit() {
+			return null;
+		}
+
+		@Override
+		public long estimateSize() {
+			return Long.MAX_VALUE;
+		}
+
+		@Override
+		public int characteristics() {
+			return Spliterator.ORDERED;
+		}
 	}
 }
