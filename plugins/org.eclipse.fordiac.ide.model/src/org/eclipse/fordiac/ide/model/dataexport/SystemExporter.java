@@ -106,8 +106,8 @@ public class SystemExporter extends AbstractTypeExporter {
 		final SystemConfiguration systemConfiguration = getType().getSystemConfiguration();
 		if (null != systemConfiguration) {
 			addDevices(systemConfiguration.getDevices());
-			addSegment(systemConfiguration.getSegments());
 			addMapping();
+			addSegment(systemConfiguration.getSegments());
 			addLink(systemConfiguration.getLinks());
 		}
 	}
